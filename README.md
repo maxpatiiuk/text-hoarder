@@ -1,6 +1,8 @@
 # Calendar Plus
 
 - [ ] Review all code and remove unused/simplify
+- [ ] Decide if tests are needed
+
 - [ ] Add github repository description
 - [ ] Design extension icon and update src/public/images
 - [ ] Add documentation & screenshots & video (compare to calendar plus
