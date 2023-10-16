@@ -2,7 +2,8 @@ import React from 'react';
 
 import { useAsyncState } from '../../hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
-import { FirstAuthScreen } from './FirstAuthScreen';
+import { AuthPrompt } from './AuthPrompt';
+import { LoadingScreen } from '../Molecules/LoadingScreen';
 
 /**
  * Entrypoint react component for the extension
@@ -14,17 +15,14 @@ export function App(): JSX.Element | null {
   );
 
   const auth = React.useContext(AuthContext);
-  const [isFirstAuth, setIsFirstAuth] = React.useState(false);
-  const handleAuth = (): void =>
-    void auth.handleAuthenticate(true).catch(console.error);
-
   return (
     <>
       {debugOverlay}
-      {isFirstAuth && (
-        <FirstAuthScreen
-          onClose={(): void => setIsFirstAuth(false)}
-          onAuth={handleAuth}
+      {auth === undefined ? (
+        <LoadingScreen />
+      ) : (
+        <AuthPrompt
+          onAuth={(): Promise<true | Error> => auth.handleAuthenticate()}
         />
       )}
     </>

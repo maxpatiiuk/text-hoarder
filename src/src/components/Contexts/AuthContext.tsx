@@ -1,20 +1,16 @@
 import React from 'react';
 import { sendRequest } from '../Background/messages';
+import { useStorage } from '../../hooks/useStorage';
 
 /**
  * Holds user token (if authenticated) and callback to authenticate
  */
-export const AuthContext = React.createContext<Auth>({
-  token: undefined,
-  handleAuthenticate: () => {
-    throw new Error('AuthContext is not defined');
-  },
-});
+export const AuthContext = React.createContext<Auth | undefined>(undefined);
 AuthContext.displayName = 'AuthContext';
 
 type Auth = {
   readonly token: string | undefined;
-  readonly handleAuthenticate: (interactive: boolean) => Promise<void>;
+  readonly handleAuthenticate: () => Promise<true | Error>;
 };
 
 let unsafeToken: string | undefined = undefined;
@@ -25,28 +21,41 @@ export function AuthenticationProvider({
 }: {
   readonly children: React.ReactNode;
 }): JSX.Element {
-  const [token, setToken] = React.useState<string | undefined>(undefined);
+  const [token, setToken] = useStorage('accessToken');
 
   const handleAuthenticate = React.useCallback(
     async (interactive: boolean) =>
-      sendRequest('Authenticate', { interactive })
-        .then(({ token }) => {
-          if (typeof token === 'string') {
-            unsafeToken = token;
-            setToken(token);
-          } else console.warn('Authentication canceled');
-        })
-        .catch(console.error),
-    []
+      sendRequest('Authenticate', { interactive }).then((result) => {
+        if (result.type === 'Authenticated') {
+          unsafeToken = token;
+          setToken(token);
+          return true;
+        } else return new Error(result.error);
+      }),
+    [],
   );
-  React.useEffect(() => void handleAuthenticate(false), [handleAuthenticate]);
+  const isLoading = token === undefined;
+  const isTokenMissing = token === '';
+  React.useEffect(
+    () =>
+      isLoading
+        ? undefined
+        : isTokenMissing
+        ? void handleAuthenticate(false)
+        : undefined,
+    [isTokenMissing, isLoading, handleAuthenticate],
+  );
 
   const auth = React.useMemo(
     () => ({
-      token,
-      handleAuthenticate,
+      token: isTokenMissing ? undefined : token,
+      handleAuthenticate: handleAuthenticate.bind(undefined, true),
     }),
-    [token, handleAuthenticate]
+    [token, isTokenMissing, handleAuthenticate],
   );
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={isLoading ? undefined : auth}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { GetSet, IR, R, RA } from '../utils/types';
+import type { GetSet, IR, R } from '../utils/types';
 import { ensure, setDevelopmentGlobal } from '../utils/types';
 import { useAsyncState } from './useAsyncState';
 
@@ -10,9 +10,9 @@ type StorageItem<T> = {
 };
 
 export const storageDefinitions = ensure<IR<StorageItem<unknown>>>()({
-  entries: {
+  accessToken: {
     type: 'local',
-    defaultValue: [] as RA<string>,
+    defaultValue: '' as string,
   },
 } as const);
 

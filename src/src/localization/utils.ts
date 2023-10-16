@@ -1,5 +1,5 @@
-import { IR, RR, RA } from "../utils/types";
-import { mappedFind } from "../utils/utils";
+import { IR, RR, RA } from '../utils/types';
+import { mappedFind } from '../utils/utils';
 
 const languages = ['en'] as const;
 let language: Language = 'en';
@@ -30,7 +30,12 @@ function resolveLanguage(): Language {
  * A tiny localization lib
  */
 export const dictionary = <
-  T extends IR<RR<Language, string | ((...args: RA<never>) => string)>>,
+  T extends IR<
+    RR<
+      Language,
+      string | JSX.Element | ((...args: RA<never>) => string | JSX.Element)
+    >
+  >,
 >(
   dictionary: T,
 ): {
