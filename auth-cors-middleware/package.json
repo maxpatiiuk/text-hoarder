@@ -1,0 +1,25 @@
+{
+  "name": "auth-cors-middleware",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maxxxxxdlp/text-hoarder"
+  },
+  "scripts": {
+    "build": "next build",
+    "test": "npm run build",
+    "debug": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "next dev",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^13.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.2",
+    "@types/react": "18.2.28",
+    "typescript": "^5.2.2"
+  }
+}
