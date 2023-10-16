@@ -5,11 +5,9 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{ts,tsx,js}'],
+  content: ['./src/**/*.{ts,tsx,js,html}'],
   // Disable unneeded components to reduce performance impact
   corePlugins: {
-    // Tailwind style reset breaks Google Calendar styling
-    preflight: false,
     float: false,
     clear: false,
     skew: false,

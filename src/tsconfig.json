@@ -43,14 +43,10 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "types": [
-      "jest",
-      "node",
-      "chrome"
-    ]
+    "types": ["jest", "node", "chrome"]
   },
-  "typedocOptions" : {
-    "entryPoints" : ["src"],
+  "typedocOptions": {
+    "entryPoints": ["src"],
     "out": "docs"
   }
 }
