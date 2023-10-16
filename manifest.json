@@ -1,0 +1,28 @@
+{
+  "name": "Text Hoarder",
+  "short_name": "Text Hoarder",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Max Patiiuk",
+  "manifest_version": 3,
+  "icons": {
+    "16": "./src/public/images/extension_icon_16x16.png",
+    "32": "./src/public/images/extension_icon_32x32.png",
+    "48": "./src/public/images/extension_icon_48x48.png",
+    "128": "./src/public/images/extension_icon_128x128.png"
+  },
+  "action": {
+    "default_title": "See where your time went"
+  },
+  "current_locale": "en",
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "./src/dist/background.bundle.js"
+  },
+  "cross_origin_embedder_policy": {
+    "value": "require-corp"
+  },
+  "cross_origin_opener_policy": {
+    "value": "same-origin"
+  }
+}
