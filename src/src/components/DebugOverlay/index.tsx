@@ -7,7 +7,7 @@ import { sendRequest } from '../Background/messages';
  */
 export function DebugOverlay(): JSX.Element {
   return (
-    <div className="absolute top-0 left-0">
+    <div className="absolute bottom-0 right-0">
       <button
         type="button"
         onClick={async (): Promise<void> =>

@@ -2,7 +2,7 @@
   "name": "Text Hoarder",
   "short_name": "Text Hoarder",
   "version": "0.0.1",
-  "description": "",
+  "description": "TODO: title",
   "author": "Max Patiiuk",
   "manifest_version": 3,
   "icons": {
@@ -11,11 +11,9 @@
     "48": "./src/public/images/extension_icon_48x48.png",
     "128": "./src/public/images/extension_icon_128x128.png"
   },
-  "action": {
-    "default_title": "See where your time went"
-  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgwksbf8T1MnUHWGlGw5c1EoE/8abxq+OD6FL/Q+q8x4BmYPqhS2KRVnTBIQrpyjUXces/eJ5cCVEf1r77oGlEomYuPoc5h+P1a0DHRKcbCEv+5lFhc1nTe6JbilHPcTIPhooX0xFIvdqEJvPMCgcQ68PdTT/hsRrRoKMPtz9rfsnfHyx1d2719AUjyovNx1Gml/DaFVmkN44RFIczc+8AWKM/mXIekG9grHygw/TZwaO9l1ZLDVn3piLj4WsNChLomn4OzVuMImtu+XTR0klI53Yy6bafTyvv4OXrA8i1qm15hjrVVjkhqpuEFRL9YplhXft+FOJgqWtD9Mk9ooeeQIDAQAB",
   "current_locale": "en",
-  "permissions": ["storage"],
+  "permissions": ["identity", "storage"],
   "background": {
     "service_worker": "./src/dist/background.bundle.js"
   },
@@ -24,5 +22,15 @@
   },
   "cross_origin_opener_policy": {
     "value": "same-origin"
+  },
+  "action": {
+    "default_icon": {
+      "16": "./src/public/images/extension_icon_16x16.png",
+      "32": "./src/public/images/extension_icon_32x32.png",
+      "48": "./src/public/images/extension_icon_48x48.png",
+      "128": "./src/public/images/extension_icon_128x128.png"
+    },
+    "default_title": "Text Hoarder",
+    "default_popup": "./src/src/components/Core/index.html"
   }
 }

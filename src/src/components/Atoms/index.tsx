@@ -24,3 +24,12 @@ export const Centered = wrap(
 
 export const H1 = wrap('H1', 'h1', 'text-4xl font-bold');
 export const H2 = wrap('H1', 'h1', 'text-2xl font-bold');
+
+export const ErrorMessage = wrap(
+  'ErrorMessage',
+  'p',
+  'flex flex-col gap-2 p-2 text-white bg-red-500 rounded',
+  {
+    role: 'alert',
+  },
+);

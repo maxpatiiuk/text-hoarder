@@ -6,7 +6,7 @@ export const className = {
   danger: 'bg-red-600 hover:bg-red-700',
   info: 'bg-blue-600 hover:bg-blue-700',
   link: `inline-flex justify-center items-center text-blue-400 transition
-  hover:text-black ${current}`,
+  hover:text-black underline ${current}`,
   strippedTable: `grid-cols-[auto,repeat(var(--column-count),minmax(6rem,1fr))]
     [&_:is(th,td)]:p-1 [&_:is(th,td)]:sm:p-2 [&_:is(th,td)]:ring-1
     [&_:is(th,td)]:ring-gray-300
