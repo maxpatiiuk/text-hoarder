@@ -6,8 +6,6 @@ import { textToBase64 } from '../../utils/gitHub';
 
 // FEATURE: use signed commits https://github.com/orgs/community/discussions/50055
 // FEATURE: create README.md if not already
-// REFACTOR: change repository folder structure into monorepo
-//
 
 export function MainScreen(): JSX.Element {
   const [repositoryOwner, repositoryName] =

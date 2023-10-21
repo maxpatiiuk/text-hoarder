@@ -7,7 +7,7 @@ import type { State } from 'typesafe-reducer';
 import type { Requests } from './messages';
 import { emitEvent } from './messages';
 import { formatUrl, parseUrl } from '../../utils/queryString';
-import { authCorsMiddlewareUrl, gitHubAppName } from '../../../config';
+import { corsAuthMiddlewareUrl, gitHubAppName } from '../../../config';
 import { ajax } from '../../utils/ajax';
 
 // TODO: use this to listen to current URL. Also, check if there is a better way
@@ -107,7 +107,7 @@ async function resolveAuthToken(
     Number.isNaN(installationId)
   )
     throw new Error('Authentication failed');
-  return ajax(formatUrl(authCorsMiddlewareUrl, { code }), {
+  return ajax(formatUrl(corsAuthMiddlewareUrl, { code }), {
     method: 'POST',
   })
     .then((response) => response.text())

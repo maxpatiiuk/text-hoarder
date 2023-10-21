@@ -15,8 +15,8 @@ export const gitHubAppId = '408553';
 export const gitHubClientId = 'Iv1.aaaaaaaaaaaaaaaa';
 
 /**
- * Set this to the URL at which auth-cors-middleware is running
- * (see /auth-cors-middleware/README.md)
+ * Set this to the URL at which cors-auth-middleware is running
+ * (see /packages/cors-auth-middleware/README.md)
  */
 export const authCorsMiddlewareUrl = 'http://localhost:3000';
 

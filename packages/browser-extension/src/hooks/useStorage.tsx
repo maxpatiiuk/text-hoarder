@@ -47,7 +47,7 @@ export function StorageProvider({
 }: {
   readonly children: JSX.Element;
 }): JSX.Element | undefined {
-  const [store, setStore] = useAsyncState(
+  const [store, setStore] = useAsyncState<StorageDefinitions>(
     React.useCallback(
       () =>
         storage

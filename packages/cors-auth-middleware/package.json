@@ -1,5 +1,5 @@
 {
-  "name": "auth-cors-middleware",
+  "name": "cors-auth-middleware",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
