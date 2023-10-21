@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useBooleanState } from '../../hooks/useBooleanState';
-import { localization } from '../../localization/common';
+import { localization } from '../../localization/localization';
 import type { RA } from '../../utils/types';
 import { crash, error } from '../Errors/assert';
 import { ErrorBoundary } from '../Errors/ErrorBoundary';

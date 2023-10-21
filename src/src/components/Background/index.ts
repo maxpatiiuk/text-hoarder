@@ -7,7 +7,7 @@ import type { State } from 'typesafe-reducer';
 import type { Requests } from './messages';
 import { emitEvent } from './messages';
 import { formatUrl, parseUrl } from '../../utils/queryString';
-import { gitHubClientId, authCorsMiddlewareUrl } from '../../../config';
+import { authCorsMiddlewareUrl, gitHubAppName } from '../../../config';
 import { ajax } from '../../utils/ajax';
 
 // TODO: use this to listen to current URL. Also, check if there is a better way
@@ -51,6 +51,8 @@ const requestHandlers: {
    * See documentation at
    * https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app
    * and
+   * https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-user-access-token-for-a-github-app#generating-a-user-access-token-when-a-user-installs-your-app
+   * and
    * https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
    */
   Authenticate: async ({ interactive }) => {
@@ -58,18 +60,21 @@ const requestHandlers: {
 
     // For protection against CSRF attacks
     const state = Math.random().toString().slice(2);
-    const authUrl = formatUrl('https://github.com/login/oauth/authorize', {
-      client_id: gitHubClientId,
-      redirect_uri: redirectUrl,
-      state,
-    });
+    const authUrl = formatUrl(
+      `https://github.com/apps/${gitHubAppName}/installations/new`,
+      {
+        redirect_uri: redirectUrl,
+        state,
+      },
+    );
+
     return chrome.identity
       .launchWebAuthFlow({
         url: authUrl,
         interactive,
       })
       .then(resolveAuthToken.bind(undefined, state))
-      .then((token) => ({ type: 'Authenticated', token }) as const)
+      .then((response) => ({ type: 'Authenticated', ...response }) as const)
       .catch((error) => {
         console.error(error);
         return { type: 'Error', error: error.message };
@@ -85,14 +90,26 @@ const requestHandlers: {
 
 async function resolveAuthToken(
   originalState: string,
-  // Example URL: https://bjknebjiadgjchmhppdfdiddfegmcaao.chromiumapp.org/?code=b9e350966d2079489b9f&state=0.016131138374419818
+  // Example URL: https://bjknebjiadgjchmhppdfdiddfegmcaao.chromiumapp.org/?code=ace8eda36ec23fb106a1&installation_id=43127586&setup_action=install&state=13915511021528948
   callbackUrl: string | undefined,
-): Promise<string> {
+): Promise<{ readonly token: string; readonly installationId: number }> {
+  console.warn(callbackUrl);
   if (callbackUrl === undefined) throw new Error('Authentication was canceled');
-  const { code, state: returnedState } = parseUrl(callbackUrl);
-  if (typeof code !== 'string' || originalState !== returnedState)
+  const {
+    code,
+    state: returnedState,
+    installation_id: installationIdString,
+  } = parseUrl(callbackUrl);
+  const installationId = Number.parseInt(installationIdString);
+  if (
+    typeof code !== 'string' ||
+    originalState !== returnedState ||
+    Number.isNaN(installationId)
+  )
     throw new Error('Authentication failed');
   return ajax(formatUrl(authCorsMiddlewareUrl, { code }), {
     method: 'POST',
-  }).then((response) => response.text());
+  })
+    .then((response) => response.text())
+    .then((token) => ({ token, installationId }));
 }

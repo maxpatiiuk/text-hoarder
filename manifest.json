@@ -23,6 +23,7 @@
   "cross_origin_opener_policy": {
     "value": "same-origin"
   },
+  "options_page": "./src/src/components/Core/index.html",
   "action": {
     "default_icon": {
       "16": "./src/public/images/extension_icon_16x16.png",

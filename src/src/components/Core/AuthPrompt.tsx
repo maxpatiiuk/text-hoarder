@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { localization } from '../../localization/common';
+import { localization } from '../../localization/localization';
 import { Link } from '../Atoms/Link';
 import { Button } from '../Atoms/Button';
 import { LoadingContext } from '../Contexts/Contexts';
@@ -18,24 +18,19 @@ export function AuthPrompt({
   const loading = React.useContext(LoadingContext);
   const [error, setError] = React.useState('');
   return (
-    <div className="flex flex-col gap-3 p-4 h-full">
+    <>
       <H1>{localization.textHoarder}</H1>
       <p>{localization.signInDescription}</p>
       <Step number={1} />
       <p>
         {localization.gitHubRegisterPrompt((label) => (
-          <Link.Default href="https://github.com/signup" target="_blank">
-            {label}
-          </Link.Default>
+          <Link.Default href="https://github.com/signup">{label}</Link.Default>
         ))}
       </p>
       <Step number={2} />
       <p>
         {localization.createRepositoryPrompt((label) => (
-          <Link.Default
-            href="https://docs.github.com/en/get-started/quickstart/create-a-repo#create-a-repository"
-            target="_blank"
-          >
+          <Link.Default href="https://docs.github.com/en/get-started/quickstart/create-a-repo#create-a-repository">
             {label}
           </Link.Default>
         ))}
@@ -56,16 +51,15 @@ export function AuthPrompt({
       {error.length > 0 && <ErrorMessage>{error}</ErrorMessage>}
       <span className="flex-1 -ml-3" />
       <p>
-        {localization.privacyPolicyDescription} {/** TODO: replace URL */}
+        {localization.privacyPolicyDescription}
         <Link.Default
+          // FIXME: replace URL
           href="https://calendar-plus.patii.uk/docs/privacy/"
-          rel="noreferrer"
-          target="_blank"
         >
           {localization.privacyPolicy}
         </Link.Default>
       </p>
-    </div>
+    </>
   );
 }
 

@@ -25,7 +25,7 @@ export const ajax = async (
   }: Omit<RequestInit, 'body'> & {
     // If object is passed to body, it is stringified
     readonly body?: IR<unknown> | RA<unknown> | string | FormData;
-  } = {}
+  } = {},
 ): Promise<Response> =>
   fetch(url, {
     ...options,
@@ -41,7 +41,7 @@ export const ajax = async (
     if (!response.ok) {
       console.error('Failed to fetch', response);
       throw new Error(
-        `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+        `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
       );
     } else return response;
   });
@@ -52,11 +52,11 @@ export const ajax = async (
 function putToken(url: string): { readonly Authorization: string } | undefined {
   if (isGitHubApiUrl(url)) {
     const token = unsafeGetToken();
-    if (token === undefined)
+    if (typeof token === 'string') return { Authorization: `Bearer ${token}` };
+    else
       throw new Error(
-        `Tried to access GitHub API before authentication: ${url}`
+        `Tried to access GitHub API before authentication: ${url}`,
       );
-    else return { Authorization: `Bearer ${token}` };
   } else return undefined;
 }
 
@@ -64,5 +64,4 @@ function putToken(url: string): { readonly Authorization: string } | undefined {
  * Check if URL belongs to the GitHub API
  */
 const isGitHubApiUrl = (url: string): boolean =>
-  new URL(url, globalThis.location.origin).origin ===
-  'https://api.github.com/';
+  new URL(url, globalThis.location.origin).origin === 'https://api.github.com/';

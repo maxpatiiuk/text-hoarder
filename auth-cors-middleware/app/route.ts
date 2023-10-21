@@ -4,9 +4,8 @@
  */
 
 import { NextRequest } from 'next/server';
-export const config = {
-  runtime: 'edge',
-};
+
+export const runtime = 'edge';
 
 export async function POST(request: NextRequest): Promise<Response> {
   const code = request.nextUrl.searchParams.get('code');

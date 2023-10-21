@@ -47,5 +47,38 @@ export const localization = dictionary({
   signInInstruction: {
     en: 'When prompted by GitHub, give access to the repository you created.',
   },
+  pickRepository: { en: 'Pick a repository' },
+  pickRepositoryHint: {
+    en: (
+      createRepositoryLink: (label: string) => JSX.Element,
+      editPermissionsLink: (label: string) => JSX.Element,
+    ) => (
+      <>
+        Don't see the repository you are looking for? Try
+        {createRepositoryLink('creating new repository')} or{' '}
+        {editPermissionsLink('editing the rights you gave to this extension')}.
+      </>
+    ),
+  },
+  noRepositories: {
+    en: (
+      createRepositoryLink: (label: string) => JSX.Element,
+      editPermissionsLink: (label: string) => JSX.Element,
+    ) => (
+      <>
+        You don't have any GitHub repositories, or the Text Hoarder extension
+        wasn't given access to any repository. Consider{' '}
+        {createRepositoryLink('creating new repository')} or{' '}
+        {editPermissionsLink('editing the rights you gave to this extension')}.
+      </>
+    ),
+  },
+  signOut: { en: 'Sign out' },
+  openRepositoryInGitHub: { en: 'Open repository in GitHub' },
+  aboutTextHoarder: { en: 'About Text Hoarder' },
+  sourceCode: { en: 'Source code' },
+  reportIssue: { en: 'Report an issue' },
+  requestFeature: { en: 'Request a feature' },
+  leaveReview: { en: 'Leave a review' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

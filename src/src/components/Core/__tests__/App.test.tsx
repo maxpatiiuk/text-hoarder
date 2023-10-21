@@ -1,7 +1,7 @@
 import React from 'react';
 import { App } from '../App';
 import { mount } from '../../../tests/reactUtils';
-import { localization } from '../../../localization/common';
+import { localization } from '../../../localization/localization';
 import { act } from '@testing-library/react';
 
 test('renders a button after current date is extracted', () =>
