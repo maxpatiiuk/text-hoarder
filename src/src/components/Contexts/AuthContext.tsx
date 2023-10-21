@@ -1,12 +1,12 @@
 import React from 'react';
 import { sendRequest } from '../Background/messages';
-import { storageLoading, useStorage } from '../../hooks/useStorage';
+import { useStorage } from '../../hooks/useStorage';
 import { Octokit } from 'octokit';
 
 /**
  * Holds user token (if authenticated) and callback to authenticate
  */
-export const AuthContext = React.createContext<Auth | undefined>({
+export const AuthContext = React.createContext<Auth>({
   octokit: undefined,
   installationId: undefined,
   handleAuthenticate: () => {
@@ -55,15 +55,12 @@ export function AuthenticationProvider({
   );
 
   const auth = React.useMemo(() => {
-    if (token === storageLoading || installationId === storageLoading)
-      return undefined;
     /**
      * See docs at:
      * https://www.npmjs.com/package/octokit
      * https://github.com/octokit/authentication-strategies.js/
      * https://github.com/octokit/auth-app.js/ (though this one
      *   requires server)
-     *
      */
     const octokit =
       token === undefined ? undefined : new Octokit({ auth: token });
