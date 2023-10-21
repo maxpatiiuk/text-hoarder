@@ -2,9 +2,9 @@ import React from 'react';
 
 import { useAsyncState } from '../../hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
-import { AuthPrompt } from './AuthPrompt';
+import { AuthPrompt } from '../Auth/AuthPrompt';
 import { LoadingScreen } from '../Molecules/LoadingScreen';
-import { Authenticated } from './Authenticated';
+import { Authenticated } from '../Auth/Authenticated';
 
 /**
  * Entrypoint React component for the extension
