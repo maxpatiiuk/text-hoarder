@@ -29,7 +29,7 @@ client_secret and return the access_token to the client.
 
 1. Create new vercel.com project from this repository
 2. Change the "Root Directory" setting to current directory
-   (./auth-cors-middleware)
+   (/packages/cors-auth-middleware)
 3. Set up the environmental variables according to the instructions in the
    `example.env.local` file
 4. Keep note of the URL at which the project is deployed - you will need it

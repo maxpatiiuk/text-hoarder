@@ -14,7 +14,7 @@
   "scripts": {
     "build": "npx webpack --mode production",
     "docs": "typedoc --options typedoc.config.js ./src/components/Core/development.tsx",
-    "package": "npm run build && (cd .. && zip -r ../text-hoarder.zip . -x .github/\\* .git/\\* src/node_modules/\\* .idea/\\* .vscode/\\*)",
+    "package": "npm run test && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
     "test": "npm run typeCheck && npm run unitTests",
     "typeCheck": "tsc",
     "unitTests": "jest",
