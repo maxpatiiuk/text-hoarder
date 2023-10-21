@@ -6,6 +6,7 @@ import type { RA } from '../../utils/types';
 import { crash, error } from '../Errors/assert';
 import { ErrorBoundary } from '../Errors/ErrorBoundary';
 import { AuthenticationProvider } from './AuthContext';
+import { StorageProvider } from '../../hooks/useStorage';
 
 /**
  * Provide contexts used by other components
@@ -49,7 +50,9 @@ export function Contexts({
         {/* FEATURE: replace this with a toast, dialog, or status line*/}
         {isLoading && localization.loading}
         <React.Suspense fallback={<>{localization.loading}</>}>
-          <AuthenticationProvider>{children}</AuthenticationProvider>
+          <StorageProvider>
+            <AuthenticationProvider>{children}</AuthenticationProvider>
+          </StorageProvider>
         </React.Suspense>
       </LoadingContext.Provider>
     </ErrorBoundary>

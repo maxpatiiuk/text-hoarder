@@ -2,8 +2,7 @@ import React from 'react';
 import { localization } from '../../localization/localization';
 import { Button } from '../Atoms/Button';
 import { AuthContext } from '../Contexts/AuthContext';
-import { storageLoading, useStorage } from '../../hooks/useStorage';
-import { LoadingScreen } from '../Molecules/LoadingScreen';
+import { useStorage } from '../../hooks/useStorage';
 import { RepositoryList } from './RepositoryList';
 import { H1 } from '../Atoms';
 import { useBooleanState } from '../../hooks/useBooleanState';
@@ -42,8 +41,6 @@ export function Authenticated(): JSX.Element {
       </div>
       {isMenuOpen ? (
         <Menu />
-      ) : repositoryName === storageLoading ? (
-        <LoadingScreen />
       ) : repositoryName === undefined ? (
         <RepositoryList />
       ) : (

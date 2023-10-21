@@ -24,8 +24,8 @@ export function RepositoryList(): JSX.Element | undefined {
                 data.repositories.map(({ full_name }) => full_name),
               )
               .then((repositories) => {
-                // if (repositories.length === 1)
-                // setRepositoryName(repositories[0]);
+                if (repositories.length === 1)
+                  setRepositoryName(repositories[0]);
                 return repositories;
               }),
       [auth, setRepositoryName],
@@ -34,7 +34,7 @@ export function RepositoryList(): JSX.Element | undefined {
   );
 
   return repositories === undefined ||
-    /*repositories.length === 1 ? undefined : */ repositories.length === 0 ? (
+    repositories.length === 1 ? undefined : repositories.length === 0 ? (
     <p>
       {localization.noRepositories(createRepositoryLink, editPermissionsLink)}
     </p>
