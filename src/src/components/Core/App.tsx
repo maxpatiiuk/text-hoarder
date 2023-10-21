@@ -4,9 +4,10 @@ import { useAsyncState } from '../../hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
 import { AuthPrompt } from './AuthPrompt';
 import { LoadingScreen } from '../Molecules/LoadingScreen';
+import { Authenticated } from './Authenticated';
 
 /**
- * Entrypoint react component for the extension
+ * Entrypoint React component for the extension
  */
 export function App(): JSX.Element | null {
   const [debugOverlay] = useAsyncState(
@@ -20,10 +21,12 @@ export function App(): JSX.Element | null {
       {debugOverlay}
       {auth === undefined ? (
         <LoadingScreen />
-      ) : (
+      ) : auth.octokit === undefined ? (
         <AuthPrompt
           onAuth={(): Promise<true | Error> => auth.handleAuthenticate()}
         />
+      ) : (
+        <Authenticated />
       )}
     </>
   );

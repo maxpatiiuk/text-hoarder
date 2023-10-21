@@ -1,16 +1,20 @@
-# Calendar Plus
+# Text Hoarder
+
+> WORK IN PROGRESS
 
 - [ ] Review all code and remove unused/simplify
 - [ ] Decide if tests are needed
 
 - [ ] Add github repository description and meta (home url, setup url)
-- [ ] Add description and meta data for github app
+- [ ] Add description and meta data for github app (and "Add a note to users")
 - [ ] Design extension icon and update src/public/images
 - [ ] Add documentation & screenshots & video (compare to calendar plus
       documentation)
 - [ ] Add description and action.default_title in manifest.json
 - [ ] Add to portfolio
 - [ ] Submit to Chrome Web Store and post link in several places
+- [ ] In GitHub App settings, set "Make this GitHub App public" to allow others
+      to install the app
 
 Features:
 
@@ -46,6 +50,8 @@ This can be done for a GitHub organization or user profile:
 
      Replace "EXTENSION_ID" with the extension ID you received in the
      [previous section](#get-extension-id).
+
+   - Check the "Request user authorization (OAuth) during installation" checkbox
 
 6. After the app is created, you will see a Client ID - write it down as you
    will need it the next section.

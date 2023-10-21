@@ -1,3 +1,10 @@
+/**
+ * The url-safe name of your application. To find out this name, open
+ * your app's settings page or your app's public page, and look for the
+ * app name in the URL
+ */
+export const gitHubAppName = 'text-hoarder';
+
 /** Fill this in with the client id received after creating a GitHub App */
 export const gitHubClientId = 'Iv1.aaaaaaaaaaaaaaaa';
 
@@ -6,3 +13,9 @@ export const gitHubClientId = 'Iv1.aaaaaaaaaaaaaaaa';
  * (see /auth-cors-middleware/README.md)
  */
 export const authCorsMiddlewareUrl = 'http://localhost:3000';
+
+/**
+ * Id of your extension. See README.md for instructions on getting extension
+ * id
+ */
+export const extensionId = "kgbbebdcmdgkbopcffmpgkgcmcoomhmh";

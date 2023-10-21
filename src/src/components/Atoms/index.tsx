@@ -22,7 +22,7 @@ export const Centered = wrap(
   'flex items-center flex-col gap-4 justify-center w-screen h-screen text-center',
 );
 
-export const H1 = wrap('H1', 'h1', 'text-4xl font-bold');
+export const H1 = wrap('H1', 'h1', 'text-3xl font-bold');
 export const H2 = wrap('H1', 'h1', 'text-2xl font-bold');
 
 export const ErrorMessage = wrap(

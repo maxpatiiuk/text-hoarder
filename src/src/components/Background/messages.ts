@@ -11,7 +11,10 @@ type AuthenticateRequest = State<
       readonly interactive: boolean;
     };
     readonly response:
-      | State<'Authenticated', { readonly token: string }>
+      | State<
+          'Authenticated',
+          { readonly token: string; readonly installationId: number }
+        >
       | State<'Error', { readonly error: string }>;
   }
 >;
