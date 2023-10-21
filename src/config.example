@@ -5,6 +5,12 @@
  */
 export const gitHubAppName = 'text-hoarder';
 
+/**
+ * After creating your app, you will see "App ID" at the top of the
+ * "General" page in the "About" section. Fill that in here.
+ */
+export const gitHubAppId = '408553';
+
 /** Fill this in with the client id received after creating a GitHub App */
 export const gitHubClientId = 'Iv1.aaaaaaaaaaaaaaaa';
 
@@ -18,4 +24,4 @@ export const authCorsMiddlewareUrl = 'http://localhost:3000';
  * Id of your extension. See README.md for instructions on getting extension
  * id
  */
-export const extensionId = "kgbbebdcmdgkbopcffmpgkgcmcoomhmh";
+export const extensionId = 'kgbbebdcmdgkbopcffmpgkgcmcoomhmh';

@@ -23,7 +23,7 @@
   "cross_origin_opener_policy": {
     "value": "same-origin"
   },
-  "options_page": "./src/src/components/Core/index.html",
+  "options_page": "./src/index.html",
   "action": {
     "default_icon": {
       "16": "./src/public/images/extension_icon_16x16.png",
@@ -32,6 +32,6 @@
       "128": "./src/public/images/extension_icon_128x128.png"
     },
     "default_title": "Text Hoarder",
-    "default_popup": "./src/src/components/Core/index.html"
+    "default_popup": "./src/index.html"
   }
 }

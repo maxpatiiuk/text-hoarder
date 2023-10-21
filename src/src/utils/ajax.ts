@@ -1,11 +1,4 @@
 import { IR, RA } from './types';
-import { unsafeGetToken } from '../components/Contexts/AuthContext';
-
-export const queryGithubApi = async (query: string) =>
-  fetch('https://api.github.com/graphql', {
-    method: 'POST',
-    body: JSON.stringify({ query }),
-  }).then(async (response) => response.json());
 
 /**
  * All front-end network requests should go through this utility.
@@ -19,7 +12,6 @@ export const queryGithubApi = async (query: string) =>
 export const ajax = async (
   url: string,
   {
-    headers,
     body,
     ...options
   }: Omit<RequestInit, 'body'> & {
@@ -29,10 +21,6 @@ export const ajax = async (
 ): Promise<Response> =>
   fetch(url, {
     ...options,
-    headers: {
-      ...putToken(url),
-      ...headers,
-    },
     body:
       typeof body === 'object' && !(body instanceof FormData)
         ? JSON.stringify(body)
@@ -45,23 +33,3 @@ export const ajax = async (
       );
     } else return response;
   });
-
-/**
- * Include GitHub OAuth token if needed
- */
-function putToken(url: string): { readonly Authorization: string } | undefined {
-  if (isGitHubApiUrl(url)) {
-    const token = unsafeGetToken();
-    if (typeof token === 'string') return { Authorization: `Bearer ${token}` };
-    else
-      throw new Error(
-        `Tried to access GitHub API before authentication: ${url}`,
-      );
-  } else return undefined;
-}
-
-/**
- * Check if URL belongs to the GitHub API
- */
-const isGitHubApiUrl = (url: string): boolean =>
-  new URL(url, globalThis.location.origin).origin === 'https://api.github.com/';
