@@ -4,6 +4,7 @@
 
 - [ ] Review all code and remove unused/simplify
 - [ ] Decide if tests are needed
+- [ ] Deploy auth-cors-middleware to vercel
 
 - [ ] Add github repository description and meta (home url, setup url)
 - [ ] Add description and meta data for github app (and "Add a note to users")
