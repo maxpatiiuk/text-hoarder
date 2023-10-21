@@ -51,8 +51,15 @@ export function StorageProvider({
     React.useCallback(
       () =>
         storage
-          .get(storageDefinitions)
-          .then((value) => value as StorageDefinitions),
+          .get(Object.keys(storageDefinitions))
+          .then((values) =>
+            Object.fromEntries(
+              Object.entries(storageDefinitions).map(([key, defaultValue]) => [
+                key,
+                values[key] ?? defaultValue,
+              ]),
+            ),
+          ),
       [],
     ),
     true,

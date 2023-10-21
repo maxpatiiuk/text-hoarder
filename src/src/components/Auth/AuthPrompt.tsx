@@ -5,6 +5,7 @@ import { Link } from '../Atoms/Link';
 import { Button } from '../Atoms/Button';
 import { LoadingContext } from '../Contexts/Contexts';
 import { ErrorMessage, H1 } from '../Atoms';
+import { urls } from '../../../config';
 
 /**
  * This dialog is displayed on first use promoting user to sign in with GitHub
@@ -52,10 +53,7 @@ export function AuthPrompt({
       <span className="flex-1 -ml-3" />
       <p>
         {localization.privacyPolicyDescription}
-        <Link.Default
-          // FIXME: replace URL
-          href="https://calendar-plus.patii.uk/docs/privacy/"
-        >
+        <Link.Default href={urls.privacyPolicy}>
           {localization.privacyPolicy}
         </Link.Default>
       </p>

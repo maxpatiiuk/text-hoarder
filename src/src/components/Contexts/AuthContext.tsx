@@ -28,9 +28,6 @@ type Auth = {
   readonly handleSignOut: () => void;
 };
 
-let unsafeToken: string | undefined = undefined;
-export const unsafeGetToken = () => unsafeToken;
-
 export function AuthenticationProvider({
   children,
 }: {
@@ -44,7 +41,6 @@ export function AuthenticationProvider({
     async (interactive: boolean) =>
       sendRequest('Authenticate', { interactive }).then((result) => {
         if (result.type === 'Authenticated') {
-          unsafeToken = result.token;
           setToken(result.token);
           setInstallationId(result.installationId);
           if (process.env.NODE_ENV === 'development') console.log(result.token);

@@ -10,8 +10,8 @@ is similar to how most modern React projects are structured.
 
 ### Utils
 
-There is an `utils` folder that contains all the utility functions
-that don't belong to any single component, but are used by many of them.
+There is an `utils` folder that contains all the utility functions that don't
+belong to any single component, but are used by many of them.
 
 The files in the `utils` folder must not be React components or React hooks (for
 the sake of consistency). React hooks that are used by several components should
@@ -46,16 +46,16 @@ modify the state of any component.
 
 ## TODOs
 
-Instead of `// TODO: ` comments, the front-end uses the following comments:
+Instead of // `TODO: ` comments, the front-end uses the following comments:
 
-- `// REFACTOR:` - for code refactoring tasks.
-- `// FEATURE:` - a task that add a new feature. Use this only if a feature is
+- // `REFACTOR:` - for code refactoring tasks.
+- // `FEATURE:` - a task that add a new feature. Use this only if a feature is
   small. For larger features create a GitHub issue.
-- `// BUG:` - a small bug, or a possible bug. For larger bugs, create a GitHub
+- // `BUG:` - a small bug, or a possible bug. For larger bugs, create a GitHub
   issue.
-- `// TEST:` - a task that requires manually verifying some behavior, or adding
+- // `TEST:` - a task that requires manually verifying some behavior, or adding
   an automated test.
-- `// FIXME:` - a task that must be completed in this commit. This commonly
+- // `FIXME:` - a task that must be completed in this commit. This commonly
   includes temporary code modifications that must be reversed before pushing the
   code.
 

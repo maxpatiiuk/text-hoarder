@@ -74,9 +74,13 @@ This can be done for a GitHub organization or user profile:
 
 Pre-requisites:
 
-```
-Node.js 20
-Npm 8
+- Node.js 20
+- Npm 8
+
+Checkout this repository:
+
+```sh
+git clone https://github.com/maxxxxxdlp/text-hoarder
 ```
 
 (Run all following commands from the `/src` directory) Install dependencies:
