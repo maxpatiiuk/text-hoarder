@@ -2,8 +2,6 @@
  * Fixes for various issues with default TypeScript declaration fils
  */
 
-import type { IR, RA, RR } from './utils/types';
-
 /**
  * Typescript does not recognize the definition overwrite when using
  * the other method signature style
@@ -17,6 +15,7 @@ import type { IR, RA, RR } from './utils/types';
 /* eslint-disable functional/prefer-readonly-type */
 
 declare global {
+  import type { IR, RA, RR } from './src/utils/types';
 
   /**
    * Workaround for https://github.com/microsoft/TypeScript/issues/17002
@@ -41,10 +40,10 @@ declare global {
   interface ObjectConstructor {
     // Object
     entries<DICTIONARY extends IR<unknown>>(
-      object: DICTIONARY
+      object: DICTIONARY,
     ): [
       keyof DICTIONARY extends number ? string : string & keyof DICTIONARY,
-      DICTIONARY[keyof DICTIONARY]
+      DICTIONARY[keyof DICTIONARY],
     ][];
 
     // Array
@@ -52,12 +51,17 @@ declare global {
 
     // Prevent Object.fromEntries() from widening the key type to string
     fromEntries<KEYS extends PropertyKey, VALUES>(
-      entries: Iterable<readonly [KEYS, VALUES]>
+      entries: Iterable<readonly [KEYS, VALUES]>,
     ): RR<KEYS, VALUES>;
 
     // Prevent Object.keys() from widening the key type to string[]
     keys<KEY extends string>(object: RR<KEY, unknown>): RA<KEY>;
   }
+}
+
+declare module 'turndown-plugin-gfm' {
+  import TurndownService from 'turndown';
+  export declare const gfm: TurndownService.Plugin;
 }
 
 /* eslint-enable @typescript-eslint/method-signature-style */
