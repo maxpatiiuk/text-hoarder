@@ -9,7 +9,7 @@ import { Authenticated } from '../Auth/Authenticated';
 /**
  * Entrypoint React component for the extension
  */
-export function App(): JSX.Element | null {
+export function Popup(): JSX.Element | null {
   const [debugOverlay] = useAsyncState(
     React.useCallback(() => debugOverlayPromise, []),
     false,
@@ -22,9 +22,7 @@ export function App(): JSX.Element | null {
       {auth === undefined ? (
         <LoadingScreen />
       ) : auth.octokit === undefined ? (
-        <AuthPrompt
-          onAuth={(): Promise<true | Error> => auth.handleAuthenticate()}
-        />
+        <AuthPrompt onAuth={auth.handleAuthenticate} />
       ) : (
         <Authenticated />
       )}

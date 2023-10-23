@@ -7,4 +7,4 @@
  */
 
 import 'react-devtools';
-import './index.js';
+import './index';
