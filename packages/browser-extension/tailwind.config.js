@@ -14,6 +14,7 @@ module.exports = {
     caretColor: false,
     sepia: false,
   },
+  darkMode: 'class',
   theme: {
     // Make default border radius more rounded
     borderRadius: {

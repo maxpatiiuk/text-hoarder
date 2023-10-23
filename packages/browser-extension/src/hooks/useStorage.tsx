@@ -18,8 +18,11 @@ import { useLiveState } from './useLiveState';
 
 export const storageDefinitions = ensure<IR<unknown>>()({
   accessToken: undefined as undefined | string,
+  // TODO: store this in shared storage
   installationId: undefined as undefined | number,
   repositoryName: undefined as undefined | string,
+  // TODO: store this in shared storage
+  theme: undefined as undefined | 'light' | 'dark',
 } as const);
 
 const StorageContext = React.createContext<Store>({
