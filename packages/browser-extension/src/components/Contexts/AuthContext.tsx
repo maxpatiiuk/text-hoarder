@@ -2,6 +2,9 @@ import React from 'react';
 import { sendRequest } from '../Background/messages';
 import { useStorage } from '../../hooks/useStorage';
 import { Octokit } from 'octokit';
+import { ajax } from '../../utils/ajax';
+import { formatUrl, parseUrl } from '../../utils/queryString';
+import { corsAuthMiddlewareUrl } from '../../../config';
 
 /**
  * Holds user token (if authenticated) and callback to authenticate
@@ -24,7 +27,7 @@ AuthContext.displayName = 'AuthContext';
 type Auth = {
   readonly octokit: Octokit | undefined;
   readonly installationId: number | undefined;
-  readonly handleAuthenticate: () => Promise<true | Error>;
+  readonly handleAuthenticate: () => Promise<void>;
   readonly handleSignOut: () => void;
 };
 
@@ -39,14 +42,13 @@ export function AuthenticationProvider({
 
   const handleAuthenticate = React.useCallback(
     async (interactive: boolean) =>
-      sendRequest('Authenticate', { interactive }).then((result) => {
-        if (result.type === 'Authenticated') {
-          setToken(result.token);
-          setInstallationId(result.installationId);
-          if (process.env.NODE_ENV === 'development') console.log(result.token);
-          return true;
-        } else return new Error(result.error);
-      }),
+      sendRequest('Authenticate', { interactive })
+        .then(resolveAuthToken)
+        .then(({ token, installationId }) => {
+          setToken(token);
+          setInstallationId(installationId);
+          if (process.env.NODE_ENV === 'development') console.log(token);
+        }),
     [setToken, setInstallationId],
   );
 
@@ -75,4 +77,33 @@ export function AuthenticationProvider({
   }, [installationId, token, handleAuthenticate, setToken, setRepositoryName]);
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+async function resolveAuthToken({
+  callbackUrl,
+  originalState,
+}: {
+  // Example URL: https://bjknebjiadgjchmhppdfdiddfegmcaao.chromiumapp.org/?code=ace8eda36ec23fb106a1&installation_id=43127586&setup_action=install&state=13915511021528948
+  callbackUrl: string | undefined;
+  originalState: string;
+}): Promise<{ readonly token: string; readonly installationId: number }> {
+  console.warn(callbackUrl);
+  if (callbackUrl === undefined) throw new Error('Authentication was canceled');
+  const {
+    code,
+    state: returnedState,
+    installation_id: installationIdString,
+  } = parseUrl(callbackUrl);
+  const installationId = Number.parseInt(installationIdString);
+  if (
+    typeof code !== 'string' ||
+    originalState !== returnedState ||
+    Number.isNaN(installationId)
+  )
+    throw new Error('Authentication failed');
+  return ajax(formatUrl(corsAuthMiddlewareUrl, { code }), {
+    method: 'POST',
+  })
+    .then((response) => response.text())
+    .then((token) => ({ token, installationId }));
 }

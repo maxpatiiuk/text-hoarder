@@ -10,12 +10,10 @@ type AuthenticateRequest = State<
     readonly request: {
       readonly interactive: boolean;
     };
-    readonly response:
-      | State<
-          'Authenticated',
-          { readonly token: string; readonly installationId: number }
-        >
-      | State<'Error', { readonly error: string }>;
+    readonly response: State<
+      'Authenticated',
+      { readonly callbackUrl: string; readonly originalState: string }
+    >;
   }
 >;
 
@@ -33,15 +31,34 @@ export type Requests = AuthenticateRequest | ReloadExtension;
  * Send a request to the background script and await the response.
  * Should be called from the content script
  */
-export const sendRequest = async <TYPE extends Requests['type']>(
+export const sendRequest = async <
+  TYPE extends Requests['type'],
+  SHAPE extends Extract<Requests, State<TYPE>>,
+>(
   type: TYPE,
-  request: Extract<Requests, State<TYPE>>['request'],
-): Promise<Extract<Requests, State<TYPE>>['response']> =>
-  // This function has a lot of overloads, which confuses TypeScript
-  chrome.runtime.sendMessage<unknown, void>({
-    type,
-    request,
-  }) as unknown as Promise<Extract<Requests, State<TYPE>>['response']>;
+  request: SHAPE['request'],
+): Promise<SHAPE['response']> =>
+  chrome.runtime
+    .sendMessage<
+      State<TYPE, { readonly request: SHAPE['request'] }>,
+      SHAPE['response'] | State<'Error', { readonly error: string }>
+    >({
+      type,
+      request,
+    })
+    .then((response) => {
+      if (
+        typeof response === 'object' &&
+        response !== null &&
+        'type' in response &&
+        typeof response.type === 'string' &&
+        response.type === 'Error' &&
+        'error' in response
+      ) {
+        console.error(response.error);
+        throw new Error(response.error);
+      } else return response as SHAPE['response'];
+    });
 
 type TabUpdate = State<'TabUpdate'>;
 type BackgroundEvents = TabUpdate;
