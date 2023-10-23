@@ -13,7 +13,7 @@
   },
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgwksbf8T1MnUHWGlGw5c1EoE/8abxq+OD6FL/Q+q8x4BmYPqhS2KRVnTBIQrpyjUXces/eJ5cCVEf1r77oGlEomYuPoc5h+P1a0DHRKcbCEv+5lFhc1nTe6JbilHPcTIPhooX0xFIvdqEJvPMCgcQ68PdTT/hsRrRoKMPtz9rfsnfHyx1d2719AUjyovNx1Gml/DaFVmkN44RFIczc+8AWKM/mXIekG9grHygw/TZwaO9l1ZLDVn3piLj4WsNChLomn4OzVuMImtu+XTR0klI53Yy6bafTyvv4OXrA8i1qm15hjrVVjkhqpuEFRL9YplhXft+FOJgqWtD9Mk9ooeeQIDAQAB",
   "current_locale": "en",
-  "permissions": ["identity", "storage"],
+  "permissions": ["identity", "storage", "activeTab", "scripting"],
   "background": {
     "service_worker": "./dist/background.bundle.js"
   },
@@ -33,5 +33,14 @@
     },
     "default_title": "Text Hoarder",
     "default_popup": "./index.html"
+  },
+  "commands": {
+    "savePageText": {
+      "suggested_key": {
+        "mac": "Command+Shift+E",
+        "default": "Ctrl+Shift+E"
+      },
+      "description": "Save selected text on current webpage (or entire page if no text selected)"
+    }
   }
 }
