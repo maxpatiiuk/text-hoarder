@@ -1,5 +1,5 @@
 import React from 'react';
-import { localization } from '../../localization/localization';
+import { popupText } from '../../localization/popupText';
 import { Button } from '../Atoms/Button';
 import { AuthContext } from '../Contexts/AuthContext';
 import { useStorage } from '../../hooks/useStorage';
@@ -19,23 +19,23 @@ export function Authenticated(): JSX.Element {
   return (
     <>
       <div className="flex gap-2 flex-wrap">
-        <H1 className="flex-1">{localization.textHoarder}</H1>
+        <H1 className="flex-1">{popupText.textHoarder}</H1>
         <Button.Icon
           icon="informationCircle"
-          title={localization.aboutTextHoarder}
+          title={popupText.aboutTextHoarder}
           onClick={handleToggleMenu}
           aria-pressed={isMenuOpen ? true : undefined}
         />
         {typeof repositoryName === 'string' && (
           <Link.Icon
             icon="globeAlt"
-            title={localization.openRepositoryInGitHub}
+            title={popupText.openRepositoryInGitHub}
             href={`https://github.com/${repositoryName}`}
           />
         )}
         <Button.Icon
           icon="logout"
-          title={localization.signOut}
+          title={popupText.signOut}
           onClick={auth?.handleSignOut}
         />
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { gitHubAppName } from '../../../config';
 import { useAsyncState } from '../../hooks/useAsyncState';
 import { useStorage } from '../../hooks/useStorage';
-import { localization } from '../../localization/localization';
+import { popupText } from '../../localization/popupText';
 import { Button } from '../Atoms/Button';
 import { Link } from '../Atoms/Link';
 import { AuthContext } from '../Contexts/AuthContext';
@@ -35,12 +35,10 @@ export function RepositoryList(): JSX.Element | undefined {
 
   return repositories === undefined ||
     repositories.length === 1 ? undefined : repositories.length === 0 ? (
-    <p>
-      {localization.noRepositories(createRepositoryLink, editPermissionsLink)}
-    </p>
+    <p>{popupText.noRepositories(createRepositoryLink, editPermissionsLink)}</p>
   ) : (
     <>
-      {localization.pickRepository}
+      {popupText.pickRepository}
       <div className="flex flex-1 flex-col gap-1 overflow-auto">
         {repositories.map((name) => (
           <Button.Success
@@ -53,7 +51,7 @@ export function RepositoryList(): JSX.Element | undefined {
         ))}
       </div>
       <p>
-        {localization.pickRepositoryHint(
+        {popupText.pickRepositoryHint(
           createRepositoryLink,
           editPermissionsLink,
         )}

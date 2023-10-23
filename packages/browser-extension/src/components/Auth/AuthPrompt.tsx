@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { localization } from '../../localization/localization';
+import { popupText } from '../../localization/popupText';
 import { Link } from '../Atoms/Link';
 import { Button } from '../Atoms/Button';
 import { LoadingContext } from '../Contexts/Contexts';
@@ -14,23 +14,23 @@ import { urls } from '../../../config';
 export function AuthPrompt({
   onAuth: handleAuth,
 }: {
-  readonly onAuth: () => Promise<true | Error>;
+  readonly onAuth: () => Promise<void>;
 }): JSX.Element {
   const loading = React.useContext(LoadingContext);
   const [error, setError] = React.useState('');
   return (
     <>
-      <H1>{localization.textHoarder}</H1>
-      <p>{localization.signInDescription}</p>
+      <H1>{popupText.textHoarder}</H1>
+      <p>{popupText.signInDescription}</p>
       <Step number={1} />
       <p>
-        {localization.gitHubRegisterPrompt((label) => (
+        {popupText.gitHubRegisterPrompt((label) => (
           <Link.Default href="https://github.com/signup">{label}</Link.Default>
         ))}
       </p>
       <Step number={2} />
       <p>
-        {localization.createRepositoryPrompt((label) => (
+        {popupText.createRepositoryPrompt((label) => (
           <Link.Default href="https://docs.github.com/en/get-started/quickstart/create-a-repo#create-a-repository">
             {label}
           </Link.Default>
@@ -39,22 +39,18 @@ export function AuthPrompt({
       <Step number={3} />
       <Button.Info
         onClick={(): void =>
-          loading(
-            handleAuth().then((result) => {
-              if (result instanceof Error) setError(result.message);
-            }),
-          )
+          loading(handleAuth().catch((error) => setError(error.message)))
         }
       >
-        {localization.signInWithGitHub}
+        {popupText.signInWithGitHub}
       </Button.Info>
-      <p>{localization.signInInstruction}</p>
+      <p>{popupText.signInInstruction}</p>
       {error.length > 0 && <ErrorMessage>{error}</ErrorMessage>}
       <span className="flex-1 -ml-3" />
       <p>
-        {localization.privacyPolicyDescription}
+        {popupText.privacyPolicyDescription}
         <Link.Default href={urls.privacyPolicy}>
-          {localization.privacyPolicy}
+          {popupText.privacyPolicy}
         </Link.Default>
       </p>
     </>
