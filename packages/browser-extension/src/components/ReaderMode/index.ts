@@ -37,6 +37,10 @@ else {
   const container = document.createElement('div');
   container.classList.add('flex', 'justify-center', 'h-full', 'overflow-auto');
 
+  // Can't use rem as those can be affected by host webpage
+  container.style.fontSize = '16px';
+  container.style.lineHeight = '24px';
+
   shadowRoot.append(container);
   dialog.append(dialogDiv);
   const originalRemove = dialog.remove;

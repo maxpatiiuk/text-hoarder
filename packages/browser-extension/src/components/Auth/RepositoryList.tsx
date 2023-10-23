@@ -9,7 +9,7 @@ import { AuthContext } from '../Contexts/AuthContext';
 
 export function RepositoryList(): JSX.Element | undefined {
   const auth = React.useContext(AuthContext);
-  const [_, setRepositoryName] = useStorage('repositoryName');
+  const [_, setRepositoryName] = useStorage('setup.repositoryName');
   const [repositories] = useAsyncState(
     React.useCallback(
       () =>
