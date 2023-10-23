@@ -2,6 +2,7 @@
   /* File Inclusion */
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
+  "files": ["src/declarations.d.ts"],
   "compilerOptions": {
     /* Basic Options */
     "isolatedModules": true,
