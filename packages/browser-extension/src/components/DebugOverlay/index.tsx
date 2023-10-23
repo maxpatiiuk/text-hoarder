@@ -16,7 +16,7 @@ export function DebugOverlay(): JSX.Element {
            * https://60devs.com/hot-reloading-for-chrome-extensions.html
            * https://chrome.google.com/webstore/detail/extensions-reloader/fimgfedafeadlieiabdeeaodndnlbhid
            */
-          sendRequest('ReloadExtension', undefined)
+          sendRequest('ReloadExtension', undefined).catch(console.error)
         }
       >
         Reload Extension
