@@ -7,7 +7,7 @@ import { RepositoryList } from './RepositoryList';
 import { H1 } from '../Atoms';
 import { useBooleanState } from '../../hooks/useBooleanState';
 import { Link } from '../Atoms/Link';
-import { Menu } from '../Core/Menu';
+import { Menu } from '../Popup/Menu';
 import { MainScreen } from '../Content';
 
 // TODO: either make options page content look nicer, or remove options page

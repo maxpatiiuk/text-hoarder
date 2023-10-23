@@ -47,6 +47,8 @@ This can be done for a GitHub organization or user profile:
 
    - Check the "Request user authorization (OAuth) during installation" checkbox
 
+   - Check the "Redirect on update" checkbox
+
 6. After the app is created, you will see a Client ID - write it down as you
    will need it the next section.
 7. Press "Generate a new client secret" (note, GitHub may also request you to

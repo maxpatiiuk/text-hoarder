@@ -5,17 +5,8 @@
 import type { State } from 'typesafe-reducer';
 
 import type { Requests } from './messages';
-import { emitEvent } from './messages';
-import { formatUrl, parseUrl } from '../../utils/queryString';
-import { corsAuthMiddlewareUrl, gitHubAppName } from '../../../config';
-import { ajax } from '../../utils/ajax';
-
-// TODO: use this to listen to current URL. Also, check if there is a better way
-/** Based on https://stackoverflow.com/a/50548409/8584605 */
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  if (changeInfo?.status === 'complete')
-    emitEvent(tabId, { type: 'TabUpdate' }).catch(console.trace);
-});
+import { formatUrl } from '../../utils/queryString';
+import { gitHubAppName } from '../../../config';
 
 /**
  * Listen for a message from the front-end and send back the response
@@ -32,7 +23,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
       .then(sendResponse)
       .catch((error) => {
         console.error(error);
-        sendResponse(error);
+        sendResponse({ type: 'Error', error: error.message });
       });
     return true;
   }
@@ -55,7 +46,7 @@ const requestHandlers: {
    * and
    * https://developer.chrome.com/docs/extensions/reference/identity/#method-launchWebAuthFlow
    */
-  Authenticate: async ({ interactive }) => {
+  async Authenticate({ interactive }) {
     const redirectUrl = chrome.identity.getRedirectURL();
 
     // For protection against CSRF attacks
@@ -73,19 +64,21 @@ const requestHandlers: {
         url: authUrl,
         interactive,
       })
-      .then(resolveAuthToken.bind(undefined, state))
-      .then((response) => ({ type: 'Authenticated', ...response }) as const)
-      .catch((error) => {
-        console.error(error);
-        return { type: 'Error', error: error.message };
+      .then((callbackUrl) => {
+        if (callbackUrl === undefined)
+          throw new Error('Authentication was canceled');
+        else
+          return {
+            type: 'Authenticated',
+            callbackUrl,
+            originalState: state,
+          } as const;
       });
   },
-  ReloadExtension: async () =>
-    new Promise((resolve) => {
-      chrome.tabs.reload();
-      chrome.runtime.reload();
-      resolve(undefined);
-    }),
+  async ReloadExtension() {
+    chrome.tabs.reload();
+    chrome.runtime.reload();
+  },
 };
 
 async function resolveAuthToken(
