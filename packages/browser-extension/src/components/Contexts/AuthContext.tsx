@@ -36,9 +36,9 @@ export function AuthenticationProvider({
 }: {
   readonly children: React.ReactNode;
 }): JSX.Element {
-  const [token, setToken] = useStorage('accessToken');
-  const [_, setRepositoryName] = useStorage('repositoryName');
-  const [installationId, setInstallationId] = useStorage('installationId');
+  const [token, setToken] = useStorage('auth.accessToken');
+  const [_, setRepositoryName] = useStorage('setup.repositoryName');
+  const [installationId, setInstallationId] = useStorage('auth.installationId');
 
   const handleAuthenticate = React.useCallback(
     async (interactive: boolean) =>
@@ -87,7 +87,6 @@ async function resolveAuthToken({
   callbackUrl: string | undefined;
   originalState: string;
 }): Promise<{ readonly token: string; readonly installationId: number }> {
-  console.warn(callbackUrl);
   if (callbackUrl === undefined) throw new Error('Authentication was canceled');
   const {
     code,

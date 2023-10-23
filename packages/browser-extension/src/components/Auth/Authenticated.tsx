@@ -14,7 +14,7 @@ import { MainScreen } from '../Content';
 
 export function Authenticated(): JSX.Element {
   const auth = React.useContext(AuthContext);
-  const [repositoryName] = useStorage('repositoryName');
+  const [repositoryName] = useStorage('setup.repositoryName');
   const [isMenuOpen, _, __, handleToggleMenu] = useBooleanState();
   return (
     <>

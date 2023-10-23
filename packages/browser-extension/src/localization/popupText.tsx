@@ -54,7 +54,7 @@ export const popupText = dictionary({
       editPermissionsLink: (label: string) => JSX.Element,
     ) => (
       <>
-        Don't see the repository you are looking for? Try
+        Don't see the repository you are looking for? Try{' '}
         {createRepositoryLink('creating new repository')} or{' '}
         {editPermissionsLink('editing the rights you gave to this extension')}.
       </>

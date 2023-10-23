@@ -9,8 +9,9 @@ import { encoding } from '../../utils/encoding';
 // FEATURE: when adding new entry, check if the same URL was already added in the last 2 years
 
 export function MainScreen(): JSX.Element {
-  const [repositoryOwner, repositoryName] =
-    useStorage('repositoryName')[0]!.split('/');
+  const [repositoryOwner, repositoryName] = useStorage(
+    'setup.repositoryName',
+  )[0]!.split('/');
   const auth = React.useContext(AuthContext);
   console.log(
     auth,

@@ -17,13 +17,15 @@ import { useAsyncState } from './useAsyncState';
 import { useLiveState } from './useLiveState';
 
 export const storageDefinitions = ensure<IR<unknown>>()({
-  accessToken: undefined as undefined | string,
-  // TODO: store this in shared storage
-  installationId: undefined as undefined | number,
-  repositoryName: undefined as undefined | string,
-  // TODO: store this in shared storage
-  theme: 'system' as 'system' | 'light' | 'dark',
+  'auth.accessToken': undefined as undefined | string,
+  'auth.installationId': undefined as undefined | number,
+  'setup.repositoryName': undefined as undefined | string,
+  'ui.theme': 'system' as 'system' | 'light' | 'dark',
   'reader.allowScrollPastLastLine': false as boolean,
+  'reader.downloadFormat': 'markdown' as 'html' | 'markdown' | 'text',
+  'reader.fontSize': 16 as number,
+  'reader.lineHeight': 1.5 as number,
+  'reader.pageWidth': 80 as number,
   'markdownToText.includeImageAltText': true as boolean,
 } as const);
 
@@ -45,7 +47,7 @@ type Store = {
 
 export type StorageDefinitions = Partial<typeof storageDefinitions>;
 
-const storage = chrome.storage.local;
+const storage = chrome.storage.sync;
 
 export function StorageProvider({
   children,

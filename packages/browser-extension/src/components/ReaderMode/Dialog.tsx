@@ -2,6 +2,7 @@ import React from 'react';
 import { documentToSimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '../../localization/readerText';
 import { H1 } from '../Atoms';
+import { Tools } from './Tools';
 
 export function Dialog(): JSX.Element {
   const simpleDocument = React.useMemo(() => documentToSimpleDocument(), []);
@@ -15,6 +16,7 @@ export function Dialog(): JSX.Element {
         <p>{readerText.noContentFound}</p>
       ) : (
         <>
+          <Tools simpleDocument={simpleDocument} />
           <H1>{simpleDocument.title ?? document.title}</H1>
           <Content node={simpleDocument.content} />
         </>

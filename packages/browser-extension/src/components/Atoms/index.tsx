@@ -1,3 +1,4 @@
+import { className } from './className';
 import { wrap } from './wrap';
 
 export const Form = wrap(
@@ -33,3 +34,8 @@ export const ErrorMessage = wrap(
     role: 'alert',
   },
 );
+
+export const Label = {
+  Block: wrap('Label.Block', 'label', className.label),
+  Inline: wrap('Label.Inline', 'label', className.labelForCheckbox),
+};

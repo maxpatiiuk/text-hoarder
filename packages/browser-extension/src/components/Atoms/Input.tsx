@@ -1,4 +1,6 @@
 import { f } from '../../utils/functools';
+import { RA } from '../../utils/types';
+import { split } from '../../utils/utils';
 import { className } from './className';
 import { wrap } from './wrap';
 
@@ -27,65 +29,149 @@ export const Input = {
     }),
   ),
   Text: wrap<
-  'input',
-  {
-    readonly onValueChange?: (value: string) => void;
-    readonly type?: never;
-    readonly children?: undefined;
-  }
->(
-  'Input.Text',
-  'input',
-  `${className.input} w-full`,
-  ({ onValueChange: handleChange, ...props }) => ({
-    ...props,
-    type: 'text',
-    onChange(event): void {
-      handleChange?.((event.target as HTMLInputElement).value);
-      props.onChange?.(event);
-    },
-  }),
-),
+    'input',
+    {
+      readonly onValueChange?: (value: string) => void;
+      readonly type?: never;
+      readonly children?: undefined;
+    }
+  >(
+    'Input.Text',
+    'input',
+    `${className.input} w-full`,
+    ({ onValueChange: handleChange, ...props }) => ({
+      ...props,
+      type: 'text',
+      onChange(event): void {
+        handleChange?.((event.target as HTMLInputElement).value);
+        props.onChange?.(event);
+      },
+    }),
+  ),
   Number: wrap<
-  'input',
-  {
-    readonly value: number | '';
-    readonly onValueChange?: (value: number) => void;
-    readonly type?: never;
-    readonly children?: undefined;
-  }
->(
-  'Input.Number',
-  'input',
-  `${className.input} w-full`,
-  ({ onValueChange: handleValueChange, ...props }) => ({
-    ...props,
-    type: 'number',
-    onChange(event): void {
-      handleValueChange?.(
-        // This non-null assertion is unsafe, but simplifies typing
-        f.parseFloat((event.target as HTMLInputElement).value)!,
-      );
-      props.onChange?.(event);
-    },
-  }),
-),
+    'input',
+    {
+      readonly value: number | '';
+      readonly onValueChange?: (value: number) => void;
+      readonly type?: never;
+      readonly children?: undefined;
+    }
+  >(
+    'Input.Number',
+    'input',
+    `${className.input} w-full`,
+    ({ onValueChange: handleValueChange, ...props }) => ({
+      ...props,
+      type: 'number',
+      onChange(event): void {
+        handleValueChange?.(
+          // This non-null assertion is unsafe, but simplifies typing
+          f.parseFloat((event.target as HTMLInputElement).value)!,
+        );
+        props.onChange?.(event);
+      },
+    }),
+  ),
   Generic: wrap<
-  'input',
+    'input',
+    {
+      readonly onValueChange?: (value: string) => void;
+      readonly children?: undefined;
+    }
+  >(
+    'Input.Generic',
+    'input',
+    `${className.input} w-full`,
+    ({ onValueChange, ...props }) => ({
+      ...props,
+      onChange(event): void {
+        onValueChange?.((event.target as HTMLInputElement).value);
+        props.onChange?.(event);
+      },
+    }),
+  ),
+  Range: wrap<
+    'input',
+    {
+      readonly value: number | '';
+      readonly onValueChange?: (value: number) => void;
+      readonly type?: never;
+      readonly children?: undefined;
+      readonly min: number;
+      readonly max: number;
+    }
+  >(
+    'Input.Range',
+    'input',
+    `${className.input} w-full`,
+    ({ onValueChange: handleValueChange, ...props }) => ({
+      ...props,
+      type: 'number',
+      onChange(event): void {
+        handleValueChange?.(
+          // This non-null assertion is unsafe, but simplifies typing
+          f.parseFloat((event.target as HTMLInputElement).value)!,
+        );
+        props.onChange?.(event);
+      },
+    }),
+  ),
+};
+
+export const selectMultipleSize = 4;
+export const Select = wrap<
+  'select',
   {
     readonly onValueChange?: (value: string) => void;
-    readonly children?: undefined;
+    readonly onValuesChange?: (value: RA<string>) => void;
   }
 >(
-  'Input.Generic',
-  'input',
-  `${className.input} w-full`,
-  ({ onValueChange, ...props }) => ({
+  'Select',
+  'select',
+  `w-full pr-5 bg-right cursor-pointer`,
+  ({ onValueChange, onValuesChange, ...props }) => ({
     ...props,
+    /*
+     * Required fields have blue background. Selected <option> in a select
+     * multiple also has blue background. Those clash. Need to make required
+     * select background slightly lighter
+     */
+    className: `${props.className ?? ''}${
+      props.required === true &&
+      (props.multiple === true ||
+        (typeof props.size === 'number' && props.size > 1))
+        ? ' bg-blue-100 dark:bg-blue-900'
+        : ''
+    }`,
+    /*
+     * REFACTOR: don't set event listener if both onValueChange and onValuesChange
+     *   are undefined
+     */
     onChange(event): void {
-      onValueChange?.((event.target as HTMLInputElement).value);
+      const options = Array.from(
+        (event.target as HTMLSelectElement).querySelectorAll('option'),
+      );
+      const [unselected, selected] = split(options, ({ selected }) => selected);
+      /*
+       * Selected options in an optional multiple select are clashing with
+       * the background in dark-mode. This is a fix:
+       */
+      if (props.required !== true && props.multiple === true) {
+        selected.map((option) => option.classList.add('dark:bg-neutral-100'));
+        unselected.map((option) =>
+          option.classList.remove('dark:bg-neutral-100'),
+        );
+      }
+      const value = (event.target as HTMLSelectElement).value;
+
+      /*
+       * Workaround for Safari weirdness. See more:
+       * https://github.com/specify/specify7/issues/1371#issuecomment-1115156978
+       */
+      if (typeof props.size !== 'number' || props.size < 2 || value !== '')
+        onValueChange?.(value);
+      onValuesChange?.(selected.map(({ value }) => value));
       props.onChange?.(event);
     },
   }),
-),
-};
+);
