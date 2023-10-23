@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useBooleanState } from '../../hooks/useBooleanState';
-import { localization } from '../../localization/localization';
+import { popupText } from '../../localization/popupText';
 import type { RA } from '../../utils/types';
 import { crash, error } from '../Errors/assert';
 import { ErrorBoundary } from '../Errors/ErrorBoundary';
@@ -48,8 +48,8 @@ export function Contexts({
     <ErrorBoundary>
       <LoadingContext.Provider key="loadingContext" value={loadingHandler}>
         {/* FEATURE: replace this with a toast, dialog, or status line*/}
-        {isLoading && localization.loading}
-        <React.Suspense fallback={<>{localization.loading}</>}>
+        {isLoading && popupText.loading}
+        <React.Suspense fallback={<>{popupText.loading}</>}>
           <StorageProvider>
             <AuthenticationProvider>{children}</AuthenticationProvider>
           </StorageProvider>
