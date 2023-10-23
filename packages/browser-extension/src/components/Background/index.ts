@@ -81,28 +81,17 @@ const requestHandlers: {
   },
 };
 
-async function resolveAuthToken(
-  originalState: string,
-  // Example URL: https://bjknebjiadgjchmhppdfdiddfegmcaao.chromiumapp.org/?code=ace8eda36ec23fb106a1&installation_id=43127586&setup_action=install&state=13915511021528948
-  callbackUrl: string | undefined,
-): Promise<{ readonly token: string; readonly installationId: number }> {
-  console.warn(callbackUrl);
-  if (callbackUrl === undefined) throw new Error('Authentication was canceled');
-  const {
-    code,
-    state: returnedState,
-    installation_id: installationIdString,
-  } = parseUrl(callbackUrl);
-  const installationId = Number.parseInt(installationIdString);
+chrome.commands.onCommand.addListener((command, tab) => {
+  const tabId = tab.id;
   if (
-    typeof code !== 'string' ||
-    originalState !== returnedState ||
-    Number.isNaN(installationId)
+    command === 'savePageText' &&
+    typeof tabId === 'number' &&
+    tabId !== chrome.tabs.TAB_ID_NONE
   )
-    throw new Error('Authentication failed');
-  return ajax(formatUrl(corsAuthMiddlewareUrl, { code }), {
-    method: 'POST',
-  })
-    .then((response) => response.text())
-    .then((token) => ({ token, installationId }));
-}
+    chrome.scripting.executeScript({
+      target: { tabId },
+      injectImmediately: true,
+      files: ['./dist/readerMode.bundle.js'],
+      world: 'ISOLATED',
+    });
+});
