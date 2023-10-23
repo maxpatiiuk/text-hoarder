@@ -17,7 +17,17 @@ module.exports = (_env, argv) =>
         },
         {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader', 'postcss-loader'],
+          use: [
+            {
+              // See https://stackoverflow.com/a/68995851/8584605
+              loader: 'style-loader',
+              options: {
+                insert: require.resolve('./src/components/Core/styleLoader.ts'),
+              },
+            },
+            'css-loader',
+            'postcss-loader',
+          ],
         },
         {
           test: /\.[tj]sx?$/,
@@ -63,11 +73,12 @@ module.exports = (_env, argv) =>
     devtool:
       argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
     entry: {
-      main:
+      popup:
         argv.mode === 'development'
-          ? './src/components/Core/development.tsx'
-          : './src/components/Core/index.tsx',
+          ? './src/components/Popup/development.tsx'
+          : './src/components/Popup/index.tsx',
       background: './src/components/Background/index.ts',
+      readerMode: './src/components/ReaderMode/index.ts',
     },
     plugins:
       argv.mode === 'development'
