@@ -10,7 +10,7 @@ export function renderApp(
   container: HTMLElement,
   App: () => JSX.Element | null,
   stylesContainer: ParentNode,
-): void {
+): () => void {
   stylesContainer.append(...getStyleTags());
 
   const root = ReactDOM.createRoot(container);
@@ -22,4 +22,5 @@ export function renderApp(
       </Contexts>
     </React.StrictMode>,
   );
+  return (): void => root.unmount();
 }

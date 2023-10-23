@@ -1,35 +1,26 @@
 import React from 'react';
-import {
-  SimpleDocument,
-  documentToSimpleDocument,
-} from '../ExtractContent/documentToSimpleDocument';
+import { documentToSimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '../../localization/readerText';
 import { H1 } from '../Atoms';
 
 export function Dialog(): JSX.Element {
   const simpleDocument = React.useMemo(() => documentToSimpleDocument(), []);
   return (
-    <div className="flex flex-col gap-4 p-4 md:p-16">
+    <div
+      className="flex flex-col gap-4 p-4 md:p-16"
+      lang={simpleDocument?.lang}
+      dir={simpleDocument?.dir}
+    >
       {simpleDocument === undefined ? (
         <p>{readerText.noContentFound}</p>
       ) : (
         <>
           <H1>{simpleDocument.title ?? document.title}</H1>
-          <DocumentMeta simpleDocument={simpleDocument} />
           <Content node={simpleDocument.content} />
         </>
       )}
     </div>
   );
-}
-
-function DocumentMeta({
-  simpleDocument,
-}: {
-  readonly simpleDocument: SimpleDocument;
-}): JSX.Element {
-  // FEATURE: allow disabling this
-  return <></>;
 }
 
 function Content({ node }: { readonly node: HTMLElement }): JSX.Element {

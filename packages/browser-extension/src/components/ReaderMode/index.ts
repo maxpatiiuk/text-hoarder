@@ -12,10 +12,8 @@ const id = 'text-hoarder-container';
 const previousDialog = document.getElementById(id);
 const alreadyOpen = previousDialog !== null;
 
-if (alreadyOpen) {
-  previousDialog?.remove();
-  restoreBodyScroll();
-} else {
+if (alreadyOpen) previousDialog?.remove();
+else {
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');
   dialog.id = id;
@@ -41,20 +39,20 @@ if (alreadyOpen) {
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);
+  const originalRemove = dialog.remove;
+  dialog.remove = (...args: []) => {
+    unmount();
+    restoreBodyScroll();
+    dialog.remove = originalRemove;
+    return dialog.remove(...args);
+  };
   document.body.append(dialog);
 
   dialog.showModal();
   preventBodyScroll();
-  renderApp(container, Dialog, shadowRoot);
+  const unmount = renderApp(container, Dialog, shadowRoot);
 
-  dialog.addEventListener(
-    'close',
-    () => {
-      dialog?.remove();
-      restoreBodyScroll();
-    },
-    { once: true },
-  );
+  dialog.addEventListener('close', dialog.remove, { once: true });
 }
 
 function preventBodyScroll(): void {

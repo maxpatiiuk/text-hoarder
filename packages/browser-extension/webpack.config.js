@@ -78,7 +78,10 @@ module.exports = (_env, argv) =>
           ? './src/components/Popup/development.tsx'
           : './src/components/Popup/index.tsx',
       background: './src/components/Background/index.ts',
-      readerMode: './src/components/ReaderMode/index.ts',
+      readerMode:
+        argv.mode === 'development'
+          ? './src/components/ReaderMode/development.tsx'
+          : './src/components/ReaderMode/index.ts',
     },
     plugins:
       argv.mode === 'development'

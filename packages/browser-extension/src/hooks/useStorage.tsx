@@ -22,7 +22,9 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   installationId: undefined as undefined | number,
   repositoryName: undefined as undefined | string,
   // TODO: store this in shared storage
-  theme: undefined as undefined | 'light' | 'dark',
+  theme: 'system' as 'system' | 'light' | 'dark',
+  'reader.allowScrollPastLastLine': false as boolean,
+  'markdownToText.includeImageAltText': true as boolean,
 } as const);
 
 const StorageContext = React.createContext<Store>({
@@ -34,10 +36,10 @@ StorageContext.displayName = 'StorageContext';
 type Store = {
   readonly get: <NAME extends keyof StorageDefinitions>(
     name: NAME,
-  ) => StorageDefinitions[NAME] | undefined;
+  ) => StorageDefinitions[NAME];
   readonly set: <NAME extends keyof StorageDefinitions>(
     _name: NAME,
-    _value: StorageDefinitions[NAME] | undefined,
+    _value: StorageDefinitions[NAME],
   ) => void;
 };
 
@@ -72,10 +74,11 @@ export function StorageProvider({
   const set = React.useCallback(
     <NAME extends keyof StorageDefinitions>(
       name: NAME,
-      value: StorageDefinitions[NAME] | undefined,
+      value: StorageDefinitions[NAME],
     ): void => {
       setStore((store) => ({ ...store, [name]: value }));
-      (value === undefined
+      const isDefaultValue = value === storageDefinitions[name];
+      (value === undefined || isDefaultValue
         ? storage.remove(name)
         : storage.set({
             [name]: value,
@@ -90,7 +93,8 @@ export function StorageProvider({
   const get = React.useCallback(
     <NAME extends keyof StorageDefinitions>(
       name: NAME,
-    ): StorageDefinitions[NAME] | undefined => storeRef.current?.[name],
+    ): StorageDefinitions[NAME] =>
+      storeRef.current?.[name] ?? storageDefinitions[name],
     [],
   );
   const context = React.useMemo((): Store => ({ get, set }), [get, set]);
@@ -105,8 +109,8 @@ export function StorageProvider({
 export function useStorage<NAME extends keyof StorageDefinitions>(
   name: NAME,
 ): readonly [
-  StorageDefinitions[NAME] | undefined,
-  (value: StorageDefinitions[NAME] | undefined) => void,
+  StorageDefinitions[NAME],
+  (value: StorageDefinitions[NAME]) => void,
 ] {
   const { get, set } = React.useContext(StorageContext);
   const [value, setValue] = useLiveState(
@@ -127,5 +131,5 @@ export function useStorage<NAME extends keyof StorageDefinitions>(
     (value: StorageDefinitions[NAME] | undefined) => set(name, value),
     [set, name],
   );
-  return [value, update];
+  return [value ?? storageDefinitions[name], update];
 }
