@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { dictionary } from './utils';
+import { extensionReviewUrl, extensionUrl } from '../components/Popup/Menu';
 
 // Refer to "Guidelines for Programmers" in ./README.md before editing this file
 
@@ -80,5 +81,18 @@ export const popupText = dictionary({
   reportIssue: { en: 'Report an issue' },
   requestFeature: { en: 'Request a feature' },
   leaveReview: { en: 'Leave a review' },
+  initializeExtensions: { en: 'Initialize Text Hoarder' },
+  readmeContent: {
+    en: `# Text Hoarder Store
+
+This repository is used by the [Text Hoarder](${extensionUrl}) browser extension
+for storage of saved snippets of text.
+
+If you are enjoying it, don't forget to [leave a review](${extensionReviewUrl}) 
+on the Chrome Web Store!
+
+// TODO: improve this
+`,
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

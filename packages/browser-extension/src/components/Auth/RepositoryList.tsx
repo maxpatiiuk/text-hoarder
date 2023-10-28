@@ -8,16 +8,17 @@ import { Link } from '../Atoms/Link';
 import { AuthContext } from '../Contexts/AuthContext';
 
 export function RepositoryList(): JSX.Element | undefined {
-  const auth = React.useContext(AuthContext);
+  const { installationId, octokit } = React.useContext(AuthContext);
   const [_, setRepositoryName] = useStorage('setup.repositoryName');
+
   const [repositories] = useAsyncState(
     React.useCallback(
       () =>
-        auth?.installationId === undefined
+        installationId === undefined
           ? undefined
-          : auth?.octokit?.rest.apps
+          : octokit?.rest.apps
               .listInstallationReposForAuthenticatedUser({
-                installation_id: auth.installationId,
+                installation_id: installationId,
                 per_page: 100,
               })
               .then(({ data }) =>
@@ -28,7 +29,7 @@ export function RepositoryList(): JSX.Element | undefined {
                   setRepositoryName(repositories[0]);
                 return repositories;
               }),
-      [auth, setRepositoryName],
+      [installationId, octokit, setRepositoryName],
     ),
     true,
   );

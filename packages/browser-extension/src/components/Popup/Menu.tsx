@@ -3,14 +3,13 @@ import { popupText } from '../../localization/popupText';
 import { Link } from '../Atoms/Link';
 import { extensionId, urls } from '../../../config';
 
+export const extensionUrl = `https://chromewebstore.google.com/u/1/detail/${extensionId}`;
+export const extensionReviewUrl = `${extensionUrl}/reviews`;
+
 export function Menu(): JSX.Element {
   return (
     <>
-      <Link.Info
-        href={`https://chromewebstore.google.com/u/1/detail/${extensionId}/reviews`}
-      >
-        {popupText.leaveReview}
-      </Link.Info>
+      <Link.Info href={extensionReviewUrl}>{popupText.leaveReview}</Link.Info>
       <Link.Info href={urls.sourceCode}>{popupText.sourceCode}</Link.Info>
       <Link.Info href={urls.requestFeature}>
         {popupText.requestFeature}

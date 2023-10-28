@@ -13,9 +13,30 @@ import { MainScreen } from '../Content';
 // TODO: either make options page content look nicer, or remove options page
 
 export function Authenticated(): JSX.Element {
-  const auth = React.useContext(AuthContext);
+  const { github, handleSignOut } = React.useContext(AuthContext);
   const [repositoryName] = useStorage('setup.repositoryName');
   const [isMenuOpen, _, __, handleToggleMenu] = useBooleanState();
+
+  const [needsReadme, setNeedsReadme] = React.useState(github === undefined);
+  React.useEffect(
+    () =>
+      needsReadme
+        ? void github
+            ?.getFile('README.md')
+            .then((content) => {
+              if (content !== undefined) undefined;
+              github.editFile(
+                'README.md',
+                popupText.initializeExtensions,
+                popupText.readmeContent,
+              );
+            })
+            .catch(console.error)
+            .finally(() => setNeedsReadme(false))
+        : undefined,
+    [needsReadme, github],
+  );
+
   return (
     <>
       <div className="flex gap-2 flex-wrap">
@@ -36,7 +57,7 @@ export function Authenticated(): JSX.Element {
         <Button.Icon
           icon="logout"
           title={popupText.signOut}
-          onClick={auth?.handleSignOut}
+          onClick={handleSignOut}
         />
       </div>
       {isMenuOpen ? (
