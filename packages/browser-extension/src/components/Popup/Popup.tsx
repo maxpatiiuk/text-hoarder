@@ -3,7 +3,6 @@ import React from 'react';
 import { useAsyncState } from '../../hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
 import { AuthPrompt } from '../Auth/AuthPrompt';
-import { LoadingScreen } from '../Molecules/LoadingScreen';
 import { Authenticated } from '../Auth/Authenticated';
 
 /**
@@ -15,14 +14,12 @@ export function Popup(): JSX.Element | null {
     false,
   );
 
-  const auth = React.useContext(AuthContext);
+  const { octokit, handleAuthenticate } = React.useContext(AuthContext);
   return (
     <>
       {debugOverlay}
-      {auth === undefined ? (
-        <LoadingScreen />
-      ) : auth.octokit === undefined ? (
-        <AuthPrompt onAuth={auth.handleAuthenticate} />
+      {octokit === undefined ? (
+        <AuthPrompt onAuth={handleAuthenticate} />
       ) : (
         <Authenticated />
       )}

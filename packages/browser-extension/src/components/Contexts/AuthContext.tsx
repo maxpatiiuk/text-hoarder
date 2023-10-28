@@ -5,12 +5,14 @@ import { Octokit } from 'octokit';
 import { ajax } from '../../utils/ajax';
 import { formatUrl, parseUrl } from '../../utils/queryString';
 import { corsAuthMiddlewareUrl } from '../../../config';
+import { OctokitWrapper, wrapOctokit } from './Octokit';
 
 /**
  * Holds user token (if authenticated) and callback to authenticate
  */
 export const AuthContext = React.createContext<Auth>({
   octokit: undefined,
+  github: undefined,
   installationId: undefined,
   handleAuthenticate: () => {
     throw new Error('Not loaded');
@@ -26,6 +28,7 @@ AuthContext.displayName = 'AuthContext';
 
 type Auth = {
   readonly octokit: Octokit | undefined;
+  readonly github: OctokitWrapper | undefined;
   readonly installationId: number | undefined;
   readonly handleAuthenticate: () => Promise<void>;
   readonly handleSignOut: () => void;
@@ -37,7 +40,9 @@ export function AuthenticationProvider({
   readonly children: React.ReactNode;
 }): JSX.Element {
   const [token, setToken] = useStorage('auth.accessToken');
-  const [_, setRepositoryName] = useStorage('setup.repositoryName');
+  const [repositoryName, setRepositoryName] = useStorage(
+    'setup.repositoryName',
+  );
   const [installationId, setInstallationId] = useStorage('auth.installationId');
 
   const handleAuthenticate = React.useCallback(
@@ -62,8 +67,13 @@ export function AuthenticationProvider({
      */
     const octokit =
       token === undefined ? undefined : new Octokit({ auth: token });
+    const github =
+      octokit === undefined || repositoryName === undefined
+        ? undefined
+        : wrapOctokit(octokit, repositoryName);
     return {
       octokit,
+      github,
       installationId,
       handleAuthenticate: handleAuthenticate.bind(undefined, true),
       handleSignOut: () => {
@@ -74,7 +84,14 @@ export function AuthenticationProvider({
         // await octokit?.rest.apps.revokeInstallationAccessToken().catch(console.error);
       },
     };
-  }, [installationId, token, handleAuthenticate, setToken, setRepositoryName]);
+  }, [
+    repositoryName,
+    installationId,
+    token,
+    handleAuthenticate,
+    setToken,
+    setRepositoryName,
+  ]);
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }

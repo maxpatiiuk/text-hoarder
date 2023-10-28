@@ -1,14 +1,14 @@
 export const encoding = {
   fileContent: {
-    encode(base64: string): string {
-      const binString = atob(base64);
-      const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0)!);
-      return new TextDecoder().decode(bytes);
-    },
-    decode(text: string): string {
+    encode(text: string): string {
       const bytes = new TextEncoder().encode(text);
       const binString = String.fromCodePoint(...bytes);
       return btoa(binString);
+    },
+    decode(base64: string): string {
+      const binString = atob(base64);
+      const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0)!);
+      return new TextDecoder().decode(bytes);
     },
   },
   fileName: {
