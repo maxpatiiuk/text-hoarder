@@ -22,5 +22,10 @@ export const preferencesText = dictionary({
   lineHeight: { en: 'Line height' },
   pageWidth: { en: 'Page width' },
   customCss: { en: 'Custom CSS' },
+  customCssPlaceholder: { en: '.markdown-body {\n  color: black;\n}' },
+  fontFamily: { en: 'Font family' },
+  sansSerif: { en: 'Sans-serif' },
+  monospace: { en: 'Monospace' },
+  serif: { en: 'Serif' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */
