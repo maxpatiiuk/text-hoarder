@@ -3,17 +3,35 @@ import { documentToSimpleDocument } from '../ExtractContent/documentToSimpleDocu
 import { readerText } from '../../localization/readerText';
 import { H1 } from '../Atoms';
 import { Tools } from './Tools';
-
-/** Apply github-markdown-css styles */
-const markdownBody = 'markdown-body';
+import { useStorage } from '../../hooks/useStorage';
 
 export function Dialog(): JSX.Element {
   const simpleDocument = React.useMemo(() => documentToSimpleDocument(), []);
+  const [allowScrollPastLastLine] = useStorage(
+    'reader.allowScrollPastLastLine',
+  );
+  const [fontSize] = useStorage('reader.fontSize');
+  const [lineHeight] = useStorage('reader.lineHeight');
+  const [pageWidth] = useStorage('reader.pageWidth');
+  const [customCss] = useStorage('reader.customCss');
+  const [fontFamily] = useStorage('reader.fontFamily');
+
   return (
     <div
-      className={`flex flex-col gap-4 p-4 md:p-16 overflow-auto ${markdownBody}`}
+      className="flex flex-col gap-4 p-4 md:p-16"
       lang={simpleDocument?.lang}
       dir={simpleDocument?.dir}
+      style={{
+        /*
+         * Can't use rem because we don't control the root element styles
+         * All children use em, which is affected by this px value
+         */
+        fontSize: `${fontSize}px`,
+        lineHeight,
+        maxWidth: `${pageWidth}em`,
+        fontFamily:
+          fontFamily === 'sans-serif' ? /* default */ undefined : fontFamily,
+      }}
     >
       {simpleDocument === undefined ? (
         <p>{readerText.noContentFound}</p>
@@ -22,8 +40,10 @@ export function Dialog(): JSX.Element {
           <Tools simpleDocument={simpleDocument} />
           <H1>{simpleDocument.title ?? document.title}</H1>
           <Content node={simpleDocument.content} />
+          {allowScrollPastLastLine && <div className="min-h-full" />}
         </>
       )}
+      <style dangerouslySetInnerHTML={{ __html: customCss }} />
     </div>
   );
 }

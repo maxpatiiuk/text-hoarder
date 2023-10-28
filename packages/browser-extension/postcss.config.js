@@ -27,7 +27,7 @@ const makeGitHubCssUseClassName = {
       media.each((child) => {
         if (child.type !== 'rule') return;
         const newRule = new Rule({
-          selector: `${scopeSelector} ${child.selector}`,
+          selector: `${scopeSelector}${child.selector}`,
         });
 
         child.each((grandChild) => void newRule.append(grandChild.clone()));

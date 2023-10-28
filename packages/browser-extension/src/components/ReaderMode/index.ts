@@ -35,11 +35,16 @@ else {
   // Can't attach shadow directly to dialog
   const shadowRoot = dialogDiv.attachShadow({ mode: 'closed' });
   const container = document.createElement('div');
-  container.classList.add('flex', 'justify-center', 'h-full');
 
-  // Can't use rem as those can be affected by host webpage
-  container.style.fontSize = '16px';
-  container.style.lineHeight = '24px';
+  /** Apply github-markdown-css styles */
+  const markdownBody = 'markdown-body';
+  container.classList.add(
+    'flex',
+    'justify-center',
+    'h-full',
+    'overflow-auto',
+    markdownBody,
+  );
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);

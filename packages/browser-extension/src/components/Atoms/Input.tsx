@@ -106,7 +106,7 @@ export const Input = {
     `${className.input} w-full`,
     ({ onValueChange: handleValueChange, ...props }) => ({
       ...props,
-      type: 'number',
+      type: 'range',
       onChange(event): void {
         handleValueChange?.(
           // This non-null assertion is unsafe, but simplifies typing

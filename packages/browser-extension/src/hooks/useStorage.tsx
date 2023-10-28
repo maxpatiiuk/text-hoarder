@@ -25,7 +25,8 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   'reader.downloadFormat': 'markdown' as 'html' | 'markdown' | 'text',
   'reader.fontSize': 16 as number,
   'reader.lineHeight': 1.5 as number,
-  'reader.pageWidth': 80 as number,
+  'reader.pageWidth': 60 as number,
+  'reader.fontFamily': 'sans-serif' as 'sans-serif' | 'monospace' | 'serif',
   'reader.customCss': '' as string,
   'markdownToText.includeImageAltText': true as boolean,
 } as const);

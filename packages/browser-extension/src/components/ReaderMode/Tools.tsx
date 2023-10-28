@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '../Atoms/Button';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '../../localization/readerText';
-import { Preferences } from './Preferences';
+import { Preferences } from '../Preferences';
 import { listen } from '../../utils/events';
 import { preferencesText } from '../../localization/preferencesText';
 import { useStorage } from '../../hooks/useStorage';
@@ -40,13 +40,13 @@ export function Tools({
     <div
       className={`
         absolute top-0 right-0 flex backdrop-blur rounded-es
-        bg-white/80 dark:bg-black/70
+        bg-white/80 dark:bg-black/70 max-h-full
         ${selectedTool === undefined ? 'opacity-75 hover:opacity-100' : ''}
       `}
       ref={containerRef}
     >
       {selectedTool !== undefined && (
-        <aside className="flex flex-col gap-4 p-4 pt-0">
+        <aside className="flex flex-col gap-4 p-4 pt-0 overflow-auto">
           <Preferences />
         </aside>
       )}
