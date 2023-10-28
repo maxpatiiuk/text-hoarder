@@ -26,11 +26,12 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   'reader.fontSize': 16 as number,
   'reader.lineHeight': 1.5 as number,
   'reader.pageWidth': 80 as number,
+  'reader.customCss': '' as string,
   'markdownToText.includeImageAltText': true as boolean,
 } as const);
 
 const StorageContext = React.createContext<Store>({
-  get: () => undefined,
+  get: () => undefined!,
   set: () => undefined,
 });
 StorageContext.displayName = 'StorageContext';
@@ -45,7 +46,7 @@ type Store = {
   ) => void;
 };
 
-export type StorageDefinitions = Partial<typeof storageDefinitions>;
+export type StorageDefinitions = typeof storageDefinitions;
 
 const storage = chrome.storage.sync;
 
@@ -54,18 +55,18 @@ export function StorageProvider({
 }: {
   readonly children: JSX.Element;
 }): JSX.Element | undefined {
-  const [store, setStore] = useAsyncState<StorageDefinitions>(
+  const [store, setStore] = useAsyncState(
     React.useCallback(
       () =>
         storage
           .get(Object.keys(storageDefinitions))
-          .then((values) =>
-            Object.fromEntries(
-              Object.entries(storageDefinitions).map(([key, defaultValue]) => [
-                key,
-                values[key] ?? defaultValue,
-              ]),
-            ),
+          .then(
+            (values) =>
+              Object.fromEntries(
+                Object.entries(storageDefinitions).map(
+                  ([key, defaultValue]) => [key, values[key] ?? defaultValue],
+                ),
+              ) as StorageDefinitions,
           ),
       [],
     ),
@@ -73,12 +74,16 @@ export function StorageProvider({
   );
   setDevelopmentGlobal(`_store`, store);
 
+  const storeRef = React.useRef(store);
+  storeRef.current = store;
+
   const set = React.useCallback(
     <NAME extends keyof StorageDefinitions>(
       name: NAME,
       value: StorageDefinitions[NAME],
     ): void => {
-      setStore((store) => ({ ...store, [name]: value }));
+      if (storeRef.current === undefined) return;
+      setStore({ ...storeRef.current, [name]: value });
       const isDefaultValue = value === storageDefinitions[name];
       (value === undefined || isDefaultValue
         ? storage.remove(name)
@@ -90,8 +95,6 @@ export function StorageProvider({
     [setStore],
   );
 
-  const storeRef = React.useRef(store);
-  storeRef.current = store;
   const get = React.useCallback(
     <NAME extends keyof StorageDefinitions>(
       name: NAME,
@@ -122,7 +125,7 @@ export function useStorage<NAME extends keyof StorageDefinitions>(
   // Sync storage changes between instances of this hook
   React.useEffect(() => {
     function handleChange(changes: IR<chrome.storage.StorageChange>): void {
-      if (!(name in changes)) return undefined;
+      if (!(name in changes)) return;
       setValue(changes[name]?.newValue);
     }
     storage.onChanged.addListener(handleChange);
@@ -130,7 +133,17 @@ export function useStorage<NAME extends keyof StorageDefinitions>(
   }, [name, storage, setValue]);
 
   const update = React.useCallback(
-    (value: StorageDefinitions[NAME] | undefined) => set(name, value),
+    (value: StorageDefinitions[NAME]) => {
+      set(name, value);
+      /*
+       * The onChanged is not triggered fast enough - causes UI flickering
+       * when useStorage is used as value for <Select>, and user changes value.
+       *
+       * Thus, have to manually change the value here ahead of time.
+       * Note, this may cause a race condition if the value changes often
+       */
+      setValue(value);
+    },
     [set, name],
   );
   return [value ?? storageDefinitions[name], update];

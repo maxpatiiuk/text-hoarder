@@ -21,5 +21,6 @@ export const preferencesText = dictionary({
   fontSize: { en: 'Font size' },
   lineHeight: { en: 'Line height' },
   pageWidth: { en: 'Page width' },
+  customCss: { en: 'Custom CSS' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

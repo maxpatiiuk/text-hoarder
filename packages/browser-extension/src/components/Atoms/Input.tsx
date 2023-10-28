@@ -175,3 +175,23 @@ export const Select = wrap<
     },
   }),
 );
+
+export const Textarea = wrap<
+  'textarea',
+  {
+    readonly children?: undefined;
+    readonly onValueChange?: (value: string) => void;
+    readonly autoGrow?: boolean;
+  }
+>(
+  'Textarea',
+  'textarea',
+  className.textArea,
+  ({ onValueChange, ...props }) => ({
+    ...props,
+    onChange(event): void {
+      onValueChange?.((event.target as HTMLTextAreaElement).value);
+      props.onChange?.(event);
+    },
+  }),
+);
