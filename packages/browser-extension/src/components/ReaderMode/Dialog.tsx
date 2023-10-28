@@ -4,11 +4,14 @@ import { readerText } from '../../localization/readerText';
 import { H1 } from '../Atoms';
 import { Tools } from './Tools';
 
+/** Apply github-markdown-css styles */
+const markdownBody = 'markdown-body';
+
 export function Dialog(): JSX.Element {
   const simpleDocument = React.useMemo(() => documentToSimpleDocument(), []);
   return (
     <div
-      className="flex flex-col gap-4 p-4 md:p-16"
+      className={`flex flex-col gap-4 p-4 md:p-16 overflow-auto ${markdownBody}`}
       lang={simpleDocument?.lang}
       dir={simpleDocument?.dir}
     >
@@ -32,5 +35,5 @@ function Content({ node }: { readonly node: HTMLElement }): JSX.Element {
     containerRef.current?.append(clone);
     return (): void => clone.remove();
   }, [node]);
-  return <div className="markdown-body" ref={containerRef} />;
+  return <div className="contents" ref={containerRef} />;
 }

@@ -1,5 +1,5 @@
 const current = 'aria-[pressed]:brightness-150 aria-[current]:brightness-150';
-const link = `text-blue-400 transition hover:text-black underline ${current}`;
+const link = `text-blue-400 transition hover:text-black dark:hover:text-white underline ${current}`;
 export const className = {
   input: 'rounded pl-1 pr-1 sm:pl-3 sm:pr-3 border-none ring-1 ring-black',
   button: `inline-flex justify-center items-center px-4 py-2 rounded-md border-none text-white ${current}`,
