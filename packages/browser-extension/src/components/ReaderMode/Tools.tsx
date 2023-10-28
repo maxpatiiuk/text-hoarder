@@ -83,3 +83,5 @@ export function Tools({
     </div>
   );
 }
+
+// FEATURE: add ability to save arbitrary text
