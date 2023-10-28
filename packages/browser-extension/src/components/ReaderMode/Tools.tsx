@@ -3,9 +3,11 @@ import { Button } from '../Atoms/Button';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '../../localization/readerText';
 import { Preferences } from './Preferences';
-import { Download } from './Download';
 import { listen } from '../../utils/events';
 import { preferencesText } from '../../localization/preferencesText';
+import { useStorage } from '../../hooks/useStorage';
+import { downloadDocument } from './download';
+import { LoadingContext } from '../Contexts/Contexts';
 
 export function Tools({
   simpleDocument,
@@ -13,8 +15,9 @@ export function Tools({
   readonly simpleDocument: SimpleDocument;
 }): JSX.Element {
   const [selectedTool, setSelectedTool] = React.useState<
-    undefined | 'preferences' | 'download'
+    undefined | 'preferences'
   >(undefined);
+  const [downloadFormat] = useStorage('reader.downloadFormat');
 
   // Close on outside click
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -31,18 +34,20 @@ export function Tools({
     [selectedTool, setSelectedTool],
   );
 
+  const loading = React.useContext(LoadingContext);
+
   return (
     <div
-      className="absolute top-0 right-0 flex backdrop-blur rounded-es bg-white/80 dark:bg-black/70 opacity-75 hover:opacity-100"
+      className={`
+        absolute top-0 right-0 flex backdrop-blur rounded-es
+        bg-white/80 dark:bg-black/70
+        ${selectedTool === undefined ? 'opacity-75 hover:opacity-100' : ''}
+      `}
       ref={containerRef}
     >
       {selectedTool !== undefined && (
         <aside className="flex flex-col gap-4 p-4 pt-0">
-          {selectedTool === 'download' ? (
-            <Download simpleDocument={simpleDocument} />
-          ) : (
-            <Preferences />
-          )}
+          <Preferences />
         </aside>
       )}
       <nav
@@ -51,13 +56,18 @@ export function Tools({
       >
         <Button.Icon
           onClick={(): void =>
-            setSelectedTool(
-              selectedTool === 'download' ? undefined : 'download',
-            )
+            containerRef.current === null
+              ? undefined
+              : loading(
+                  downloadDocument(
+                    downloadFormat,
+                    simpleDocument,
+                    containerRef.current,
+                  ),
+                )
           }
           icon="download"
           title={readerText.download}
-          aria-pressed={selectedTool === 'download' ? true : undefined}
         />
         <Button.Icon
           onClick={(): void =>
