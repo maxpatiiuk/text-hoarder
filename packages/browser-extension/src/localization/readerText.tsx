@@ -8,8 +8,21 @@ import { dictionary } from './utils';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const readerText = dictionary({
+  textHoarder: { en: 'Text Hoarder' },
+  loading: { en: 'Loading...' },
   noContentFound: { en: 'Unable to find readable content on the page' },
   tools: { en: 'Tools' },
   download: { en: 'Download' },
+  aboutTextHoarder: { en: 'About Text Hoarder' },
+  sourceCode: { en: 'Source code' },
+  reportIssue: { en: 'Report an issue' },
+  requestFeature: { en: 'Request a feature' },
+  leaveReview: { en: 'Leave a review' },
+  saveToGitHub: { en: 'Save to GitHub' },
+  editOnGitHub: { en: 'Edit on GitHub' },
+  recentlySaved: { en: 'This article has already been saved recently' },
+  saveAgain: { en: 'Save again' },
+  saved: { en: 'Saved!' },
+  edit: { en: 'Edit' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

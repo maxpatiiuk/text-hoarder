@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { useBooleanState } from '../../hooks/useBooleanState';
-import { popupText } from '../../localization/popupText';
 import type { RA } from '../../utils/types';
 import { crash, error } from '../Errors/assert';
 import { ErrorBoundary } from '../Errors/ErrorBoundary';
 import { AuthenticationProvider } from './AuthContext';
 import { StorageProvider } from '../../hooks/useStorage';
+import { readerText } from '../../localization/readerText';
 
 /**
  * Provide contexts used by other components
@@ -47,9 +47,9 @@ export function Contexts({
   return (
     <ErrorBoundary>
       <LoadingContext.Provider key="loadingContext" value={loadingHandler}>
-        {/* FEATURE: replace this with a toast, dialog, or status line*/}
-        {isLoading && popupText.loading}
-        <React.Suspense fallback={<>{popupText.loading}</>}>
+        {/* FIXME: replace this with a toast, dialog, or status line */}
+        {isLoading && readerText.loading}
+        <React.Suspense fallback={<>{readerText.loading}</>}>
           <StorageProvider>
             <AuthenticationProvider>{children}</AuthenticationProvider>
           </StorageProvider>

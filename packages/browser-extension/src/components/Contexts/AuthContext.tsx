@@ -40,9 +40,7 @@ export function AuthenticationProvider({
   readonly children: React.ReactNode;
 }): JSX.Element {
   const [token, setToken] = useStorage('auth.accessToken');
-  const [repositoryName, setRepositoryName] = useStorage(
-    'setup.repositoryName',
-  );
+  const [repository, setRepository] = useStorage('setup.repository');
   const [installationId, setInstallationId] = useStorage('auth.installationId');
 
   const handleAuthenticate = React.useCallback(
@@ -68,9 +66,9 @@ export function AuthenticationProvider({
     const octokit =
       token === undefined ? undefined : new Octokit({ auth: token });
     const github =
-      octokit === undefined || repositoryName === undefined
+      octokit === undefined || repository === undefined
         ? undefined
-        : wrapOctokit(octokit, repositoryName);
+        : wrapOctokit(octokit, repository);
     return {
       octokit,
       github,
@@ -79,18 +77,18 @@ export function AuthenticationProvider({
       handleSignOut: () => {
         // FIXME: delete the token?
         setToken(undefined);
-        setRepositoryName(undefined);
+        setRepository(undefined);
         // FIXME: delete the installation?
         // await octokit?.rest.apps.revokeInstallationAccessToken().catch(console.error);
       },
     };
   }, [
-    repositoryName,
+    repository,
     installationId,
     token,
     handleAuthenticate,
     setToken,
-    setRepositoryName,
+    setRepository,
   ]);
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;

@@ -2,14 +2,14 @@ import React from 'react';
 import { gitHubAppName } from '../../../config';
 import { useAsyncState } from '../../hooks/useAsyncState';
 import { useStorage } from '../../hooks/useStorage';
-import { popupText } from '../../localization/popupText';
+import { signInText } from '../../localization/signInText';
 import { Button } from '../Atoms/Button';
 import { Link } from '../Atoms/Link';
 import { AuthContext } from '../Contexts/AuthContext';
 
 export function RepositoryList(): JSX.Element | undefined {
   const { installationId, octokit } = React.useContext(AuthContext);
-  const [_, setRepositoryName] = useStorage('setup.repositoryName');
+  const [_, setRepository] = useStorage('setup.repository');
 
   const [repositories] = useAsyncState(
     React.useCallback(
@@ -21,38 +21,55 @@ export function RepositoryList(): JSX.Element | undefined {
                 installation_id: installationId,
                 per_page: 100,
               })
-              .then(({ data }) =>
-                data.repositories.map(({ full_name }) => full_name),
-              )
+              .then(({ data }) => data.repositories)
               .then((repositories) => {
                 if (repositories.length === 1)
-                  setRepositoryName(repositories[0]);
+                  setRepository({
+                    owner: repositories[0].owner.login,
+                    name: repositories[0].name,
+                    branch: repositories[0].default_branch,
+                  });
                 return repositories;
               }),
-      [installationId, octokit, setRepositoryName],
+      [installationId, octokit, setRepository],
     ),
     true,
   );
 
   return repositories === undefined ||
     repositories.length === 1 ? undefined : repositories.length === 0 ? (
-    <p>{popupText.noRepositories(createRepositoryLink, editPermissionsLink)}</p>
+    <p>
+      {signInText.noRepositories(createRepositoryLink, editPermissionsLink)}
+    </p>
   ) : (
     <>
-      {popupText.pickRepository}
+      {signInText.pickRepository}
       <div className="flex flex-1 flex-col gap-1 overflow-auto">
-        {repositories.map((name) => (
-          <Button.Success
-            key={name}
-            onClick={(): void => setRepositoryName(name)}
-            className="!justify-start"
-          >
-            {name}
-          </Button.Success>
-        ))}
+        {repositories.map(
+          ({
+            full_name: fullName,
+            owner,
+            name,
+            default_branch: defaultBranch,
+          }) => (
+            <Button.Success
+              key={fullName}
+              onClick={(): void =>
+                setRepository({
+                  owner: owner.login,
+                  name,
+                  branch: defaultBranch,
+                })
+              }
+              className="!justify-start"
+            >
+              {fullName}
+            </Button.Success>
+          ),
+        )}
       </div>
       <p>
-        {popupText.pickRepositoryHint(
+        {signInText.pickRepositoryHint(
           createRepositoryLink,
           editPermissionsLink,
         )}

@@ -1,5 +1,12 @@
 import { IR, RA } from './types';
 
+export const http = {
+  ok: 200,
+  created: 201,
+  noContent: 204,
+  notModified: 304,
+};
+
 /**
  * All front-end network requests should go through this utility.
  *

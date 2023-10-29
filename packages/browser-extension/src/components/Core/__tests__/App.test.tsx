@@ -1,14 +1,14 @@
 import React from 'react';
-import { Popup } from '../../Popup/Popup';
+import { Popup } from '../../SignInFlow/Popup';
 import { mount } from '../../../tests/reactUtils';
-import { popupText } from '../../../localization/popupText';
+import { signInText } from '../../../localization/signInText';
 import { act } from '@testing-library/react';
 
 test('renders a button after current date is extracted', () =>
   act(() => {
     const { getByRole } = mount(<Popup />);
     const linkElement = getByRole('button', {
-      name: popupText.textHoarder,
+      name: signInText.textHoarder,
     });
     expect(linkElement).toBeInTheDocument();
   }));
