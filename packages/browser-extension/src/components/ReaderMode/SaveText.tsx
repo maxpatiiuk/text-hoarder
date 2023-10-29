@@ -104,7 +104,7 @@ export function SaveText({
 
   const fileEditUrl =
     typeof repository === 'object' && typeof state === 'object'
-      ? pathToUrl(repository, state.path)
+      ? filePathToGitHubUrl(repository, state.path)
       : undefined;
   React.useEffect(
     () =>
@@ -159,5 +159,7 @@ export function SaveText({
   );
 }
 
-const pathToUrl = ({ owner, name, branch }: Repository, filePath: string) =>
-  `https://github.com/${owner}/${name}/edit/${branch}/${filePath}`;
+export const filePathToGitHubUrl = (
+  { owner, name, branch }: Repository,
+  filePath: string,
+) => `https://github.com/${owner}/${name}/edit/${branch}/${filePath}`;

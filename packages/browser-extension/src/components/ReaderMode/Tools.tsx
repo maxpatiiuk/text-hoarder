@@ -10,8 +10,9 @@ import { downloadDocument } from './download';
 import { LoadingContext } from '../Contexts/Contexts';
 import { InfoTab } from './InfoTab';
 import { EnsureAuthenticated } from '../Auth';
-import { SaveText, useExistingFile } from './SaveText';
+import { SaveText, filePathToGitHubUrl, useExistingFile } from './SaveText';
 import { listenEvent } from '../Background/messages';
+import { Link } from '../Atoms/Link';
 
 // FEATURE: use action.setIcon/setTitle/setBadgeText/setBadgeBackgroundColor to show if there are any saved texts for this page (https://developer.chrome.com/docs/extensions/reference/action/#badge)
 
@@ -69,8 +70,9 @@ export function Tools({
   );
 
   const [existingFile, setExistingFile] = useExistingFile();
+  const [repository] = useStorage('setup.repository');
+  const panelId = React.useId();
 
-  // FIXME add aria-controls and manage focus. maybe use role too
   return (
     <div
       className={`
@@ -83,13 +85,16 @@ export function Tools({
       {selectedTool !== undefined && (
         <aside
           className={`
-          flex flex-col gap-4 p-4 overflow-auto max-w-[15rem]
-          ${
-            selectedTool === 'preferences' || selectedTool === 'infoTab'
-              ? 'pt-0 '
-              : ''
-          }
-        `}
+            flex flex-col gap-4 p-4 overflow-auto max-w-[15rem]
+            ${
+              selectedTool === 'preferences' || selectedTool === 'infoTab'
+                ? 'pt-0 '
+                : ''
+            }
+          `}
+          id={panelId}
+          tabIndex={-1}
+          ref={(element): void => element?.focus()}
         >
           {selectedTool === 'preferences' ? (
             <Preferences />
@@ -123,17 +128,28 @@ export function Tools({
           }
           title={readerText.saveToGitHub}
           aria-pressed={selectedTool === 'saveText' ? true : undefined}
+          aria-controls={panelId}
         />
-        <Button.Icon
-          onClick={(): void =>
-            setSelectedTool(
-              selectedTool === 'editText' ? undefined : 'editText',
-            )
-          }
-          icon="pencil"
-          title={readerText.editOnGitHub}
-          aria-pressed={selectedTool === 'editText' ? true : undefined}
-        />
+        {typeof existingFile === 'string' && typeof repository === 'object' ? (
+          <Link.Icon
+            href={filePathToGitHubUrl(repository, existingFile)}
+            icon="pencil"
+            title={readerText.editOnGitHub}
+            aria-controls={panelId}
+          />
+        ) : (
+          <Button.Icon
+            onClick={(): void =>
+              setSelectedTool(
+                selectedTool === 'editText' ? undefined : 'editText',
+              )
+            }
+            icon="pencil"
+            title={readerText.editOnGitHub}
+            aria-pressed={selectedTool === 'editText' ? true : undefined}
+            aria-controls={panelId}
+          />
+        )}
         <Button.Icon
           onClick={handleDownload}
           icon="download"
@@ -146,6 +162,7 @@ export function Tools({
           icon="informationCircle"
           title={readerText.aboutTextHoarder}
           aria-pressed={selectedTool === 'infoTab' ? true : undefined}
+          aria-controls={panelId}
         />
         <Button.Icon
           onClick={(): void =>
@@ -156,6 +173,7 @@ export function Tools({
           icon="cog"
           title={preferencesText.preferences}
           aria-pressed={selectedTool === 'preferences' ? true : undefined}
+          aria-controls={panelId}
         />
       </nav>
     </div>
