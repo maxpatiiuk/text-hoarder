@@ -84,7 +84,7 @@ for storage of saved snippets of text.
 If you are enjoying it, don't forget to [leave a review](${urls.webStoreReviewUrl}) 
 on the Chrome Web Store!
 
-// TODO: improve this
+// FINAL: improve this
 `,
   },
 });

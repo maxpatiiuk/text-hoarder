@@ -7,6 +7,25 @@ import 'github-markdown-css/github-markdown.css';
 import { renderApp } from '../Core/renderApp';
 import { Dialog } from './Dialog';
 
+// FEATURE: add local stats CLI
+// FEATURE: add local text-to-speech CLI
+// FINAL: Review all code and remove unused/simplify
+// FINAL: Decide if tests are needed
+// FINAL: either make options page content look nicer, or remove options page
+// LOW: use signed commits https://github.com/orgs/community/discussions/50055
+
+// FINAL: Deploy cors-auth-middleware to vercel
+// FINAL: Sync example config files with changes in real config files
+// FINAL: Add github repository description and meta (home url, setup url)
+// FINAL: Add description and meta data for github app (and "Add a note to users")
+// FINAL: Add documentation & screenshots & video (compare to calendar plus
+//   documentation)
+// FINAL:  Add description and action.default_title in manifest.json
+// FINAL: Add to portfolio
+// FINAL: Submit to Chrome Web Store and post link in several places
+// FINAL: In GitHub App settings, set "Make this GitHub App public" to allow others
+//   to install the app
+
 // Remove previous reader mode instance
 const id = 'text-hoarder-container';
 const previousDialog = document.getElementById(id);

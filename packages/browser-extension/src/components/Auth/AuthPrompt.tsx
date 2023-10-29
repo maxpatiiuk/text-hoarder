@@ -9,10 +9,6 @@ import { urls } from '../../../config';
 import { readerText } from '../../localization/readerText';
 import { AuthContext } from '../Contexts/AuthContext';
 
-// TODO: either make options page content look nicer, or remove options page
-// FEATURE: use signed commits https://github.com/orgs/community/discussions/50055
-// FEATURE: when adding new entry, check if the same URL was already added in the last 2 years
-
 /**
  * This dialog is displayed on first use promoting user to sign in with GitHub
  * and give the extension access to a single private repository
