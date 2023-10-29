@@ -2,7 +2,7 @@ import { preferencesText } from '../../localization/preferencesText';
 import { StorageDefinitions } from '../../hooks/useStorage';
 import { Renderers } from './Renderers';
 
-// FIXME: add more preferences?
+// FEATURE: add more preferences?
 // FEATURE: make preferences also accessible at options_page (or instead of this)
 
 export const definitions: Partial<{
