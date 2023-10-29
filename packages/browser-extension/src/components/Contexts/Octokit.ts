@@ -23,11 +23,12 @@ export function wrapOctokit(
     owner,
     repo,
     hasFile: (fileName) =>
-      octokit
-        .request('HEAD /repos/{owner}/{repo}/contents/{path}', {
+      octokit.rest.repos
+        .getContent({
           owner,
           repo,
           path: encoding.fileName.encode(fileName),
+          method: 'HEAD',
         })
         .then(
           ({ status }) =>

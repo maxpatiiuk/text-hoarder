@@ -1,21 +1,5 @@
 # Text Hoarder
 
-- [ ] Review all code and remove unused/simplify
-- [ ] Decide if tests are needed
-- [ ] Deploy cors-auth-middleware to vercel
-
-- [ ] Sync example config files with changes in real config files
-- [ ] Add github repository description and meta (home url, setup url)
-- [ ] Add description and meta data for github app (and "Add a note to users")
-- [ ] Design extension icon and update src/public/images
-- [ ] Add documentation & screenshots & video (compare to calendar plus
-      documentation)
-- [ ] Add description and action.default_title in manifest.json
-- [ ] Add to portfolio
-- [ ] Submit to Chrome Web Store and post link in several places
-- [ ] In GitHub App settings, set "Make this GitHub App public" to allow others
-      to install the app
-
 ## Local Installation
 
 ### Get extension ID
