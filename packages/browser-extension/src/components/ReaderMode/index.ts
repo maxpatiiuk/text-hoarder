@@ -36,15 +36,7 @@ else {
   const shadowRoot = dialogDiv.attachShadow({ mode: 'closed' });
   const container = document.createElement('div');
 
-  /** Apply github-markdown-css styles */
-  const markdownBody = 'markdown-body';
-  container.classList.add(
-    'flex',
-    'justify-center',
-    'h-full',
-    'overflow-auto',
-    markdownBody,
-  );
+  container.classList.add('flex', 'justify-center', 'h-full', 'overflow-auto');
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);

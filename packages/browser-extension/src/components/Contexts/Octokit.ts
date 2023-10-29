@@ -1,11 +1,13 @@
 import { Octokit } from 'octokit';
 import { encoding } from '../../utils/encoding';
 import { gitHubAppName, gitHubAppId } from '../../../config';
+import { Repository } from '../../hooks/useStorage';
+import { http } from '../../utils/ajax';
 
 export type OctokitWrapper = {
   readonly owner: string;
   readonly repo: string;
-  readonly getFile: (name: string) => Promise<string | undefined>;
+  readonly hasFile: (name: string) => Promise<boolean>;
   readonly editFile: (
     name: string,
     commitMessage: string,
@@ -15,27 +17,25 @@ export type OctokitWrapper = {
 
 export function wrapOctokit(
   octokit: Octokit,
-  repositoryName: string,
+  { owner, name: repo }: Repository,
 ): OctokitWrapper {
-  const [owner, repo] = repositoryName.split('/');
   return {
     owner,
     repo,
-    getFile: (fileName) =>
-      octokit.rest.repos
-        .getContent({
+    hasFile: (fileName) =>
+      octokit
+        .request('HEAD /repos/{owner}/{repo}/contents/{path}', {
           owner,
           repo,
           path: encoding.fileName.encode(fileName),
         })
-        .then((response) =>
-          response.status === 200 &&
-          'type' in response.data &&
-          response.data.type === 'file'
-            ? encoding.fileContent.decode(response.data.content)
-            : undefined,
+        .then(
+          ({ status }) =>
+            status === http.noContent ||
+            status === http.ok ||
+            status === http.notModified,
         )
-        .catch(() => undefined),
+        .catch(() => false),
     editFile: (name, commitMessage, content) =>
       octokit.rest.repos
         .createOrUpdateFileContents({
@@ -49,6 +49,6 @@ export function wrapOctokit(
             email: `${gitHubAppId}+${gitHubAppName}[bot]@users.noreply.github.com`,
           },
         })
-        .then(({ status }) => status === 201),
+        .then(({ status }) => status === http.created),
   };
 }

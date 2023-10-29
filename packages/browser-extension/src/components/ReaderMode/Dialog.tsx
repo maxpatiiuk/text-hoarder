@@ -5,6 +5,9 @@ import { H1 } from '../Atoms';
 import { Tools } from './Tools';
 import { useStorage } from '../../hooks/useStorage';
 
+/** Apply github-markdown-css styles */
+const markdownBody = 'markdown-body';
+
 export function Dialog(): JSX.Element {
   const simpleDocument = React.useMemo(() => documentToSimpleDocument(), []);
   const [allowScrollPastLastLine] = useStorage(
@@ -17,34 +20,38 @@ export function Dialog(): JSX.Element {
   const [fontFamily] = useStorage('reader.fontFamily');
 
   return (
-    <div
-      className="flex flex-col gap-4 p-4 md:p-16"
-      lang={simpleDocument?.lang}
-      dir={simpleDocument?.dir}
-      style={{
-        /*
-         * Can't use rem because we don't control the root element styles
-         * All children use em, which is affected by this px value
-         */
-        fontSize: `${fontSize}px`,
-        lineHeight,
-        maxWidth: `${pageWidth}em`,
-        fontFamily:
-          fontFamily === 'sans-serif' ? /* default */ undefined : fontFamily,
-      }}
-    >
-      {simpleDocument === undefined ? (
-        <p>{readerText.noContentFound}</p>
-      ) : (
-        <>
-          <Tools simpleDocument={simpleDocument} />
-          <H1>{simpleDocument.title ?? document.title}</H1>
-          <Content node={simpleDocument.content} />
-          {allowScrollPastLastLine && <div className="min-h-full" />}
-        </>
+    <>
+      {typeof simpleDocument === 'object' && (
+        <Tools simpleDocument={simpleDocument} />
       )}
-      <style dangerouslySetInnerHTML={{ __html: customCss }} />
-    </div>
+      <div
+        className={`flex flex-col gap-4 p-4 md:p-16 ${markdownBody}`}
+        lang={simpleDocument?.lang}
+        dir={simpleDocument?.dir}
+        style={{
+          /*
+           * Can't use rem because we don't control the root element styles
+           * All children use em, which is affected by this px value
+           */
+          fontSize: `${fontSize}px`,
+          lineHeight,
+          maxWidth: `${pageWidth}em`,
+          fontFamily:
+            fontFamily === 'sans-serif' ? /* default */ undefined : fontFamily,
+        }}
+      >
+        {simpleDocument === undefined ? (
+          <p>{readerText.noContentFound}</p>
+        ) : (
+          <>
+            <H1>{simpleDocument.title ?? document.title}</H1>
+            <Content node={simpleDocument.content} />
+            {allowScrollPastLastLine && <div className="min-h-full" />}
+          </>
+        )}
+        <style dangerouslySetInnerHTML={{ __html: customCss }} />
+      </div>
+    </>
   );
 }
 

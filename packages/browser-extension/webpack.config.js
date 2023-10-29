@@ -73,10 +73,6 @@ module.exports = (_env, argv) =>
     devtool:
       argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
     entry: {
-      popup:
-        argv.mode === 'development'
-          ? './src/components/Popup/development.tsx'
-          : './src/components/Popup/index.tsx',
       background: './src/components/Background/index.ts',
       readerMode:
         argv.mode === 'development'

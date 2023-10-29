@@ -1,5 +1,5 @@
 /**
- * Message passing utils. Used both by the context and background scripts
+ * Message passing utils. Used both by the content and background scripts
  */
 
 import { State } from 'typesafe-reducer';
@@ -17,6 +17,11 @@ type AuthenticateRequest = State<
   }
 >;
 
+type OpenUrl = State<
+  'OpenUrl',
+  { readonly request: string; readonly response: void }
+>;
+
 type ReloadExtension = State<
   'ReloadExtension',
   {
@@ -25,7 +30,7 @@ type ReloadExtension = State<
   }
 >;
 
-export type Requests = AuthenticateRequest | ReloadExtension;
+export type Requests = AuthenticateRequest | OpenUrl | ReloadExtension;
 
 /**
  * Send a request to the background script and await the response.
@@ -60,8 +65,13 @@ export const sendRequest = async <
       } else return response as SHAPE['response'];
     });
 
-type TabUpdate = State<'TabUpdate'>;
-type BackgroundEvents = TabUpdate;
+type ActivateExtension = State<
+  'ActivateExtension',
+  {
+    readonly action: 'open' | 'saveText' | 'editText' | 'download';
+  }
+>;
+type BackgroundEvents = ActivateExtension;
 
 /**
  * Emit an event. Must be called from a background script only

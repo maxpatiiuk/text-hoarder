@@ -1,17 +1,15 @@
 /**
- * Localization strings for all UI components (except for preferences)
+ * Localization strings for sign in flow and info menu
  */
 
 import React from 'react';
 import { dictionary } from './utils';
-import { extensionReviewUrl, extensionUrl } from '../components/Popup/Menu';
+import { urls } from '../../config';
 
 // Refer to "Guidelines for Programmers" in ./README.md before editing this file
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export const popupText = dictionary({
-  textHoarder: { en: 'Text Hoarder' },
-  loading: { en: 'Loading...' },
+export const signInText = dictionary({
   privacyPolicy: {
     en: 'Privacy Policy',
   },
@@ -76,19 +74,14 @@ export const popupText = dictionary({
   },
   signOut: { en: 'Sign out' },
   openRepositoryInGitHub: { en: 'Open repository in GitHub' },
-  aboutTextHoarder: { en: 'About Text Hoarder' },
-  sourceCode: { en: 'Source code' },
-  reportIssue: { en: 'Report an issue' },
-  requestFeature: { en: 'Request a feature' },
-  leaveReview: { en: 'Leave a review' },
-  initializeExtensions: { en: 'Initialize Text Hoarder' },
+  initializeExtension: { en: 'Initialize Text Hoarder' },
   readmeContent: {
     en: `# Text Hoarder Store
 
-This repository is used by the [Text Hoarder](${extensionUrl}) browser extension
+This repository is used by the [Text Hoarder](${urls.webStoreUrl}) browser extension
 for storage of saved snippets of text.
 
-If you are enjoying it, don't forget to [leave a review](${extensionReviewUrl}) 
+If you are enjoying it, don't forget to [leave a review](${urls.webStoreReviewUrl}) 
 on the Chrome Web Store!
 
 // TODO: improve this

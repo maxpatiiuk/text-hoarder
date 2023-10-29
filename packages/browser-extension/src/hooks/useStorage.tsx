@@ -16,10 +16,16 @@ import { ensure, setDevelopmentGlobal } from '../utils/types';
 import { useAsyncState } from './useAsyncState';
 import { useLiveState } from './useLiveState';
 
+export type Repository = {
+  readonly owner: string;
+  readonly name: string;
+  readonly branch: string;
+};
+
 export const storageDefinitions = ensure<IR<unknown>>()({
   'auth.accessToken': undefined as undefined | string,
   'auth.installationId': undefined as undefined | number,
-  'setup.repositoryName': undefined as undefined | string,
+  'setup.repository': undefined as undefined | Repository,
   'ui.theme': 'system' as 'system' | 'light' | 'dark',
   'reader.allowScrollPastLastLine': false as boolean,
   'reader.downloadFormat': 'markdown' as 'html' | 'markdown' | 'text',

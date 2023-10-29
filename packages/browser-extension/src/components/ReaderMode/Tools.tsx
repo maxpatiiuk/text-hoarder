@@ -8,6 +8,12 @@ import { preferencesText } from '../../localization/preferencesText';
 import { useStorage } from '../../hooks/useStorage';
 import { downloadDocument } from './download';
 import { LoadingContext } from '../Contexts/Contexts';
+import { InfoTab } from './InfoTab';
+import { EnsureAuthenticated } from '../Auth';
+import { SaveText, useExistingFile } from './SaveText';
+import { listenEvent } from '../Background/messages';
+
+// FEATURE: use action.setIcon/setTitle/setBadgeText/setBadgeBackgroundColor to show if there are any saved texts for this page (https://developer.chrome.com/docs/extensions/reference/action/#badge)
 
 export function Tools({
   simpleDocument,
@@ -15,9 +21,37 @@ export function Tools({
   readonly simpleDocument: SimpleDocument;
 }): JSX.Element {
   const [selectedTool, setSelectedTool] = React.useState<
-    undefined | 'preferences'
+    undefined | 'saveText' | 'editText' | 'infoTab' | 'preferences'
   >(undefined);
+  const handleClose = React.useCallback(() => setSelectedTool(undefined), []);
+
+  const loading = React.useContext(LoadingContext);
   const [downloadFormat] = useStorage('reader.downloadFormat');
+  const handleDownload = React.useCallback(
+    (): void =>
+      containerRef.current === null
+        ? undefined
+        : loading(
+            downloadDocument(
+              downloadFormat,
+              simpleDocument,
+              containerRef.current,
+            ),
+          ),
+    [loading, downloadFormat],
+  );
+
+  React.useEffect(
+    () =>
+      listenEvent('ActivateExtension', ({ action }) =>
+        action === 'saveText' || action === 'editText'
+          ? setSelectedTool(action)
+          : action === 'download'
+          ? handleDownload()
+          : undefined,
+      ),
+    [downloadDocument, setSelectedTool],
+  );
 
   // Close on outside click
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -34,8 +68,9 @@ export function Tools({
     [selectedTool, setSelectedTool],
   );
 
-  const loading = React.useContext(LoadingContext);
+  const [existingFile, setExistingFile] = useExistingFile();
 
+  // FIXME add aria-controls and manage focus. maybe use role too
   return (
     <div
       className={`
@@ -46,28 +81,71 @@ export function Tools({
       ref={containerRef}
     >
       {selectedTool !== undefined && (
-        <aside className="flex flex-col gap-4 p-4 pt-0 overflow-auto">
-          <Preferences />
+        <aside
+          className={`
+          flex flex-col gap-4 p-4 overflow-auto max-w-[15rem]
+          ${
+            selectedTool === 'preferences' || selectedTool === 'infoTab'
+              ? 'pt-0 '
+              : ''
+          }
+        `}
+        >
+          {selectedTool === 'preferences' ? (
+            <Preferences />
+          ) : selectedTool === 'infoTab' ? (
+            <InfoTab />
+          ) : (
+            <EnsureAuthenticated>
+              <SaveText
+                existingFile={existingFile}
+                simpleDocument={simpleDocument}
+                mode={selectedTool === 'saveText' ? 'save' : 'edit'}
+                onClose={handleClose}
+                onSaved={setExistingFile}
+              />
+            </EnsureAuthenticated>
+          )}
         </aside>
       )}
       <nav
-        className="flex flex-col p-2 gap-2 text-[130%] "
+        className="flex flex-col p-2 gap-3 text-[130%] "
         aria-label={readerText.tools}
       >
         <Button.Icon
           onClick={(): void =>
-            containerRef.current === null
-              ? undefined
-              : loading(
-                  downloadDocument(
-                    downloadFormat,
-                    simpleDocument,
-                    containerRef.current,
-                  ),
-                )
+            setSelectedTool(
+              selectedTool === 'saveText' ? undefined : 'saveText',
+            )
           }
+          icon={
+            typeof existingFile === 'string' ? 'bookmark' : 'bookmarkHollow'
+          }
+          title={readerText.saveToGitHub}
+          aria-pressed={selectedTool === 'saveText' ? true : undefined}
+        />
+        <Button.Icon
+          onClick={(): void =>
+            setSelectedTool(
+              selectedTool === 'editText' ? undefined : 'editText',
+            )
+          }
+          icon="pencil"
+          title={readerText.editOnGitHub}
+          aria-pressed={selectedTool === 'editText' ? true : undefined}
+        />
+        <Button.Icon
+          onClick={handleDownload}
           icon="download"
           title={readerText.download}
+        />
+        <Button.Icon
+          onClick={(): void =>
+            setSelectedTool(selectedTool === 'infoTab' ? undefined : 'infoTab')
+          }
+          icon="informationCircle"
+          title={readerText.aboutTextHoarder}
+          aria-pressed={selectedTool === 'infoTab' ? true : undefined}
         />
         <Button.Icon
           onClick={(): void =>
@@ -83,5 +161,3 @@ export function Tools({
     </div>
   );
 }
-
-// FEATURE: add ability to save arbitrary text

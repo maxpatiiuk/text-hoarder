@@ -1,5 +1,7 @@
 import React from 'react';
 
+// FIXME: remove this if it is not needed anymore
+
 import { sendRequest } from '../Background/messages';
 
 /**

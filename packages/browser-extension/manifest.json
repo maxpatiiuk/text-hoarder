@@ -26,23 +26,28 @@
   },
   "options_page": "./index.html",
   "action": {
-    "default_icon": {
-      "16": "./public/images/extension_icon_16x16.png",
-      "32": "./public/images/extension_icon_32x32.png",
-      "48": "./public/images/extension_icon_48x48.png",
-      "128": "./public/images/extension_icon_128x128.png",
-      "1024": "./public/images/extension_icon_1024x1024.png"
-    },
-    "default_title": "Text Hoarder",
-    "default_popup": "./index.html"
+    "default_title": "Open Reader Mode"
   },
   "commands": {
-    "savePageText": {
+    "_execute_action": {
+      "suggested_key": {
+        "mac": "Command+E",
+        "default": "Ctrl+E"
+      },
+      "description": "Open Reader Mode"
+    },
+    "saveText": {
       "suggested_key": {
         "mac": "Command+Shift+E",
         "default": "Ctrl+Shift+E"
       },
-      "description": "Save selected text on current webpage (or entire page if no text selected)"
+      "description": "Save current page to GitHub repository (while extension is active)"
+    },
+    "editText": {
+      "description": "Open Editor for current page in GitHub repository (while extension is active)"
+    },
+    "download": {
+      "description": "Download current webpage (while extension is active)"
     }
   }
 }

@@ -4,21 +4,24 @@
 
 import type { State } from 'typesafe-reducer';
 
-import type { Requests } from './messages';
+import { emitEvent, type Requests } from './messages';
 import { formatUrl } from '../../utils/queryString';
 import { gitHubAppName } from '../../../config';
 
 /**
  * Listen for a message from the front-end and send back the response
  */
-chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (
+    // Only accept messages from the extension itself
+    sender.id === chrome.runtime.id &&
     typeof request === 'object' &&
     request !== null &&
     request.type in requestHandlers
   ) {
     requestHandlers[request.type as 'ReloadExtension'](
       request.request as undefined,
+      sender,
     )
       .then(sendResponse)
       .catch((error) => {
@@ -36,6 +39,7 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 const requestHandlers: {
   readonly [TYPE in Requests['type']]: (
     request: Extract<Requests, State<TYPE>>['request'],
+    sender: chrome.runtime.MessageSender,
   ) => Promise<Extract<Requests, State<TYPE>>['response']>;
 } = {
   /**
@@ -75,23 +79,43 @@ const requestHandlers: {
           } as const;
       });
   },
+  OpenUrl: (url, { tab }) =>
+    chrome.tabs.create({ openerTabId: tab?.id, url }).then(() => undefined),
   async ReloadExtension() {
     chrome.tabs.reload();
     chrome.runtime.reload();
   },
 };
 
-chrome.commands.onCommand.addListener((command, tab) => {
+chrome.action.onClicked.addListener((tab) => connect(tab, 'open'));
+chrome.commands.onCommand.addListener((command, tab) =>
+  command === 'open' ||
+  command === 'saveText' ||
+  command === 'editText' ||
+  command === 'download'
+    ? connect(tab, command)
+    : undefined,
+);
+
+function connect(
+  tab: chrome.tabs.Tab,
+  action: 'open' | 'saveText' | 'editText' | 'download',
+) {
   const tabId = tab.id;
-  if (
-    command === 'savePageText' &&
-    typeof tabId === 'number' &&
-    tabId !== chrome.tabs.TAB_ID_NONE
-  )
-    chrome.scripting.executeScript({
-      target: { tabId },
-      injectImmediately: true,
-      files: ['./dist/readerMode.bundle.js'],
-      world: 'ISOLATED',
-    });
-});
+  if (typeof tabId !== 'number' || tab.id === chrome.tabs.TAB_ID_NONE) return;
+
+  const toggleReader = (): void =>
+    void chrome.scripting
+      .executeScript({
+        target: { tabId },
+        injectImmediately: true,
+        files: ['./dist/readerMode.bundle.js'],
+        world: 'ISOLATED',
+      })
+      .catch(console.error);
+
+  if (action === 'open') toggleReader();
+  else
+    emitEvent(tabId, { type: 'ActivateExtension', action }).catch(toggleReader);
+}
+// FIXME: decide if keyboard shortcuts should work before first activation
