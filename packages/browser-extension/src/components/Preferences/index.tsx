@@ -1,61 +1,49 @@
+/**
+ * This scrip is called from the preferences page
+ */
+
+import { renderApp } from '../Core/renderApp';
 import React from 'react';
-import { H2 } from '../Atoms';
 import { preferencesText } from '../../localization/preferencesText';
-import { StorageDefinitions, useStorage } from '../../hooks/useStorage';
-import { definitions } from './definitions';
+import { Preferences } from './Preferences';
+import { IsPreferencesStandalone } from './Context';
+import { usePageStyle } from './usePageStyle';
 
-export function Preferences(): JSX.Element {
+const container = document.createElement('div');
+
+container.classList.add(
+  'flex',
+  'items-center',
+  'justify-center',
+  'h-full',
+  'overflow-auto',
+  'dark:bg-neutral-800',
+  'dark:text-gray-100',
+  'min-h-screen',
+);
+
+document.body.append(container);
+document.title = preferencesText.preferences;
+
+renderApp(container, <PreferencesPage />, document.body);
+
+function PreferencesPage(): JSX.Element {
+  const { style, customCss } = usePageStyle();
   return (
-    <>
-      <H2>{preferencesText.preferences}</H2>
-      {Object.entries(definitions).map(([name, renderer]) => (
-        <Item
-          key={name}
-          name={name as keyof StorageDefinitions}
-          renderer={
-            renderer as (
-              value: StorageDefinitions[keyof StorageDefinitions],
-              setValue: (
-                newValue: StorageDefinitions[keyof StorageDefinitions],
-                apply: boolean,
-              ) => void,
-            ) => JSX.Element
-          }
-        />
-      ))}
-    </>
+    <IsPreferencesStandalone.Provider value>
+      <div
+        className="flex flex-col gap-4 p-4 max-w-[40rem]"
+        style={{
+          ...style,
+          fontFamily:
+            style.fontFamily === 'sans-serif'
+              ? /* default */ undefined
+              : style.fontFamily,
+        }}
+      >
+        <Preferences />
+      </div>
+      {customCss}
+    </IsPreferencesStandalone.Provider>
   );
-}
-
-function Item<KEY extends keyof StorageDefinitions>({
-  name: name,
-  renderer,
-}: {
-  readonly name: KEY;
-  readonly renderer: (
-    value: StorageDefinitions[KEY],
-    setValue: (newValue: StorageDefinitions[KEY], apply?: boolean) => void,
-  ) => JSX.Element;
-}): JSX.Element {
-  const [value, setValue] = useStorage(name);
-  const oldValueRef = React.useRef(value);
-  const changed = oldValueRef.current !== value;
-  const localValueRef = React.useRef(value);
-  const [reRender, setReRender] = React.useState(false);
-  if (changed) {
-    localValueRef.current = value;
-    oldValueRef.current = value;
-  }
-
-  return renderer(localValueRef.current, (newValue, apply = true) => {
-    /*
-     * Only change value on blur (to avoid UX issues with font size, and
-     * avoid chrome storage quota issues if value changes often)
-     */
-    if (apply) setValue(newValue);
-    else {
-      setReRender(!reRender);
-      localValueRef.current = newValue;
-    }
-  });
 }

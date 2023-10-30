@@ -6,7 +6,15 @@
 import 'github-markdown-css/github-markdown.css';
 import { renderApp } from '../Core/renderApp';
 import { Dialog } from './Dialog';
+import { shouldAutoTrigger } from '../ExtractContent/shouldAutoTrigger';
+import {
+  SimpleDocument,
+  documentToSimpleDocument,
+} from '../ExtractContent/documentToSimpleDocument';
+import React from 'react';
+import { listenEvent } from '../Background/messages';
 
+// FEATURE: when entering reader mode, find the previous location and scroll there
 // FEATURE: add local stats CLI
 // FEATURE: add local text-to-speech CLI
 // FINAL: Review all code and remove unused/simplify
@@ -31,8 +39,32 @@ const id = 'text-hoarder-container';
 const previousDialog = document.getElementById(id);
 const alreadyOpen = previousDialog !== null;
 
+const activatedReason = new Promise((resolve) => {
+  const stopListening = listenEvent('ActivateExtension', ({ action }) => {
+    stopListening();
+    resolve(action);
+  });
+});
+
 if (alreadyOpen) previousDialog?.remove();
 else {
+  const autoTrigger = shouldAutoTrigger();
+  const simpleDocument = documentToSimpleDocument();
+
+  /**
+   * If page doesn't look readable, or failed to extract content, then wait for
+   * background script to tell us how the extension was activated:
+   *  - If automatically, then don't do anything
+   *  - If manually by user, then display the dialog with an error message
+   */
+  if (!autoTrigger || simpleDocument === undefined)
+    activatedReason.then((action) =>
+      action === 'automaticTrigger' ? undefined : displayDialog(undefined),
+    );
+  else displayDialog(simpleDocument);
+}
+
+function displayDialog(simpleDocument: SimpleDocument | undefined): void {
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');
   dialog.id = id;
@@ -47,11 +79,11 @@ else {
   dialog.style.border = 'none';
   dialog.style.outline = 'none';
 
-  // Isolate from parent page's styles
+  // Can't attach shadow directly to dialog, so create an intermediate
   const dialogDiv = document.createElement('div');
   dialogDiv.style.display = 'contents';
 
-  // Can't attach shadow directly to dialog
+  // Isolate from parent page's styles
   const shadowRoot = dialogDiv.attachShadow({ mode: 'closed' });
   const container = document.createElement('div');
 
@@ -59,18 +91,28 @@ else {
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);
+
+  /**
+   * Override instance method so that if ReaderMode bundle is connected to page
+   * again, it can properly dispose of previous instance (i.e toggle the reader)
+   */
   const originalRemove = dialog.remove;
   dialog.remove = (...args: []) => {
     unmount();
     restoreBodyScroll();
     dialog.remove = originalRemove;
+    // Trying to be as transparent with the override as possible
     return dialog.remove(...args);
   };
   document.body.append(dialog);
 
   dialog.showModal();
   preventBodyScroll();
-  const unmount = renderApp(container, Dialog, shadowRoot);
+  const unmount = renderApp(
+    container,
+    <Dialog simpleDocument={simpleDocument} />,
+    shadowRoot,
+  );
 
   dialog.addEventListener('close', dialog.remove, { once: true });
 }

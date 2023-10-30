@@ -64,6 +64,15 @@ declare module 'turndown-plugin-gfm' {
   export declare const gfm: TurndownService.Plugin;
 }
 
+declare namespace chrome.permissions {
+  export interface PermissionsRemovedEvent {
+    readonly removeListener: (callback: () => void) => void;
+  }
+  export interface PermissionsAddedEvent {
+    readonly removeListener: (callback: () => void) => void;
+  }
+}
+
 /* eslint-enable @typescript-eslint/method-signature-style */
 /* eslint-enable functional/no-method-signature */
 /* eslint-enable @typescript-eslint/consistent-type-definitions */

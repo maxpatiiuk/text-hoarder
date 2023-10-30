@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '../Atoms/Button';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '../../localization/readerText';
-import { Preferences } from '../Preferences';
+import { Preferences } from '../Preferences/Preferences';
 import { listen } from '../../utils/events';
 import { preferencesText } from '../../localization/preferencesText';
 import { useStorage } from '../../hooks/useStorage';
@@ -18,8 +18,10 @@ import { Link } from '../Atoms/Link';
 
 export function Tools({
   simpleDocument,
+  style,
 }: {
   readonly simpleDocument: SimpleDocument;
+  readonly style: React.CSSProperties;
 }): JSX.Element {
   const [selectedTool, setSelectedTool] = React.useState<
     undefined | 'saveText' | 'editText' | 'infoTab' | 'preferences'
@@ -80,12 +82,13 @@ export function Tools({
         bg-white/80 dark:bg-black/70 max-h-full
         ${selectedTool === undefined ? 'opacity-75 hover:opacity-100' : ''}
       `}
+      style={style}
       ref={containerRef}
     >
       {selectedTool !== undefined && (
         <aside
           className={`
-            flex flex-col gap-4 p-4 overflow-auto max-w-[15rem]
+            flex flex-col gap-4 p-4 overflow-auto max-w-[20rem]
             ${
               selectedTool === 'preferences' || selectedTool === 'infoTab'
                 ? 'pt-0 '

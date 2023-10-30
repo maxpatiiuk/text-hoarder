@@ -27,5 +27,28 @@ export const preferencesText = dictionary({
   sansSerif: { en: 'Sans-serif' },
   monospace: { en: 'Monospace' },
   serif: { en: 'Serif' },
+  autoTriggerUrls: { en: 'Automatically enter reader mode for these URLs' },
+  addCurrentSite: { en: 'Add (this site)' },
+  addCurrentSiteWithSuffix: {
+    en: (suffix: string) => `Add (this site)/${suffix}`,
+  },
+  missingRequiredPermissions: {
+    en: `
+      Unable to automatically enter reader mode on the following sites due to
+      missing permissions:
+    `,
+  },
+  giveAccessToSites: {
+    en: 'Give access to these sites',
+  },
+  giveAccessToEverySite: {
+    en: 'Give access to every site',
+  },
+  giveAccessInPreferences: {
+    en: 'To give this access, you need to open extension options page',
+  },
+  openPreferences: {
+    en: 'Open preferences',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

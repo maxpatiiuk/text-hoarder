@@ -9,9 +9,10 @@ import { Button } from '../Atoms/Button';
 import { LoadingContext } from '../Contexts/Contexts';
 import { encoding } from '../../utils/encoding';
 import { Link } from '../Atoms/Link';
-import { Repository, useStorage } from '../../hooks/useStorage';
+import { useStorage } from '../../hooks/useStorage';
 import { GetOrSet } from '../../utils/types';
 import { sendRequest } from '../Background/messages';
+import { Repository } from '../../utils/storage';
 
 const currentYear = new Date().getFullYear();
 const previousYear = currentYear - 1;

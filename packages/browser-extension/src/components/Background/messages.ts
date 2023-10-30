@@ -65,10 +65,15 @@ export const sendRequest = async <
       } else return response as SHAPE['response'];
     });
 
-type ActivateExtension = State<
+export type ActivateExtension = State<
   'ActivateExtension',
   {
-    readonly action: 'open' | 'saveText' | 'editText' | 'download';
+    readonly action:
+      | 'open'
+      | 'saveText'
+      | 'editText'
+      | 'download'
+      | 'automaticTrigger';
   }
 >;
 type BackgroundEvents = ActivateExtension;
