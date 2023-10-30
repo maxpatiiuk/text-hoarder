@@ -4,17 +4,19 @@
 
 import type { State } from 'typesafe-reducer';
 
-import { emitEvent, type Requests } from './messages';
+import { ActivateExtension, emitEvent, type Requests } from './messages';
 import { formatUrl } from '../../utils/queryString';
 import { gitHubAppName } from '../../../config';
+import { RA } from '../../utils/types';
+import { preparePatterns, urlMatches } from '../ReaderMode/matchUrl';
+import { listenToStorage, setStorage } from '../../utils/storage';
+import { emit } from 'process';
 
 /**
  * Listen for a message from the front-end and send back the response
  */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (
-    // Only accept messages from the extension itself
-    sender.id === chrome.runtime.id &&
     typeof request === 'object' &&
     request !== null &&
     request.type in requestHandlers
@@ -87,35 +89,80 @@ const requestHandlers: {
   },
 };
 
-chrome.action.onClicked.addListener((tab) => connect(tab, 'open'));
+chrome.action.onClicked.addListener((tab) => connect(tab.id, 'open'));
 chrome.commands.onCommand.addListener((command, tab) =>
-  command === 'open' ||
-  command === 'saveText' ||
-  command === 'editText' ||
-  command === 'download'
-    ? connect(tab, command)
+  command === 'saveText' || command === 'editText' || command === 'download'
+    ? connect(tab.id, command)
     : undefined,
 );
 
 function connect(
-  tab: chrome.tabs.Tab,
-  action: 'open' | 'saveText' | 'editText' | 'download',
+  tabId: number | undefined,
+  action: ActivateExtension['action'],
 ) {
-  const tabId = tab.id;
-  if (typeof tabId !== 'number' || tab.id === chrome.tabs.TAB_ID_NONE) return;
+  if (typeof tabId !== 'number' || tabId === chrome.tabs.TAB_ID_NONE) return;
 
-  const toggleReader = (): void =>
-    void chrome.scripting
+  const toggleReader = (): Promise<void> =>
+    chrome.scripting
       .executeScript({
         target: { tabId },
         injectImmediately: true,
         files: ['./dist/readerMode.bundle.js'],
         world: 'ISOLATED',
       })
+      .then(() => undefined)
       .catch(console.error);
 
-  if (action === 'open') toggleReader();
-  else
+  const emit = (): Promise<void> =>
     emitEvent(tabId, { type: 'ActivateExtension', action }).catch(toggleReader);
+
+  if (action === 'open') toggleReader().then(emit);
+  else emit();
 }
 // FIXME: decide if keyboard shortcuts should work before first activation
+
+let matchUrls: RA<string | RegExp> = [];
+listenToStorage('reader.autoTriggerUrls', async (value) => {
+  matchUrls = preparePatterns(value);
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (
+    changeInfo.status === 'complete' &&
+    typeof tab.url === 'string' &&
+    urlMatches(tab.url, matchUrls)
+  )
+    connect(tabId, 'automaticTrigger');
+});
+
+/**
+ * Note, if user changes from all sites to none, or wise versa, these events
+ * aren't fired((
+ */
+const updatePermissions = (): Promise<void> =>
+  chrome.permissions
+    .getAll()
+    .then((permissions) => setStorage('extension.permissions', permissions))
+    .catch(console.error);
+updatePermissions();
+chrome.permissions.onAdded.addListener(updatePermissions);
+chrome.permissions.onRemoved.addListener(updatePermissions);
+
+/*
+// FINAL: add install/uninstall URLs?
+chrome.runtime.onInstalled.addListener(({ reason }) =>
+  reason === 'install'
+    ? chrome.tabs.create({
+        url: 'INSTALLED'
+      })
+    : undefined
+);
+chrome.runtime.setUninstallURL('UNINSTALLED');
+// FINAL: add migration scripts when necessary
+runtime.onUpdate(async details => {
+    if (details.previousVersion[0] < '9' && runtime.getCurrentVersion() >
+        '8.0.0') {
+        await action.migrateStorage()
+    }
+})
+ */

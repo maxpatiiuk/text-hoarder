@@ -11,31 +11,16 @@
 
 import React from 'react';
 
-import type { IR } from '../utils/types';
-import { ensure, setDevelopmentGlobal } from '../utils/types';
+import { setDevelopmentGlobal } from '../utils/types';
 import { useAsyncState } from './useAsyncState';
 import { useLiveState } from './useLiveState';
-
-export type Repository = {
-  readonly owner: string;
-  readonly name: string;
-  readonly branch: string;
-};
-
-export const storageDefinitions = ensure<IR<unknown>>()({
-  'auth.accessToken': undefined as undefined | string,
-  'auth.installationId': undefined as undefined | number,
-  'setup.repository': undefined as undefined | Repository,
-  'ui.theme': 'system' as 'system' | 'light' | 'dark',
-  'reader.allowScrollPastLastLine': false as boolean,
-  'reader.downloadFormat': 'markdown' as 'html' | 'markdown' | 'text',
-  'reader.fontSize': 16 as number,
-  'reader.lineHeight': 1.5 as number,
-  'reader.pageWidth': 60 as number,
-  'reader.fontFamily': 'sans-serif' as 'sans-serif' | 'monospace' | 'serif',
-  'reader.customCss': '' as string,
-  'markdownToText.includeImageAltText': true as boolean,
-} as const);
+import {
+  StorageDefinitions,
+  listenForChanges,
+  setStorage,
+  storage,
+  storageDefinitions,
+} from '../utils/storage';
 
 const StorageContext = React.createContext<Store>({
   get: () => undefined!,
@@ -52,10 +37,6 @@ type Store = {
     _value: StorageDefinitions[NAME],
   ) => void;
 };
-
-export type StorageDefinitions = typeof storageDefinitions;
-
-const storage = chrome.storage.sync;
 
 export function StorageProvider({
   children,
@@ -91,13 +72,7 @@ export function StorageProvider({
     ): void => {
       if (storeRef.current === undefined) return;
       setStore({ ...storeRef.current, [name]: value });
-      const isDefaultValue = value === storageDefinitions[name];
-      (value === undefined || isDefaultValue
-        ? storage.remove(name)
-        : storage.set({
-            [name]: value,
-          })
-      ).catch(console.error);
+      setStorage(name, value);
     },
     [setStore],
   );
@@ -130,14 +105,10 @@ export function useStorage<NAME extends keyof StorageDefinitions>(
   );
 
   // Sync storage changes between instances of this hook
-  React.useEffect(() => {
-    function handleChange(changes: IR<chrome.storage.StorageChange>): void {
-      if (!(name in changes)) return;
-      setValue(changes[name]?.newValue);
-    }
-    storage.onChanged.addListener(handleChange);
-    return (): void => storage.onChanged.addListener(handleChange);
-  }, [name, storage, setValue]);
+  React.useEffect(
+    () => listenForChanges(name, setValue),
+    [name, storage, setValue],
+  );
 
   const update = React.useCallback(
     (value: StorageDefinitions[NAME]) => {

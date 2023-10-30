@@ -64,6 +64,20 @@ const convertRemToEm = {
 // Regex to find all occurrences of "rem" units
 const remRegex = /(?<=\d)rem/g;
 
+/**
+ * Fix tailwind's preflight apply styles only to "html" selector, and not
+ * ":host", thus not working inside of shadow dom (since my <styles> block
+ * is added only inside the shadow dom, "html" selector never matches)
+ */
+/** @type {import('postcss-load-config').ConfigPlugin} */
+const useHostAlongsideHtml = {
+  postcssPlugin: 'useHostAlongsideHtml',
+  // When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
+  Rule(rule) {
+    if (rule.selector === 'html') rule.selector = 'html, :host';
+  },
+};
+
 /** @type {import('postcss-load-config').Config} */
 module.exports = {
   plugins: [
@@ -73,5 +87,6 @@ module.exports = {
     require('autoprefixer'),
     makeGitHubCssUseClassName,
     convertRemToEm,
+    useHostAlongsideHtml,
   ],
 };

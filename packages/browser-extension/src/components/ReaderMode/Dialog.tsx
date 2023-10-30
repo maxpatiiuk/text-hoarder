@@ -1,43 +1,46 @@
 import React from 'react';
-import { documentToSimpleDocument } from '../ExtractContent/documentToSimpleDocument';
+import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '../../localization/readerText';
 import { H1 } from '../Atoms';
 import { Tools } from './Tools';
 import { useStorage } from '../../hooks/useStorage';
+import { usePageStyle } from '../Preferences/usePageStyle';
 
 /** Apply github-markdown-css styles */
 const markdownBody = 'markdown-body';
 
-export function Dialog(): JSX.Element {
-  const simpleDocument = React.useMemo(() => documentToSimpleDocument(), []);
+export function Dialog({
+  simpleDocument,
+}: {
+  readonly simpleDocument: SimpleDocument | undefined;
+}): JSX.Element {
   const [allowScrollPastLastLine] = useStorage(
     'reader.allowScrollPastLastLine',
   );
-  const [fontSize] = useStorage('reader.fontSize');
-  const [lineHeight] = useStorage('reader.lineHeight');
-  const [pageWidth] = useStorage('reader.pageWidth');
-  const [customCss] = useStorage('reader.customCss');
-  const [fontFamily] = useStorage('reader.fontFamily');
-
+  const { style, customCss } = usePageStyle();
   return (
     <>
       {typeof simpleDocument === 'object' && (
-        <Tools simpleDocument={simpleDocument} />
+        <Tools
+          simpleDocument={simpleDocument}
+          /*
+           * I don't want this element to be affected by markdownBody styles
+           * (breaks Link.Info) but do want user styles
+           */
+          style={style}
+        />
       )}
       <div
         className={`flex flex-col gap-4 p-4 md:p-16 ${markdownBody}`}
         lang={simpleDocument?.lang}
         dir={simpleDocument?.dir}
+        // Setting these as style attribute to override markdownBody styles
         style={{
-          /*
-           * Can't use rem because we don't control the root element styles
-           * All children use em, which is affected by this px value
-           */
-          fontSize: `${fontSize}px`,
-          lineHeight,
-          maxWidth: `${pageWidth}em`,
+          ...style,
           fontFamily:
-            fontFamily === 'sans-serif' ? /* default */ undefined : fontFamily,
+            style.fontFamily === 'sans-serif'
+              ? /* default */ undefined
+              : style.fontFamily,
         }}
       >
         {simpleDocument === undefined ? (
@@ -49,7 +52,7 @@ export function Dialog(): JSX.Element {
             {allowScrollPastLastLine && <div className="min-h-full" />}
           </>
         )}
-        <style dangerouslySetInnerHTML={{ __html: customCss }} />
+        {customCss}
       </div>
     </>
   );

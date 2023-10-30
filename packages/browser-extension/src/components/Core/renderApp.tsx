@@ -8,7 +8,7 @@ import { ApplyTheme } from './ApplyTheme';
 
 export function renderApp(
   container: HTMLElement,
-  App: () => JSX.Element | null,
+  children: JSX.Element,
   stylesContainer: ParentNode,
 ): () => void {
   stylesContainer.append(...getStyleTags());
@@ -17,9 +17,7 @@ export function renderApp(
   root.render(
     <React.StrictMode>
       <ApplyTheme container={container} />
-      <Contexts>
-        <App />
-      </Contexts>
+      <Contexts>{children}</Contexts>
     </React.StrictMode>,
   );
   return (): void => root.unmount();

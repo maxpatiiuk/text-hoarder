@@ -1,8 +1,8 @@
 import { Octokit } from 'octokit';
 import { encoding } from '../../utils/encoding';
 import { gitHubAppName, gitHubAppId } from '../../../config';
-import { Repository } from '../../hooks/useStorage';
 import { http } from '../../utils/ajax';
+import { Repository } from '../../utils/storage';
 
 export type OctokitWrapper = {
   readonly owner: string;
@@ -22,6 +22,7 @@ export function wrapOctokit(
   return {
     owner,
     repo,
+    // FEATURE: cache the results of this function? and update cache on editFile
     hasFile: (fileName) =>
       octokit.rest.repos
         .getContent({
@@ -37,6 +38,7 @@ export function wrapOctokit(
             status === http.notModified,
         )
         .catch(() => false),
+    // FIXME: if overriding, must specify SHA
     editFile: (name, commitMessage, content) =>
       octokit.rest.repos
         .createOrUpdateFileContents({

@@ -9,6 +9,7 @@ import { dictionary } from './utils';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const readerText = dictionary({
   textHoarder: { en: 'Text Hoarder' },
+  readerMode: { en: 'Reader Mode' },
   loading: { en: 'Loading...' },
   noContentFound: { en: 'Unable to find readable content on the page' },
   tools: { en: 'Tools' },

@@ -24,14 +24,17 @@ export const Centered = wrap(
 );
 
 export const H1 = wrap('H1', 'h1', 'text-3xl font-bold');
-export const H2 = wrap('H1', 'h1', 'text-2xl font-bold');
+export const H2 = wrap('H2', 'h2', 'text-2xl font-bold');
+export const H3 = wrap('H3', 'h3', 'text-xl font-bold');
 
 export const ErrorMessage = wrap(
   'ErrorMessage',
-  'p',
+  'div',
   'flex flex-col gap-2 p-2 text-white bg-red-500 rounded',
   {
     role: 'alert',
+    'aria-live': 'polite',
+    'aria-atomic': true,
   },
 );
 

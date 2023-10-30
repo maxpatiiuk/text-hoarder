@@ -2,7 +2,7 @@
  * WebPack config for development and production
  */
 
-const path = require('path');
+const path = require('node:path');
 const webpack = require('webpack');
 
 const outputPath = path.resolve(__dirname, 'dist');
@@ -73,11 +73,15 @@ module.exports = (_env, argv) =>
     devtool:
       argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
     entry: {
+      preferences:
+        argv.mode === 'development'
+          ? './src/components/Preferences/development.tsx'
+          : './src/components/Preferences/index.tsx',
       background: './src/components/Background/index.ts',
       readerMode:
         argv.mode === 'development'
           ? './src/components/ReaderMode/development.tsx'
-          : './src/components/ReaderMode/index.ts',
+          : './src/components/ReaderMode/index.tsx',
     },
     plugins:
       argv.mode === 'development'
