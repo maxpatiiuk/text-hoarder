@@ -50,5 +50,8 @@ export const preferencesText = dictionary({
   openPreferences: {
     en: 'Open preferences',
   },
+  unfocusedMenuOpacity: {
+    en: 'Menu opacity when not in use',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

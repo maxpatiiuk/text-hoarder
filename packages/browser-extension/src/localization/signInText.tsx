@@ -73,7 +73,7 @@ export const signInText = dictionary({
     ),
   },
   signOut: { en: 'Sign out' },
-  openRepositoryInGitHub: { en: 'Open repository in GitHub' },
+  openRepositoryInGitHub: { en: 'Open repository on GitHub' },
   initializeExtension: { en: 'Initialize Text Hoarder' },
   readmeContent: {
     en: `# Text Hoarder Store

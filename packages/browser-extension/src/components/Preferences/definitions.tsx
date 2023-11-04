@@ -55,5 +55,13 @@ export const definitions: IR<
       preferencesText.customCss,
       preferencesText.customCssPlaceholder,
     ),
+    'reader.unfocusedMenuOpacity': Renderers.Range(
+      preferencesText.unfocusedMenuOpacity,
+      {
+        min: 0,
+        max: 100,
+        step: 1,
+      },
+    ),
   },
 };
