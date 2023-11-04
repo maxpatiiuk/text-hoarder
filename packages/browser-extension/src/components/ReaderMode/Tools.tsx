@@ -75,14 +75,25 @@ export function Tools({
   const [repository] = useStorage('setup.repository');
   const panelId = React.useId();
 
+  const [unfocusedMenuOpacity] = useStorage('reader.unfocusedMenuOpacity');
+
   return (
     <div
       className={`
         absolute top-0 right-0 flex backdrop-blur rounded-es
         bg-white/80 dark:bg-black/70 max-h-full
-        ${selectedTool === undefined ? 'opacity-75 hover:opacity-100' : ''}
+        ${
+          selectedTool === undefined
+            ? 'opacity-[var(--opacity)] hover:opacity-100'
+            : ''
+        }
       `}
-      style={style}
+      style={
+        {
+          ...style,
+          '--opacity': unfocusedMenuOpacity / 100,
+        } as React.CSSProperties
+      }
       ref={containerRef}
     >
       {selectedTool !== undefined && (

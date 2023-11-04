@@ -22,6 +22,7 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   'reader.fontFamily': 'sans-serif' as 'sans-serif' | 'monospace' | 'serif',
   'reader.customCss': '' as string,
   'reader.autoTriggerUrls': '' as string,
+  'reader.unfocusedMenuOpacity': 75 as number,
   'markdownToText.includeImageAltText': true as boolean,
 } as const);
 
