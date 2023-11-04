@@ -99,7 +99,7 @@ export function Tools({
       {selectedTool !== undefined && (
         <aside
           className={`
-            flex flex-col gap-4 p-4 overflow-auto max-w-[20rem]
+            flex flex-col gap-4 p-4 overflow-auto w-[20rem]
             ${
               selectedTool === 'preferences' || selectedTool === 'infoTab'
                 ? 'pt-0 '
@@ -116,13 +116,17 @@ export function Tools({
             <InfoTab />
           ) : (
             <EnsureAuthenticated>
-              <SaveText
-                existingFile={existingFile}
-                simpleDocument={simpleDocument}
-                mode={selectedTool === 'saveText' ? 'save' : 'edit'}
-                onClose={handleClose}
-                onSaved={setExistingFile}
-              />
+              {existingFile === undefined ? (
+                <p>{readerText.loading}</p>
+              ) : (
+                <SaveText
+                  existingFile={existingFile}
+                  simpleDocument={simpleDocument}
+                  mode={selectedTool === 'saveText' ? 'save' : 'edit'}
+                  onClose={handleClose}
+                  onSaved={setExistingFile}
+                />
+              )}
             </EnsureAuthenticated>
           )}
         </aside>

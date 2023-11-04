@@ -25,5 +25,6 @@ export const readerText = dictionary({
   saveAgain: { en: 'Save again' },
   saved: { en: 'Saved!' },
   edit: { en: 'Edit' },
+  delete: { en: 'Delete' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

@@ -23,6 +23,7 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   'reader.customCss': '' as string,
   'reader.autoTriggerUrls': '' as string,
   'reader.unfocusedMenuOpacity': 75 as number,
+  'reader.eagerCheckForAlreadySaved': false as boolean,
   'markdownToText.includeImageAltText': true as boolean,
 } as const);
 

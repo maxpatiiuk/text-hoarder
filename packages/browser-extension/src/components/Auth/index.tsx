@@ -20,15 +20,10 @@ export function EnsureAuthenticated({
     () =>
       needsReadme
         ? void github
-            ?.hasFile(readmeFile)
-            .then((hasFile) =>
-              hasFile
-                ? undefined
-                : github.editFile(
-                    readmeFile,
-                    signInText.initializeExtension,
-                    signInText.readmeContent,
-                  ),
+            ?.createFile(
+              readmeFile,
+              signInText.initializeExtension,
+              signInText.readmeContent,
             )
             .catch(console.error)
             .finally(() => setNeedsReadme(false))
