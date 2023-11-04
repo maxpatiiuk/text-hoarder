@@ -17,6 +17,7 @@ import { listenEvent } from '../Background/messages';
 // FEATURE: when entering reader mode, find the previous location and scroll there
 // FEATURE: add local stats CLI
 // FEATURE: add local text-to-speech CLI
+// FINAL: do accessibility testing
 // FINAL: Review all code and remove unused/simplify
 // FINAL: Decide if tests are needed
 // FINAL: either make options page content look nicer, or remove options page
@@ -59,7 +60,7 @@ else {
    */
   if (!autoTrigger || simpleDocument === undefined)
     activatedReason.then((action) =>
-      action === 'automaticTrigger' ? undefined : displayDialog(undefined),
+      action === 'automaticTrigger' ? undefined : displayDialog(simpleDocument),
     );
   else displayDialog(simpleDocument);
 }

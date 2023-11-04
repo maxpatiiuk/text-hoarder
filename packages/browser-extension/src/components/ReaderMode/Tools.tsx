@@ -84,7 +84,7 @@ export function Tools({
         bg-white/80 dark:bg-black/70 max-h-full
         ${
           selectedTool === undefined
-            ? 'opacity-[var(--opacity)] hover:opacity-100'
+            ? 'opacity-[var(--opacity)] hover:opacity-100 focus-within:opacity-100'
             : ''
         }
       `}
