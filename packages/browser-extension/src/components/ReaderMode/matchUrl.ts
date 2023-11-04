@@ -41,7 +41,6 @@ function parseRegex(pattern: string): RegExp | undefined {
   }
 }
 
-// BUG: something like "world.hey.com/jason/*" matches for https://github.com/maxxxxxdlp/text-hoarder-store/blob/main/2023/world.hey.com/jason/. A problem?
 const wildcardToRegex = (pattern: string): string =>
   pattern
     // Escape . ? | ( ) [ ] + $ ^ \ { }

@@ -37,14 +37,14 @@ export function AutoTriggerUrls(
       {!isStandalone && (
         <div className="flex gap-1 flex-wrap">
           <Button.Info
-            onClick={(): void => updateValue(`${value}\n${location.hostname}`)}
+            onClick={(): void => updateValue(`${value}\n${location.origin}`)}
           >
             {preferencesText.addCurrentSite}
           </Button.Info>
           <Button.Info
             onClick={(): void =>
               updateValue(
-                `${value}\n${location.hostname}/${
+                `${value}\n${location.origin}/${
                   location.pathname.split('/')[1]
                 }`,
               )
