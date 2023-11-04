@@ -1,9 +1,9 @@
 import { preferencesText } from '../../localization/preferencesText';
-import { StorageDefinitions } from '../../hooks/useStorage';
 import { Renderers } from './Renderers';
 import { IR } from '../../utils/types';
 import { readerText } from '../../localization/readerText';
 import { AutoTriggerUrls } from './AutoTriggerUrls';
+import { StorageDefinitions } from '../../utils/storage';
 
 // FEATURE: add more preferences?
 // FEATURE: make preferences also accessible at options_page (or instead of this)
@@ -62,6 +62,9 @@ export const definitions: IR<
         max: 100,
         step: 1,
       },
+    ),
+    'reader.eagerCheckForAlreadySaved': Renderers.Checkbox(
+      preferencesText.eagerCheckForAlreadySaved,
     ),
   },
 };

@@ -5,6 +5,7 @@ export const http = {
   created: 201,
   noContent: 204,
   notModified: 304,
+  unprocessableContent: 422,
 };
 
 /**

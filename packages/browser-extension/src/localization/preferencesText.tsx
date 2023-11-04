@@ -53,5 +53,8 @@ export const preferencesText = dictionary({
   unfocusedMenuOpacity: {
     en: 'Menu opacity when not in use',
   },
+  eagerCheckForAlreadySaved: {
+    en: 'Check ahead of time if current article has already been saved (less green for the planet)',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

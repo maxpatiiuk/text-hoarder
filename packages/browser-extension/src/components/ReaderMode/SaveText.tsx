@@ -3,7 +3,6 @@ import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { simpleDocumentToMarkdown } from '../ExtractContent/simpleDocumentToMarkdown';
 import { useAsyncState } from '../../hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
-import { State } from 'typesafe-reducer';
 import { readerText } from '../../localization/readerText';
 import { Button } from '../Atoms/Button';
 import { LoadingContext } from '../Contexts/Contexts';
@@ -27,18 +26,23 @@ const previousYearPath = encoding.urlToPath.encode(
 
 export function useExistingFile(): GetOrSet<undefined | false | string> {
   const { github } = React.useContext(AuthContext);
+  const [eagerCheckForAlreadySaved] = useStorage(
+    'reader.eagerCheckForAlreadySaved',
+  );
   return useAsyncState(
     React.useCallback(
       () =>
-        github
-          ?.hasFile(currentYearPath)
-          .then((hasFile) =>
-            hasFile
-              ? currentYearPath
-              : github
-                  .hasFile(previousYearPath)
-                  .then((hasFile) => (hasFile ? previousYearPath : false)),
-          ),
+        eagerCheckForAlreadySaved
+          ? github
+              ?.hasFile(currentYearPath)
+              .then((hasFile) =>
+                hasFile
+                  ? currentYearPath
+                  : github
+                      .hasFile(previousYearPath)
+                      .then((hasFile) => (hasFile ? previousYearPath : false)),
+              )
+          : false,
       [github],
     ),
     false,
@@ -52,107 +56,83 @@ export function SaveText({
   onClose: handleClose,
   onSaved: handleSaved,
 }: {
-  readonly existingFile: undefined | false | string;
+  readonly existingFile: false | string;
   readonly simpleDocument: SimpleDocument;
   readonly mode: 'save' | 'edit';
   readonly onClose: () => void;
-  readonly onSaved: (fileName: string) => void;
+  readonly onSaved: (fileName: string | false) => void;
 }): JSX.Element {
   const { github } = React.useContext(AuthContext);
   const repository = useStorage('setup.repository')[0];
 
-  const [state, setState] = useAsyncState<
-    | State<
-        'RecentlySaved',
-        {
-          readonly saveAgain: () => Promise<void>;
-          readonly path: string;
-        }
-      >
-    | State<
-        'Saved',
-        {
-          readonly path: string;
-        }
-      >
-  >(
-    React.useCallback(async () => {
-      if (existingFile === undefined) return undefined;
-
-      function saveDocument(): Promise<void> {
-        const markdown = simpleDocumentToMarkdown(simpleDocument);
-        return github!
-          .editFile(currentYearPath, simpleDocument.title, markdown)
-          .then(() => handleSaved(currentYearPath));
-      }
-
-      if (typeof existingFile === 'string')
-        return {
-          type: 'RecentlySaved',
-          path: existingFile,
-          saveAgain: saveDocument,
-        };
-      else
-        return saveDocument().then(() => ({
-          type: 'Saved',
-          path: currentYearPath,
-        }));
-    }, [github, existingFile, simpleDocument]),
-    false,
+  const [wasAlreadySaved, setWasAlreadySaved] = React.useState(
+    typeof existingFile === 'string',
   );
+  React.useEffect(() => {
+    if (wasAlreadySaved) return undefined;
+
+    const markdown = simpleDocumentToMarkdown(simpleDocument);
+    github!
+      .createFile(currentYearPath, simpleDocument.title, markdown)
+      .then((response) => {
+        if (response.type === 'AlreadyExists') setWasAlreadySaved(true);
+        handleSaved(currentYearPath);
+      });
+  }, [github, wasAlreadySaved, simpleDocument]);
 
   const loading = React.useContext(LoadingContext);
 
   const fileEditUrl =
-    typeof repository === 'object' && typeof state === 'object'
-      ? filePathToGitHubUrl(repository, state.path)
+    typeof repository === 'object' && typeof existingFile === 'string'
+      ? filePathToGitHubUrl(repository, existingFile)
       : undefined;
+  const openFileUrl = mode === 'edit' ? fileEditUrl : undefined;
   React.useEffect(
     () =>
-      mode === 'edit' && typeof fileEditUrl === 'string'
-        ? void sendRequest('OpenUrl', fileEditUrl)
+      typeof openFileUrl === 'string'
+        ? void sendRequest('OpenUrl', openFileUrl)
             .then(handleClose)
             .catch(console.error)
         : undefined,
-    [fileEditUrl, mode],
+    [openFileUrl],
   );
 
   return (
     <>
       {existingFile === undefined ||
-      state === undefined ||
       fileEditUrl === undefined ||
       mode === 'edit' ? (
         <p>{readerText.loading}</p>
       ) : (
         <>
-          {state.type === 'RecentlySaved' ? (
-            <>
-              <p className="flex-1">{readerText.recentlySaved}</p>
-              <Button.Success
-                onClick={(): void =>
-                  loading(
-                    state
-                      .saveAgain()
-                      .then(() =>
-                        setState({ type: 'Saved', path: currentYearPath }),
-                      ),
+          <p className="flex-1">
+            {wasAlreadySaved ? readerText.recentlySaved : readerText.saved}
+          </p>
+          <Button.Danger
+            onClick={(): void =>
+              typeof existingFile === 'string'
+                ? loading(
+                    github!
+                      .fetchSha(existingFile)
+                      .then((sha) =>
+                        sha === undefined
+                          ? undefined
+                          : github!.deleteFile(
+                              existingFile,
+                              `[${readerText.delete}] simpleDocument.title`,
+                              sha,
+                            ),
+                      )
+                      .then(() => {
+                        handleSaved(false);
+                        handleClose();
+                      }),
                   )
-                }
-              >
-                {
-                  /*
-                   * File contents will likely be the same, but last commit date
-                   * will be updated - last commit date matters when looking for
-                   * recently added/updated files
-                   */
-                  readerText.saveAgain
-                }
-              </Button.Success>
-            </>
-          ) : (
-            <p className="flex-1">{readerText.saved}</p>
-          )}
+                : undefined
+            }
+          >
+            {readerText.delete}
+          </Button.Danger>
           <Link.Info href={fileEditUrl}>{readerText.edit}</Link.Info>
         </>
       )}
