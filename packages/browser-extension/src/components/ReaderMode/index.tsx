@@ -21,7 +21,6 @@ import { catchErrors } from '../Errors/assert';
 // FEATURE: add local text-to-speech CLI
 // FINAL: do accessibility testing
 // FINAL: Review all code and remove unused/simplify
-// FINAL: Decide if tests are needed
 // FINAL: either make options page content look nicer, or remove options page
 // LOW: use signed commits https://github.com/orgs/community/discussions/50055
 
