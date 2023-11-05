@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import { readerText } from '@common/localization/readerText';
 import { renderApp } from '@common/components/Core/renderApp';
+import { commonText } from '@common/localization/commonText';
 
 const container = document.createElement('main');
 
@@ -18,6 +18,6 @@ container.classList.add(
 );
 
 document.body.append(container);
-document.title = readerText.textHoarder;
+document.title = commonText.textHoarder;
 
-renderApp(container, <h1>{readerText.textHoarder}</h1>);
+renderApp(container, <h1>{commonText.textHoarder}</h1>);

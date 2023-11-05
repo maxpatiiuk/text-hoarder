@@ -73,21 +73,5 @@ export const signInText = dictionary({
   },
   signOut: { en: 'Sign out' },
   openRepositoryInGitHub: { en: 'Open repository on GitHub' },
-  initializeExtension: { en: 'Initialize Text Hoarder' },
-  readmeContent: {
-    en: (
-      webStoreUrl: string,
-      webStoreReviewUrl: string,
-    ) => `# Text Hoarder Store
-
-This repository is used by the [Text Hoarder](${webStoreUrl}) browser extension
-for storage of saved snippets of text.
-
-If you are enjoying it, don't forget to [leave a review](${webStoreReviewUrl}) 
-on the Chrome Web Store!
-
-// FINAL: improve this
-`,
-  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */
