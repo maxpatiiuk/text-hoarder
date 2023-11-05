@@ -43,7 +43,6 @@ export function wrapOctokit(
           'type' in data && data.type === 'file' ? data.sha : undefined,
         )
         .catch(() => undefined),
-    // FEATURE: cache the results of this function? and update cache on editFile
     hasFile: (fileName) =>
       octokit.rest.repos
         .getContent({
