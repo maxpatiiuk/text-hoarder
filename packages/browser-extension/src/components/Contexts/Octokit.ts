@@ -1,7 +1,7 @@
 import { Octokit } from 'octokit';
-import { encoding } from '../../../../common/src/utils/encoding';
+import { encoding } from '@common/utils/encoding';
 import { gitHubAppName, gitHubAppId } from '../../../config';
-import { http } from '../../../../common/src/utils/ajax';
+import { http } from '@common/utils/ajax';
 import { Repository } from '../../utils/storage';
 import { State } from 'typesafe-reducer';
 

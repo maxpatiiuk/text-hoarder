@@ -1,21 +1,18 @@
 import React from 'react';
-import { Button } from '../../../../common/src/components/Atoms/Button';
+import { Button } from '@common/components/Atoms/Button';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
-import { readerText } from '../../../../common/src/localization/readerText';
+import { readerText } from '@common/localization/readerText';
 import { Preferences } from '../Preferences/Preferences';
-import { listen } from '../../../../common/src/utils/events';
-import { preferencesText } from '../../../../common/src/localization/preferencesText';
+import { listen } from '@common/utils/events';
+import { preferencesText } from '@common/localization/preferencesText';
 import { useStorage } from '../../hooks/useStorage';
 import { downloadDocument } from './download';
 import { InfoTab } from './InfoTab';
 import { EnsureAuthenticated } from '../Auth';
 import { SaveText, filePathToGitHubUrl, useExistingFile } from './SaveText';
 import { listenEvent } from '../Background/messages';
-import { Link } from '../../../../common/src/components/Atoms/Link';
-import {
-  loadingGif,
-  useLoading,
-} from '../../../../common/src/hooks/useLoading';
+import { Link } from '@common/components/Atoms/Link';
+import { loadingGif, useLoading } from '@common/hooks/useLoading';
 
 export function Tools({
   simpleDocument,

@@ -1,11 +1,7 @@
 import React from 'react';
-import { Label } from '../../../../common/src/components/Atoms';
-import {
-  Input,
-  Select,
-  Textarea,
-} from '../../../../common/src/components/Atoms/Input';
-import { RR } from '../../../../common/src/utils/types';
+import { Label } from '@common/components/Atoms';
+import { Input, Select, Textarea } from '@common/components/Atoms/Input';
+import { RR } from '@common/utils/types';
 
 export const Renderers = {
   Select:

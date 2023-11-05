@@ -4,7 +4,6 @@
 
 import React from 'react';
 import { dictionary } from './utils';
-import { urls } from '../../../browser-extension/config';
 
 // Refer to "Guidelines for Programmers" in ./README.md before editing this file
 
@@ -76,12 +75,15 @@ export const signInText = dictionary({
   openRepositoryInGitHub: { en: 'Open repository on GitHub' },
   initializeExtension: { en: 'Initialize Text Hoarder' },
   readmeContent: {
-    en: `# Text Hoarder Store
+    en: (
+      webStoreUrl: string,
+      webStoreReviewUrl: string,
+    ) => `# Text Hoarder Store
 
-This repository is used by the [Text Hoarder](${urls.webStoreUrl}) browser extension
+This repository is used by the [Text Hoarder](${webStoreUrl}) browser extension
 for storage of saved snippets of text.
 
-If you are enjoying it, don't forget to [leave a review](${urls.webStoreReviewUrl}) 
+If you are enjoying it, don't forget to [leave a review](${webStoreReviewUrl}) 
 on the Chrome Web Store!
 
 // FINAL: improve this

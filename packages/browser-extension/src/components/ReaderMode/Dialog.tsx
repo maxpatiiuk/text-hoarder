@@ -1,11 +1,11 @@
 import React from 'react';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
-import { readerText } from '../../../../common/src/localization/readerText';
-import { H1 } from '../../../../common/src/components/Atoms';
+import { readerText } from '@common/localization/readerText';
+import { H1 } from '@common/components/Atoms';
 import { Tools } from './Tools';
 import { useStorage } from '../../hooks/useStorage';
 import { usePageStyle } from '../Preferences/usePageStyle';
-import { useReducedMotion } from '../../../../common/src/hooks/useReduceMotion';
+import { useReducedMotion } from '@common/hooks/useReduceMotion';
 
 /** Apply github-markdown-css styles */
 const markdownBody = 'markdown-body';

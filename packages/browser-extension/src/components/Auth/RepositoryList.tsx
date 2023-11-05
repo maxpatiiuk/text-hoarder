@@ -1,12 +1,12 @@
 import React from 'react';
 import { gitHubAppName } from '../../../config';
-import { useAsyncState } from '../../../../common/src/hooks/useAsyncState';
+import { useAsyncState } from '@common/hooks/useAsyncState';
 import { useStorage } from '../../hooks/useStorage';
-import { signInText } from '../../../../common/src/localization/signInText';
-import { Button } from '../../../../common/src/components/Atoms/Button';
-import { Link } from '../../../../common/src/components/Atoms/Link';
+import { signInText } from '@common/localization/signInText';
+import { Button } from '@common/components/Atoms/Button';
+import { Link } from '@common/components/Atoms/Link';
 import { AuthContext } from '../Contexts/AuthContext';
-import { loadingGif } from '../../../../common/src/hooks/useLoading';
+import { loadingGif } from '@common/hooks/useLoading';
 
 export function RepositoryList(): JSX.Element | undefined {
   const { installationId, octokit } = React.useContext(AuthContext);

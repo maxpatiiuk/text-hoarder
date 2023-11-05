@@ -3,8 +3,8 @@
  */
 
 import React from 'react';
-import { readerText } from '../../../../common/src/localization/readerText';
-import { renderApp } from '../../../../common/src/components/Core/renderApp';
+import { readerText } from '@common/localization/readerText';
+import { renderApp } from '@common/components/Core/renderApp';
 
 const container = document.createElement('main');
 

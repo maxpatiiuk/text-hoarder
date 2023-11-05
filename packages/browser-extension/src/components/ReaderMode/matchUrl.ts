@@ -3,7 +3,7 @@
  * but simplified and modernized
  */
 
-import { RA, filterArray } from '../../../../common/src/utils/types';
+import { RA, filterArray } from '@common/utils/types';
 
 export const preparePatterns = (patterns: string): RA<string | RegExp> =>
   filterArray(

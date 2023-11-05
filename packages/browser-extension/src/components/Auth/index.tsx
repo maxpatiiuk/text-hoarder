@@ -2,7 +2,8 @@ import React from 'react';
 import { AuthContext } from '../Contexts/AuthContext';
 import { AuthPrompt } from './AuthPrompt';
 import { RepositoryList } from './RepositoryList';
-import { signInText } from '../../../../common/src/localization/signInText';
+import { signInText } from '@common/localization/signInText';
+import { urls } from '../../../config';
 
 const readmeFile = 'README.md';
 
@@ -23,7 +24,10 @@ export function EnsureAuthenticated({
             ?.createFile(
               readmeFile,
               signInText.initializeExtension,
-              signInText.readmeContent,
+              signInText.readmeContent(
+                urls.webStoreUrl,
+                urls.webStoreReviewUrl,
+              ),
             )
             .catch(console.error)
             .finally(() => setNeedsReadme(false))

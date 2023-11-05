@@ -1,7 +1,7 @@
-import { preferencesText } from '../../../../common/src/localization/preferencesText';
+import { preferencesText } from '@common/localization/preferencesText';
 import { Renderers } from './Renderers';
-import { IR } from '../../../../common/src/utils/types';
-import { readerText } from '../../../../common/src/localization/readerText';
+import { IR } from '@common/utils/types';
+import { readerText } from '@common/localization/readerText';
 import { AutoTriggerUrls } from './AutoTriggerUrls';
 import { StorageDefinitions } from '../../utils/storage';
 
