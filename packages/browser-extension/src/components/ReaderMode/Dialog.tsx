@@ -5,19 +5,25 @@ import { H1 } from '../Atoms';
 import { Tools } from './Tools';
 import { useStorage } from '../../hooks/useStorage';
 import { usePageStyle } from '../Preferences/usePageStyle';
+import { useReducedMotion } from '../../hooks/useReduceMotion';
 
 /** Apply github-markdown-css styles */
 const markdownBody = 'markdown-body';
 
 export function Dialog({
   simpleDocument,
+  onRestoreScroll: handleRestoreScroll,
 }: {
   readonly simpleDocument: SimpleDocument | undefined;
+  readonly onRestoreScroll:
+    | ((containerElement: Element, mode: 'smooth' | 'instant') => void)
+    | undefined;
 }): JSX.Element {
   const [allowScrollPastLastLine] = useStorage(
     'reader.allowScrollPastLastLine',
   );
   const { style, customCss } = usePageStyle();
+
   return (
     <>
       {typeof simpleDocument === 'object' && (
@@ -48,7 +54,10 @@ export function Dialog({
         ) : (
           <>
             <H1>{simpleDocument.title ?? document.title}</H1>
-            <Content node={simpleDocument.content} />
+            <Content
+              node={simpleDocument.content}
+              onRestoreScroll={handleRestoreScroll}
+            />
             {allowScrollPastLastLine && <div className="min-h-full" />}
           </>
         )}
@@ -58,12 +67,34 @@ export function Dialog({
   );
 }
 
-function Content({ node }: { readonly node: HTMLElement }): JSX.Element {
+function Content({
+  node,
+  onRestoreScroll: handleRestoreScroll,
+}: {
+  readonly node: HTMLElement;
+  readonly onRestoreScroll:
+    | ((containerElement: Element, mode: 'smooth' | 'instant') => void)
+    | undefined;
+}): JSX.Element {
+  const [restoreScrollPosition] = useStorage('reader.restoreScrollPosition');
+  const reduceMotion = useReducedMotion();
+  const restoreScrollMode =
+    restoreScrollPosition === 'auto'
+      ? reduceMotion
+        ? 'instant'
+        : 'smooth'
+      : restoreScrollPosition;
+
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
     const clone = node.cloneNode(true) as Element;
     containerRef.current?.append(clone);
+
+    if (restoreScrollMode !== 'none')
+      handleRestoreScroll?.(containerRef.current!, restoreScrollMode);
+
     return (): void => clone.remove();
-  }, [node]);
+  }, [node, handleRestoreScroll]);
+
   return <div className="contents" ref={containerRef} />;
 }

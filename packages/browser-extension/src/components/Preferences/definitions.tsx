@@ -43,6 +43,15 @@ export const definitions: IR<
       step: 1,
     }),
     'reader.autoTriggerUrls': AutoTriggerUrls,
+    'reader.restoreScrollPosition': Renderers.Select(
+      preferencesText.restoreScrollPosition,
+      {
+        auto: preferencesText.automatic,
+        smooth: preferencesText.smoothScroll,
+        instant: preferencesText.instantScroll,
+        none: preferencesText.dontRestoreScroll,
+      },
+    ),
     'reader.downloadFormat': Renderers.Select(preferencesText.downloadFormat, {
       html: preferencesText.html,
       markdown: preferencesText.markdown,

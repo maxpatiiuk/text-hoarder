@@ -73,6 +73,10 @@ declare namespace chrome.permissions {
   }
 }
 
+interface Document {
+  caretPositionFromPoint(x: number, y: number): { readonly offsetNode: Node };
+}
+
 /* eslint-enable @typescript-eslint/method-signature-style */
 /* eslint-enable functional/no-method-signature */
 /* eslint-enable @typescript-eslint/consistent-type-definitions */
