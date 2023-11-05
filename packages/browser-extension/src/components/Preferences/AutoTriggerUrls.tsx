@@ -1,13 +1,16 @@
 import React from 'react';
-import { preferencesText } from '../../localization/preferencesText';
-import { ErrorMessage, Label } from '../Atoms';
-import { Button } from '../Atoms/Button';
-import { Textarea } from '../Atoms/Input';
+import { preferencesText } from '../../../../common/src/localization/preferencesText';
+import { ErrorMessage, Label } from '../../../../common/src/components/Atoms';
+import { Button } from '../../../../common/src/components/Atoms/Button';
+import { Textarea } from '../../../../common/src/components/Atoms/Input';
 import { extractOrigins, preparePatterns } from '../ReaderMode/matchUrl';
-import { RA } from '../../utils/types';
+import { RA } from '../../../../common/src/utils/types';
 import { IsPreferencesStandalone } from './Context';
 import { useStorage } from '../../hooks/useStorage';
-import { loadingGif, useLoading } from '../../hooks/useLoading';
+import {
+  loadingGif,
+  useLoading,
+} from '../../../../common/src/hooks/useLoading';
 
 export function AutoTriggerUrls(
   value: string,

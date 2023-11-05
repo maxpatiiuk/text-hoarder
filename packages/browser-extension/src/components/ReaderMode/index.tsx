@@ -4,7 +4,7 @@
  */
 
 import 'github-markdown-css/github-markdown.css';
-import { renderApp } from '../Core/renderApp';
+import { renderApp } from '../../../../common/src/components/Core/renderApp';
 import { Dialog } from './Dialog';
 import { shouldAutoTrigger } from '../ExtractContent/shouldAutoTrigger';
 import {
@@ -15,7 +15,9 @@ import React from 'react';
 import { listenEvent } from '../Background/messages';
 import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
-import { catchErrors } from '../Errors/assert';
+import { catchErrors } from '../../../../common/src/components/Errors/assert';
+import { Contexts } from '../Contexts/Contexts';
+import { ApplyTheme } from '../Preferences/ApplyTheme';
 
 // FEATURE: add local stats CLI
 // FEATURE: add local text-to-speech CLI
@@ -125,10 +127,13 @@ function displayDialog(
   preventBodyScroll();
   const unmount = renderApp(
     container,
-    <Dialog
-      simpleDocument={simpleDocument}
-      onRestoreScroll={scrollToMatchingElement}
-    />,
+    <Contexts>
+      <ApplyTheme container={container} />
+      <Dialog
+        simpleDocument={simpleDocument}
+        onRestoreScroll={scrollToMatchingElement}
+      />
+    </Contexts>,
     shadowRoot,
   );
 

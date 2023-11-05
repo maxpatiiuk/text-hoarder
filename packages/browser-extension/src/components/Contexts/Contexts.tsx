@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { ErrorBoundary } from '../Errors/ErrorBoundary';
+import { ErrorBoundary } from '../../../../common/src/components/Errors/ErrorBoundary';
 import { AuthenticationProvider } from './AuthContext';
 import { StorageProvider } from '../../hooks/useStorage';
-import { loadingGif } from '../../hooks/useLoading';
 
 /**
  * Provide contexts used by other components
@@ -25,11 +24,9 @@ export function Contexts({
 }): JSX.Element {
   return (
     <ErrorBoundary>
-      <React.Suspense fallback={loadingGif}>
-        <StorageProvider>
-          <AuthenticationProvider>{children}</AuthenticationProvider>
-        </StorageProvider>
-      </React.Suspense>
+      <StorageProvider>
+        <AuthenticationProvider>{children}</AuthenticationProvider>
+      </StorageProvider>
     </ErrorBoundary>
   );
 }

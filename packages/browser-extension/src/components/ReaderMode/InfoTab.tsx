@@ -1,10 +1,10 @@
 import React from 'react';
-import { signInText } from '../../localization/signInText';
-import { Link } from '../Atoms/Link';
+import { signInText } from '../../../../common/src/localization/signInText';
+import { Link } from '../../../../common/src/components/Atoms/Link';
 import { urls } from '../../../config';
-import { readerText } from '../../localization/readerText';
-import { H1 } from '../Atoms';
-import { Button } from '../Atoms/Button';
+import { readerText } from '../../../../common/src/localization/readerText';
+import { H1 } from '../../../../common/src/components/Atoms';
+import { Button } from '../../../../common/src/components/Atoms/Button';
 import { useStorage } from '../../hooks/useStorage';
 import { AuthContext } from '../Contexts/AuthContext';
 

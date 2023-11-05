@@ -2,8 +2,8 @@ import React from 'react';
 import { sendRequest } from '../Background/messages';
 import { useStorage } from '../../hooks/useStorage';
 import { Octokit } from 'octokit';
-import { ajax } from '../../utils/ajax';
-import { formatUrl, parseUrl } from '../../utils/queryString';
+import { ajax } from '../../../../common/src/utils/ajax';
+import { formatUrl, parseUrl } from '../../../../common/src/utils/queryString';
 import { corsAuthMiddlewareUrl } from '../../../config';
 import { OctokitWrapper, wrapOctokit } from './Octokit';
 

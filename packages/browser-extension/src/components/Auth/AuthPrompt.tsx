@@ -1,13 +1,16 @@
 import React from 'react';
 
-import { signInText } from '../../localization/signInText';
-import { Link } from '../Atoms/Link';
-import { Button } from '../Atoms/Button';
-import { ErrorMessage, H1 } from '../Atoms';
+import { signInText } from '../../../../common/src/localization/signInText';
+import { Link } from '../../../../common/src/components/Atoms/Link';
+import { Button } from '../../../../common/src/components/Atoms/Button';
+import { ErrorMessage, H1 } from '../../../../common/src/components/Atoms';
 import { urls } from '../../../config';
-import { readerText } from '../../localization/readerText';
+import { readerText } from '../../../../common/src/localization/readerText';
 import { AuthContext } from '../Contexts/AuthContext';
-import { loadingGif, useLoading } from '../../hooks/useLoading';
+import {
+  loadingGif,
+  useLoading,
+} from '../../../../common/src/hooks/useLoading';
 
 /**
  * This dialog is displayed on first use promoting user to sign in with GitHub

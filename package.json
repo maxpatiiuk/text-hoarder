@@ -1,5 +1,5 @@
 {
-  "name": "text-hoarder",
+  "name": "text-hoarder-base",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -13,13 +13,7 @@
   },
   "scripts": {
     "build": "npx webpack --mode production",
-    "docs": "typedoc --options typedoc.config.js ./src/components/Core/development.tsx",
-    "package": "npm run test && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
-    "test": "npm run typeCheck && npm run unitTests",
-    "typeCheck": "tsc",
-    "unitTests": "jest",
-    "unitTests:coverage": "jest --coverage",
-    "unitTests:watch": "jest --watch",
+    "package": "tsc && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
     "watch": "npx webpack --mode development --watch"
   },
   "dependencies": {
@@ -45,11 +39,7 @@
     "@maxxxxxdlp/eslint-config-react": "^3.0.0",
     "@maxxxxxdlp/prettier-config": "^1.0.4",
     "@stylelint/postcss-css-in-js": "^0.38.0",
-    "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.5.1",
     "@types/chrome": "^0.0.248",
-    "@types/jest": "^29.5.7",
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.34",
     "@types/react-devtools": "^3.6.1",
@@ -59,11 +49,6 @@
     "core-js": "^3.33.2",
     "css-loader": "^6.8.1",
     "eslint": "^8.53.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-fail-on-console": "^3.1.1",
-    "jest-silent-reporter": "^0.5.0",
-    "jest-skipped-reporter": "^0.0.5",
     "jsdom-global": "^3.0.2",
     "loader-utils": "^3.2.1",
     "node-notifier": "^10.0.1",
@@ -76,7 +61,6 @@
     "regenerator-runtime": "^0.14.0",
     "style-loader": "^3.3.3",
     "tailwindcss": "^3.3.5",
-    "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
@@ -93,9 +77,6 @@
       "last 2 Firefox versions",
       "last 1 Safari version"
     ]
-  },
-  "directories": {
-    "test": "tests"
   },
   "prettier": "@maxxxxxdlp/prettier-config"
 }

@@ -111,3 +111,8 @@ introduced:
 ```sh
 npx tsc
 ```
+
+Note, this project does not include tests, which is an intentional decision.
+Read the commit message in
+[af2eedf](https://github.com/maxxxxxdlp/text-hoarder/commit/af2eedf) to see
+several justifications (and why this may be reversed in the future).

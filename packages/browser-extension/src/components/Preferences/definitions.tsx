@@ -1,9 +1,9 @@
-import { preferencesText } from '../../localization/preferencesText';
+import { preferencesText } from '../../../../common/src/localization/preferencesText';
 import { Renderers } from './Renderers';
-import { IR } from '../../utils/types';
-import { readerText } from '../../localization/readerText';
+import { IR } from '../../../../common/src/utils/types';
+import { readerText } from '../../../../common/src/localization/readerText';
 import { AutoTriggerUrls } from './AutoTriggerUrls';
-import { StorageDefinitions } from '../../utils/storage';
+import { StorageDefinitions } from '../../../../common/src/utils/storage';
 
 export const definitions: IR<
   Partial<{
