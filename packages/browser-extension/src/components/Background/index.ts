@@ -80,11 +80,21 @@ const requestHandlers: {
           } as const;
       });
   },
+
   OpenUrl: (url, { tab }) =>
     chrome.tabs.create({ openerTabId: tab?.id, url }).then(() => undefined),
+
   async ReloadExtension() {
     chrome.tabs.reload();
     chrome.runtime.reload();
+  },
+
+  async UpdateBadge(text, { tab }) {
+    await chrome.action.setBadgeText({ text: text ?? '', tabId: tab?.id });
+    await chrome.action.setBadgeBackgroundColor({
+      color: '#f77',
+      tabId: tab?.id,
+    });
   },
 };
 

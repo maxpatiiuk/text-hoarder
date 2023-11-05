@@ -14,8 +14,6 @@ import { listenEvent } from '../Background/messages';
 import { Link } from '../Atoms/Link';
 import { loadingGif, useLoading } from '../../hooks/useLoading';
 
-// FEATURE: use action.setIcon/setTitle/setBadgeText/setBadgeBackgroundColor to show if there are any saved texts for this page (https://developer.chrome.com/docs/extensions/reference/action/#badge)
-
 export function Tools({
   simpleDocument,
   style,

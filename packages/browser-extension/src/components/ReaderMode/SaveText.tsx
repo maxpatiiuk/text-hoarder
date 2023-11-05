@@ -24,15 +24,12 @@ const previousYearPath = encoding.urlToPath.encode(
   new URL(window.location.href),
 );
 
-export function useExistingFile(): [
-  ...GetOrSet<undefined | false | string>,
-  isLoading: boolean,
-] {
+export function useExistingFile(): GetOrSet<undefined | false | string> {
   const { github } = React.useContext(AuthContext);
   const [eagerCheckForAlreadySaved] = useStorage(
     'reader.eagerCheckForAlreadySaved',
   );
-  return useAsyncState(
+  const [file, setFile] = useAsyncState(
     React.useCallback(
       () =>
         eagerCheckForAlreadySaved
@@ -49,6 +46,15 @@ export function useExistingFile(): [
       [github],
     ),
   );
+
+  React.useEffect(() => {
+    if (file === undefined || file === false) return;
+    sendRequest('UpdateBadge', '1').catch(console.error);
+    return (): void =>
+      void sendRequest('UpdateBadge', undefined).catch(console.error);
+  }, [file]);
+
+  return [file, setFile];
 }
 
 export function SaveText({

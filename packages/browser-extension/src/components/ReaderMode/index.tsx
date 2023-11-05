@@ -1,5 +1,5 @@
 /**
- * This scrip is called by background scrip on keyboard shortcut press - it is
+ * This script is called by background scrip on keyboard shortcut press - it is
  * executed in the page that was active when action was triggered.
  */
 
