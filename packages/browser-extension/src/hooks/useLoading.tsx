@@ -1,7 +1,6 @@
 import React from 'react';
 import { RA } from '../utils/types';
 import { useBooleanState } from './useBooleanState';
-import { crash } from '../components/Errors/assert';
 import { readerText } from '../localization/readerText';
 
 // LOW: don't set isLoading if occurs only briefly. https://github.com/specify/specify7/blob/xml-editor/specifyweb/frontend/js_src/lib/components/Core/Contexts.tsx#L149-L188
@@ -29,7 +28,7 @@ export function useLoading(): readonly [
           holders.current = holders.current.filter((item) => item !== holderId);
           if (holders.current.length === 0) handleLoaded();
         })
-        .catch(crash);
+        .catch(console.error);
     },
     [handleLoading, handleLoaded],
   );
