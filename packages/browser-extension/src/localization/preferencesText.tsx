@@ -56,5 +56,20 @@ export const preferencesText = dictionary({
   eagerCheckForAlreadySaved: {
     en: 'Check ahead of time if current article has already been saved (less green for the planet)',
   },
+  restoreScrollPosition: {
+    en: 'Restore scroll position',
+  },
+  automatic: {
+    en: 'Automatic',
+  },
+  smoothScroll: {
+    en: 'Smooth Scroll',
+  },
+  instantScroll: {
+    en: 'Instant Scroll',
+  },
+  dontRestoreScroll: {
+    en: "Don't Restore Scroll",
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

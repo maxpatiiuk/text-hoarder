@@ -13,6 +13,7 @@ import {
 } from '../ExtractContent/documentToSimpleDocument';
 import React from 'react';
 import { listenEvent } from '../Background/messages';
+import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 
 // FEATURE: when entering reader mode, find the previous location and scroll there
 // FEATURE: add local stats CLI
@@ -49,8 +50,11 @@ const activatedReason = new Promise((resolve) => {
 
 if (alreadyOpen) previousDialog?.remove();
 else {
+  const scrollToMatchingElement = scrollToMatchingNode();
   const autoTrigger = shouldAutoTrigger();
   const simpleDocument = documentToSimpleDocument();
+  const render = () =>
+    displayDialog(simpleDocument, scrollToMatchingElement?.());
 
   /**
    * If page doesn't look readable, or failed to extract content, then wait for
@@ -60,12 +64,17 @@ else {
    */
   if (!autoTrigger || simpleDocument === undefined)
     activatedReason.then((action) =>
-      action === 'automaticTrigger' ? undefined : displayDialog(simpleDocument),
+      action === 'automaticTrigger' ? undefined : render(),
     );
-  else displayDialog(simpleDocument);
+  else render();
 }
 
-function displayDialog(simpleDocument: SimpleDocument | undefined): void {
+function displayDialog(
+  simpleDocument: SimpleDocument | undefined,
+  scrollToMatchingElement:
+    | ((containerElement: Element, mode: 'smooth' | 'instant') => void)
+    | undefined,
+): void {
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');
   dialog.id = id;
@@ -111,7 +120,10 @@ function displayDialog(simpleDocument: SimpleDocument | undefined): void {
   preventBodyScroll();
   const unmount = renderApp(
     container,
-    <Dialog simpleDocument={simpleDocument} />,
+    <Dialog
+      simpleDocument={simpleDocument}
+      onRestoreScroll={scrollToMatchingElement}
+    />,
     shadowRoot,
   );
 
