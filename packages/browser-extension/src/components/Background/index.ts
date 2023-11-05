@@ -9,10 +9,7 @@ import { formatUrl } from '../../../../common/src/utils/queryString';
 import { gitHubAppName } from '../../../config';
 import { RA } from '../../../../common/src/utils/types';
 import { preparePatterns, urlMatches } from '../ReaderMode/matchUrl';
-import {
-  listenToStorage,
-  setStorage,
-} from '../../../../common/src/utils/storage';
+import { listenToStorage, setStorage } from '../../utils/storage';
 
 /**
  * Listen for a message from the front-end and send back the response

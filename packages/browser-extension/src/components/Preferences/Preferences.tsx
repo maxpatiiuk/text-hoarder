@@ -5,7 +5,7 @@ import { IsPreferencesStandalone } from './Context';
 import { useStorage } from '../../hooks/useStorage';
 import { definitions } from './definitions';
 import { RequestUrlPermissions } from './AutoTriggerUrls';
-import { StorageDefinitions } from '../../../../common/src/utils/storage';
+import { StorageDefinitions } from '../../utils/storage';
 
 export function Preferences(): JSX.Element {
   const isStandalone = React.useContext(IsPreferencesStandalone);

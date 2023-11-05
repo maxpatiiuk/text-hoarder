@@ -20,7 +20,7 @@ import {
   setStorage,
   storage,
   storageDefinitions,
-} from '../../../common/src/utils/storage';
+} from '../utils/storage';
 import { loadingGif } from '../../../common/src/hooks/useLoading';
 
 const StorageContext = React.createContext<Store>({

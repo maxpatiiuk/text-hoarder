@@ -1,4 +1,4 @@
-import { ensure, IR } from './types';
+import { ensure, IR } from '../../../common/src/utils/types';
 
 export type Repository = {
   readonly owner: string;

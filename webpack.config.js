@@ -5,10 +5,12 @@
 const path = require('node:path');
 const webpack = require('webpack');
 
-const outputPath = path.resolve(__dirname, 'dist');
-
-module.exports = (_env, argv) =>
-  /** @type { import('webpack').Configuration } */ ({
+module.exports = ({ cwd }, argv) => {
+  const pathParts = cwd?.split(path.sep) ?? [];
+  const packagesPathPart = pathParts.indexOf('packages');
+  const package = pathParts[packagesPathPart + 1] ?? 'browser-extension';
+  const outputPath = path.resolve(__dirname, 'packages', package, 'dist');
+  return /** @type { import('webpack').Configuration } */ ({
     module: {
       rules: [
         {
@@ -21,9 +23,14 @@ module.exports = (_env, argv) =>
             {
               // See https://stackoverflow.com/a/68995851/8584605
               loader: 'style-loader',
-              options: {
-                insert: require.resolve('./src/components/Core/styleLoader.ts'),
-              },
+              options:
+                package === 'browser-extension'
+                  ? {
+                      insert: require.resolve(
+                        './packages/browser-extension/src/components/Core/styleLoader.ts',
+                      ),
+                    }
+                  : undefined,
             },
             'css-loader',
             'postcss-loader',
@@ -72,17 +79,24 @@ module.exports = (_env, argv) =>
      */
     devtool:
       argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
-    entry: {
-      preferences:
-        argv.mode === 'development'
-          ? './src/components/Preferences/development.tsx'
-          : './src/components/Preferences/index.tsx',
-      background: './src/components/Background/index.ts',
-      readerMode:
-        argv.mode === 'development'
-          ? './src/components/ReaderMode/development.tsx'
-          : './src/components/ReaderMode/index.tsx',
-    },
+    entry:
+      package === 'browser-extension'
+        ? {
+            preferences:
+              argv.mode === 'development'
+                ? './packages/browser-extension/src/components/Preferences/development.tsx'
+                : './packages/browser-extension/src/components/Preferences/index.tsx',
+            background:
+              './packages/browser-extension/src/components/Background/index.ts',
+            readerMode:
+              argv.mode === 'development'
+                ? './packages/browser-extension/src/components/ReaderMode/development.tsx'
+                : './packages/browser-extension/src/components/ReaderMode/index.tsx',
+          }
+        : {
+            cli: './packages/cli/src/components/Cli/index.ts',
+            web: './packages/cli/src/components/Web/index.tsx',
+          },
     plugins:
       argv.mode === 'development'
         ? [
@@ -107,7 +121,7 @@ module.exports = (_env, argv) =>
       },
     },
     watchOptions: {
-      ignored: '/node_modules/',
+      ignored: '**/node_modules/',
     },
     optimization: {
       minimize: false,
@@ -128,3 +142,4 @@ module.exports = (_env, argv) =>
       timings: true,
     },
   });
+};

@@ -2,7 +2,7 @@ import { Octokit } from 'octokit';
 import { encoding } from '../../../../common/src/utils/encoding';
 import { gitHubAppName, gitHubAppId } from '../../../config';
 import { http } from '../../../../common/src/utils/ajax';
-import { Repository } from '../../../../common/src/utils/storage';
+import { Repository } from '../../utils/storage';
 import { State } from 'typesafe-reducer';
 
 export type OctokitWrapper = {
