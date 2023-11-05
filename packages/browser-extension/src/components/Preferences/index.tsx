@@ -2,16 +2,14 @@
  * This scrip is called from the preferences page
  */
 
-import { renderApp } from '../../../../common/src/components/Core/renderApp';
 import React from 'react';
 import { preferencesText } from '../../../../common/src/localization/preferencesText';
 import { Preferences } from './Preferences';
 import { IsPreferencesStandalone } from './Context';
 import { usePageStyle } from './usePageStyle';
-import { Contexts } from '../Contexts/Contexts';
-import { ApplyTheme } from './ApplyTheme';
+import { renderExtension } from '../Core/renderExtension';
 
-const container = document.createElement('div');
+const container = document.createElement('main');
 
 container.classList.add(
   'flex',
@@ -27,14 +25,7 @@ container.classList.add(
 document.body.append(container);
 document.title = preferencesText.preferences;
 
-renderApp(
-  container,
-  <Contexts>
-    <ApplyTheme container={container} />
-    <PreferencesPage />
-  </Contexts>,
-  document.body,
-);
+renderExtension(container, <PreferencesPage />, document.body);
 
 function PreferencesPage(): JSX.Element {
   const { style, customCss } = usePageStyle();

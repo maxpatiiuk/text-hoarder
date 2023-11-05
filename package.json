@@ -12,9 +12,9 @@
     "url": "https://github.com/maxxxxxdlp/text-hoarder/issues"
   },
   "scripts": {
-    "build": "npx webpack --mode production",
+    "build": "npx webpack --mode production --env cwd=$INIT_CWD",
     "package": "tsc && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
-    "watch": "npx webpack --mode development --watch"
+    "watch": "npx webpack --mode development --watch --env cwd=$INIT_CWD"
   },
   "dependencies": {
     "@mozilla/readability": "^0.4.4",

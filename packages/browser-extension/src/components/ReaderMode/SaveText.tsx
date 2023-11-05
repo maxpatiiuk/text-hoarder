@@ -10,7 +10,7 @@ import { Link } from '../../../../common/src/components/Atoms/Link';
 import { useStorage } from '../../hooks/useStorage';
 import { GetOrSet } from '../../../../common/src/utils/types';
 import { sendRequest } from '../Background/messages';
-import { Repository } from '../../../../common/src/utils/storage';
+import { Repository } from '../../utils/storage';
 import {
   loadingGif,
   useLoading,
