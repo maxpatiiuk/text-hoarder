@@ -15,8 +15,8 @@ export function shouldAutoTrigger(): boolean {
   if (blockedExtensions.has(extension ?? '')) return false;
 
   // LOW: fetch page as HTML again? https://searchfox.org/mozilla-central/source/toolkit/components/reader/ReaderMode.sys.mjs#261. ChatGPT says content before JS may be better - fewer ads and non-essential content
-  // FEATURE: make reader create new history entry?
-  // FEATURE: if was in reader mode, and clicked on same-origin link, remain in reader mode?
+  // LOW: make reader create new history entry?
+  // LOW: if was in reader mode, and clicked on same-origin link, remain in reader mode?
 
   if (!isProbablyReaderable(document)) return false;
 

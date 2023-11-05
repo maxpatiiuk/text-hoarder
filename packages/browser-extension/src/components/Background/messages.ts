@@ -25,12 +25,24 @@ type OpenUrl = State<
 type ReloadExtension = State<
   'ReloadExtension',
   {
-    readonly request: undefined;
-    readonly response: undefined;
+    readonly request: void;
+    readonly response: void;
   }
 >;
 
-export type Requests = AuthenticateRequest | OpenUrl | ReloadExtension;
+type UpdateBadge = State<
+  'UpdateBadge',
+  {
+    readonly request: undefined | '1';
+    readonly response: void;
+  }
+>;
+
+export type Requests =
+  | AuthenticateRequest
+  | OpenUrl
+  | ReloadExtension
+  | UpdateBadge;
 
 /**
  * Send a request to the background script and await the response.

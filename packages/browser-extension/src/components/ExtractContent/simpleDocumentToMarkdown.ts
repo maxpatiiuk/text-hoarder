@@ -8,13 +8,12 @@ import { SimpleDocument } from './documentToSimpleDocument';
 export function simpleDocumentToMarkdown(
   simpleDocument: SimpleDocument,
 ): string {
-  // FEATURE: add meta to top
   return `# ${simpleDocument.title}\n${elementToMarkdown(
     simpleDocument.content,
   )}`;
 }
 
-// FEATURE: add customization options
+// LOW: add customization options
 const turndownService = new TurndownService({
   headingStyle: 'atx',
   hr: '---',
