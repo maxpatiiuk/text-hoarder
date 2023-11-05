@@ -63,7 +63,8 @@ git clone https://github.com/maxxxxxdlp/text-hoarder
 cd packages/browser-extension
 ```
 
-(Run all following commands from the `/src` directory) Install dependencies:
+(Run all following commands from the `/packages/browser-extension` directory)
+Install dependencies:
 
 ```sh
 npm install
@@ -102,24 +103,11 @@ Instead, a standalone React DevTools (an Electron app) needs to be used.
 Note, this will only work for when WebPack is run in development mode as we
 disabled react DevTools integration in production to reduce bundle size.
 
-## Testing
+## TypeCheck
 
-Unit tests are powered by Jest. Static Typechecking is powered by TypeScript.
-
-You can run both like this:
-
-```sh
-npm test
-```
-
-or:
+After making changes, double check that no TypeScript errors have been
+introduced:
 
 ```sh
-npm t
-```
-
-Alternatively, you can start Jest in watch mode:
-
-```sh
-npm run unitTests:watch
+npx tsc
 ```
