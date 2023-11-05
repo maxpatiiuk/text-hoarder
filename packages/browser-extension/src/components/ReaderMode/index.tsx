@@ -14,6 +14,8 @@ import {
 import React from 'react';
 import { listenEvent } from '../Background/messages';
 import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
+import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
+import { catchErrors } from '../Errors/assert';
 
 // FEATURE: add local stats CLI
 // FEATURE: add local text-to-speech CLI
@@ -49,11 +51,15 @@ const activatedReason = new Promise((resolve) => {
 
 if (alreadyOpen) previousDialog?.remove();
 else {
-  const scrollToMatchingElement = scrollToMatchingNode();
+  const scrollToMatchingElement = catchErrors(scrollToMatchingNode);
+  const preserveSelection = catchErrors(preserveTextSelection);
   const autoTrigger = shouldAutoTrigger();
   const simpleDocument = documentToSimpleDocument();
   const render = () =>
-    displayDialog(simpleDocument, scrollToMatchingElement?.());
+    displayDialog(simpleDocument, (containerElement, mode) => {
+      scrollToMatchingElement?.(containerElement, mode);
+      preserveSelection?.(containerElement);
+    });
 
   /**
    * If page doesn't look readable, or failed to extract content, then wait for
@@ -70,9 +76,10 @@ else {
 
 function displayDialog(
   simpleDocument: SimpleDocument | undefined,
-  scrollToMatchingElement:
-    | ((containerElement: Element, mode: 'smooth' | 'instant') => void)
-    | undefined,
+  scrollToMatchingElement: (
+    containerElement: Element,
+    mode: 'smooth' | 'instant' | 'none',
+  ) => void,
 ): void {
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');

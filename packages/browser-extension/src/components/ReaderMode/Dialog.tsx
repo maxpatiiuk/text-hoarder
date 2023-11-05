@@ -15,9 +15,10 @@ export function Dialog({
   onRestoreScroll: handleRestoreScroll,
 }: {
   readonly simpleDocument: SimpleDocument | undefined;
-  readonly onRestoreScroll:
-    | ((containerElement: Element, mode: 'smooth' | 'instant') => void)
-    | undefined;
+  readonly onRestoreScroll: (
+    containerElement: Element,
+    mode: 'smooth' | 'instant' | 'none',
+  ) => void;
 }): JSX.Element {
   const [allowScrollPastLastLine] = useStorage(
     'reader.allowScrollPastLastLine',
@@ -72,9 +73,10 @@ function Content({
   onRestoreScroll: handleRestoreScroll,
 }: {
   readonly node: HTMLElement;
-  readonly onRestoreScroll:
-    | ((containerElement: Element, mode: 'smooth' | 'instant') => void)
-    | undefined;
+  readonly onRestoreScroll: (
+    containerElement: Element,
+    mode: 'smooth' | 'instant' | 'none',
+  ) => void;
 }): JSX.Element {
   const [restoreScrollPosition] = useStorage('reader.restoreScrollPosition');
   const reduceMotion = useReducedMotion();
@@ -90,8 +92,7 @@ function Content({
     const clone = node.cloneNode(true) as Element;
     containerRef.current?.append(clone);
 
-    if (restoreScrollMode !== 'none')
-      handleRestoreScroll?.(containerRef.current!, restoreScrollMode);
+    handleRestoreScroll(containerRef.current!, restoreScrollMode);
 
     return (): void => clone.remove();
   }, [node, handleRestoreScroll]);
