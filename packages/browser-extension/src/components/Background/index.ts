@@ -10,7 +10,6 @@ import { gitHubAppName } from '../../../config';
 import { RA } from '../../utils/types';
 import { preparePatterns, urlMatches } from '../ReaderMode/matchUrl';
 import { listenToStorage, setStorage } from '../../utils/storage';
-import { emit } from 'process';
 
 /**
  * Listen for a message from the front-end and send back the response
@@ -110,14 +109,16 @@ function connect(
         files: ['./dist/readerMode.bundle.js'],
         world: 'ISOLATED',
       })
-      .then(() => undefined)
+      .then(() => emit(false))
       .catch(console.error);
 
-  const emit = (): Promise<void> =>
-    emitEvent(tabId, { type: 'ActivateExtension', action }).catch(toggleReader);
+  const emit = (retry: boolean): Promise<void> =>
+    emitEvent(tabId, { type: 'ActivateExtension', action }).catch(
+      retry ? toggleReader : () => {},
+    );
 
-  if (action === 'open') toggleReader().then(emit);
-  else emit();
+  if (action === 'open') toggleReader();
+  else emit(true);
 }
 // FIXME: decide if keyboard shortcuts should work before first activation
 
