@@ -19,7 +19,6 @@ export const commitText = dictionary({
   },
   initialize: { en: 'Initialize Text Hoarder' },
   createFile: { en: (documentTitle: string): string => documentTitle },
-  updateMetadata: { en: `[${commonText.textHoarder}] Update metadata file` },
   readmeContent: {
     en: (
       webStoreUrl: string,
