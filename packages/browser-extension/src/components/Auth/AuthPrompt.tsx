@@ -5,9 +5,9 @@ import { Link } from '@common/components/Atoms/Link';
 import { Button } from '@common/components/Atoms/Button';
 import { ErrorMessage, H1 } from '@common/components/Atoms';
 import { urls } from '../../../config';
-import { readerText } from '@common/localization/readerText';
 import { AuthContext } from '../Contexts/AuthContext';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
+import { commonText } from '@common/localization/commonText';
 
 /**
  * This dialog is displayed on first use promoting user to sign in with GitHub
@@ -19,7 +19,7 @@ export function AuthPrompt(): JSX.Element {
   const [error, setError] = React.useState('');
   return (
     <>
-      <H1>{readerText.textHoarder}</H1>
+      <H1>{commonText.textHoarder}</H1>
       <p>{signInText.signInDescription}</p>
       <Step number={1} />
       <p>

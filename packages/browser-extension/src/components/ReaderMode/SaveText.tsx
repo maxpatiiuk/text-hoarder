@@ -12,6 +12,8 @@ import { GetOrSet } from '@common/utils/types';
 import { sendRequest } from '../Background/messages';
 import { Repository } from '../../utils/storage';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
+import { commonText } from '@common/localization/commonText';
+import { commitText } from '@common/localization/commitText';
 
 const currentYear = new Date().getFullYear();
 const previousYear = currentYear - 1;
@@ -81,7 +83,11 @@ export function SaveText({
 
     const markdown = simpleDocumentToMarkdown(simpleDocument);
     github!
-      .createFile(currentYearPath, simpleDocument.title, markdown)
+      .createFile(
+        currentYearPath,
+        commitText.createFile(simpleDocument.title),
+        markdown,
+      )
       .then((response) => {
         if (response.type === 'AlreadyExists') setWasAlreadySaved(true);
         handleSaved(currentYearPath);
@@ -127,7 +133,9 @@ export function SaveText({
                           ? undefined
                           : github!.deleteFile(
                               existingFile,
-                              `[${readerText.delete}] simpleDocument.title`,
+                              commitText.repositoryInitialize(
+                                simpleDocument.title,
+                              ),
                               sha,
                             ),
                       )
@@ -139,7 +147,7 @@ export function SaveText({
                 : undefined
             }
           >
-            {readerText.delete}
+            {commonText.delete}
           </Button.Danger>
           <Link.Info href={fileEditUrl}>{readerText.edit}</Link.Info>
           {isLoading && loadingGif}

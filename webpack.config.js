@@ -4,13 +4,25 @@
 
 const path = require('node:path');
 const webpack = require('webpack');
+const fs = require('fs');
 
-module.exports = ({ cwd }, argv) => {
+const version = JSON.parse(
+  fs.readFileSync('packages/browser-extension/manifest.json').toString(),
+).version;
+
+module.exports = ({ cwd }, { mode }) => {
   const pathParts = cwd?.split(path.sep) ?? [];
   const packagesPathPart = pathParts.indexOf('packages');
   const package = pathParts[packagesPathPart + 1] ?? 'browser-extension';
+  return package === 'browser-extension'
+    ? makeConfig(package, mode)
+    : [makeConfig(package, mode, 'node'), makeConfig(package, mode, 'web')];
+};
+
+function makeConfig(package, mode, target = 'web') {
   const outputPath = path.resolve(__dirname, 'packages', package, 'dist');
   return /** @type { import('webpack').Configuration } */ ({
+    target,
     module: {
       rules: [
         {
@@ -54,7 +66,7 @@ module.exports = ({ cwd }, argv) => {
                       },
                       bugfixes: true,
                       // See "browserslist" section of package.json
-                      browserslistEnv: argv.mode,
+                      browserslistEnv: mode,
                     },
                   ],
                   ['@babel/preset-react'],
@@ -69,45 +81,51 @@ module.exports = ({ cwd }, argv) => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js'],
       symlinks: false,
+      alias: {
+        '@common': path.resolve(__dirname, 'packages/common/src'),
+      },
     },
     // Set appropriate process.env.NODE_ENV
-    mode: argv.mode,
+    mode: mode,
     /*
      * User recommended source map type in production
      * Can't use the recommended "eval-source-map" in development due to
      * https://stackoverflow.com/questions/48047150/chrome-extension-compiled-by-webpack-throws-unsafe-eval-error
      */
-    devtool:
-      argv.mode === 'development' ? 'cheap-module-source-map' : 'source-map',
+    devtool: mode === 'development' ? 'cheap-module-source-map' : 'source-map',
     entry:
       package === 'browser-extension'
         ? {
             preferences:
-              argv.mode === 'development'
+              mode === 'development'
                 ? './packages/browser-extension/src/components/Preferences/development.tsx'
                 : './packages/browser-extension/src/components/Preferences/index.tsx',
             background:
               './packages/browser-extension/src/components/Background/index.ts',
             readerMode:
-              argv.mode === 'development'
+              mode === 'development'
                 ? './packages/browser-extension/src/components/ReaderMode/development.tsx'
                 : './packages/browser-extension/src/components/ReaderMode/index.tsx',
           }
+        : target === 'web'
+        ? {
+            web: './packages/cli/src/components/Web/index.tsx',
+          }
         : {
             cli: './packages/cli/src/components/Cli/index.ts',
-            web: './packages/cli/src/components/Web/index.tsx',
           },
-    plugins:
-      argv.mode === 'development'
-        ? [
-            new webpack.optimize.LimitChunkCountPlugin({
-              maxChunks: 1,
-            }),
-          ]
+    plugins: [
+      mode === 'development'
+        ? new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1,
+          })
         : undefined,
+      new webpack.DefinePlugin({
+        'process.env.TEXT_HOARDER_VERSION': JSON.stringify(version),
+      }),
+    ],
     output: {
       path: outputPath,
-      clean: true,
       publicPath: '/public/',
       filename: '[name].bundle.js',
       environment: {
@@ -142,4 +160,4 @@ module.exports = ({ cwd }, argv) => {
       timings: true,
     },
   });
-};
+}
