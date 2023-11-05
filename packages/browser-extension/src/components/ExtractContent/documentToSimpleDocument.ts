@@ -34,7 +34,7 @@ export function documentToSimpleDocument(): undefined | SimpleDocument {
       new Readability(documentClone, {
         serializer: (node) => node as HTMLElement,
         classesToPreserve: Array.from(preserveClassNames),
-        // FEATURE: extend the unlikely candidates regex? Inspiration: https://github.com/lindylearn/unclutter/blob/main/apps/unclutter/source/content-script/modifications/contentBlock.ts#L126
+        // LOW: extend the unlikely candidates regex? Inspiration: https://github.com/lindylearn/unclutter/blob/main/apps/unclutter/source/content-script/modifications/contentBlock.ts#L126
       }).parse() ?? undefined
     );
   } catch (error) {

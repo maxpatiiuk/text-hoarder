@@ -6,7 +6,7 @@ import { markdownToTxt } from 'markdown-to-txt';
 export function markdownToText(markdown: string): string {
   return markdownToTxt(markdown, {
     // LOW: add customization options
-    // FEATURE: allow omitting images
+    // LOW: allow omitting images
     //renderer: {image: ()=>''}
   });
 }

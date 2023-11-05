@@ -4,12 +4,13 @@ import { useBooleanState } from './useBooleanState';
 import { crash } from '../components/Errors/assert';
 import { readerText } from '../localization/readerText';
 
+// LOW: don't set isLoading if occurs only briefly. https://github.com/specify/specify7/blob/xml-editor/specifyweb/frontend/js_src/lib/components/Core/Contexts.tsx#L149-L188
 /**
- * Display a modal loading dialog while promise is resolving.
- * Also, catch and handle erros if promise is rejected.
- * If multiple promises are resolving at the same time, the dialog is
- * visible until all promises are resolved.
- * This prevents having more than one loading dialog visible at the same time.
+ * Provide a callback that can be called with a promise. While promise is
+ * resolving, this hook will set isLoading to "true". Can have multiple promises
+ * in loading() at the same time - isLoading stays true until all promises are
+ * resolved.
+ * Also, catches and handle errors if promise is rejected.
  */
 export function useLoading(): readonly [
   isLoading: boolean,

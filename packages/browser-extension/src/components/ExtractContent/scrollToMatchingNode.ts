@@ -5,7 +5,7 @@
 const id = 'text-hoarder-current-position-element';
 export function scrollToMatchingNode():
   | undefined
-  | (() => (containerElement: Element, mode: 'smooth' | 'instant') => void) {
+  | ((containerElement: Element, mode: 'smooth' | 'instant' | 'none') => void) {
   const node = getTextNearTopOfViewport();
   const element =
     node instanceof Element ? node : node?.parentElement ?? undefined;
@@ -21,20 +21,18 @@ export function scrollToMatchingNode():
       : element.setAttribute('id', previousId);
 
   // Could probably have used a yield here, but this seems more commonplace
-  return () => {
+  return (containerElement, mode): void => {
     restoreId(element);
-
-    return (containerElement, mode): void => {
-      // LOW: only scroll down if element is more than 1 screen down?
-      const markedElement = containerElement.querySelector(
-        `#${escapeUnsafeId(markerId)}`,
-      );
-      if (markedElement !== null) restoreId(markedElement);
-      markedElement?.scrollIntoView({
-        behavior: mode,
-        block: 'center',
-      });
-    };
+    if (mode === 'none') return;
+    // LOW: only scroll down if element is more than 1 screen down?
+    const markedElement = containerElement.querySelector(
+      `#${escapeUnsafeId(markerId)}`,
+    );
+    if (markedElement !== null) restoreId(markedElement);
+    markedElement?.scrollIntoView({
+      behavior: mode,
+      block: 'center',
+    });
   };
 }
 
