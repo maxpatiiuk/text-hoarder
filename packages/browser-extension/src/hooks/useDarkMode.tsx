@@ -1,4 +1,4 @@
-import { useMedia } from './useMedia';
+import { useMedia } from '../../../common/src/hooks/useMedia';
 import { useStorage } from './useStorage';
 
 export function useDarkMode(): boolean {

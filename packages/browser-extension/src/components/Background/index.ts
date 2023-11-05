@@ -5,11 +5,14 @@
 import type { State } from 'typesafe-reducer';
 
 import { ActivateExtension, emitEvent, type Requests } from './messages';
-import { formatUrl } from '../../utils/queryString';
+import { formatUrl } from '../../../../common/src/utils/queryString';
 import { gitHubAppName } from '../../../config';
-import { RA } from '../../utils/types';
+import { RA } from '../../../../common/src/utils/types';
 import { preparePatterns, urlMatches } from '../ReaderMode/matchUrl';
-import { listenToStorage, setStorage } from '../../utils/storage';
+import {
+  listenToStorage,
+  setStorage,
+} from '../../../../common/src/utils/storage';
 
 /**
  * Listen for a message from the front-end and send back the response

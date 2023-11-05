@@ -1,10 +1,9 @@
 import '../../css/main.css';
-import { getStyleTags } from '../Core/styleLoader';
+import { getStyleTags } from './styleLoader';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { Contexts } from '../Contexts/Contexts';
-import { ApplyTheme } from './ApplyTheme';
+import { loadingGif } from '../../hooks/useLoading';
 
 export function renderApp(
   container: HTMLElement,
@@ -16,8 +15,7 @@ export function renderApp(
   const root = ReactDOM.createRoot(container);
   root.render(
     <React.StrictMode>
-      <ApplyTheme container={container} />
-      <Contexts>{children}</Contexts>
+      <React.Suspense fallback={loadingGif}>{children}</React.Suspense>
     </React.StrictMode>,
   );
   return (): void => root.unmount();

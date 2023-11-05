@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { dictionary } from './utils';
-import { urls } from '../../config';
+import { urls } from '../../../browser-extension/config';
 
 // Refer to "Guidelines for Programmers" in ./README.md before editing this file
 

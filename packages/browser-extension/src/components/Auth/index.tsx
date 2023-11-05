@@ -2,7 +2,7 @@ import React from 'react';
 import { AuthContext } from '../Contexts/AuthContext';
 import { AuthPrompt } from './AuthPrompt';
 import { RepositoryList } from './RepositoryList';
-import { signInText } from '../../localization/signInText';
+import { signInText } from '../../../../common/src/localization/signInText';
 
 const readmeFile = 'README.md';
 

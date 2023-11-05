@@ -1,17 +1,20 @@
 import React from 'react';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { simpleDocumentToMarkdown } from '../ExtractContent/simpleDocumentToMarkdown';
-import { useAsyncState } from '../../hooks/useAsyncState';
+import { useAsyncState } from '../../../../common/src/hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
-import { readerText } from '../../localization/readerText';
-import { Button } from '../Atoms/Button';
-import { encoding } from '../../utils/encoding';
-import { Link } from '../Atoms/Link';
+import { readerText } from '../../../../common/src/localization/readerText';
+import { Button } from '../../../../common/src/components/Atoms/Button';
+import { encoding } from '../../../../common/src/utils/encoding';
+import { Link } from '../../../../common/src/components/Atoms/Link';
 import { useStorage } from '../../hooks/useStorage';
-import { GetOrSet } from '../../utils/types';
+import { GetOrSet } from '../../../../common/src/utils/types';
 import { sendRequest } from '../Background/messages';
-import { Repository } from '../../utils/storage';
-import { loadingGif, useLoading } from '../../hooks/useLoading';
+import { Repository } from '../../../../common/src/utils/storage';
+import {
+  loadingGif,
+  useLoading,
+} from '../../../../common/src/hooks/useLoading';
 
 const currentYear = new Date().getFullYear();
 const previousYear = currentYear - 1;

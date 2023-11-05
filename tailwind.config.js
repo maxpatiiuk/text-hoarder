@@ -5,7 +5,7 @@
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['index.html', './src/**/*.{ts,tsx}'],
+  content: ['./packages/*/index.html', './packages/*/src/**/*.{ts,tsx}'],
   // Disable unneeded components to reduce performance impact
   corePlugins: {
     float: false,
