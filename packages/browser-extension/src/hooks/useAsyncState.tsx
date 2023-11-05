@@ -1,7 +1,6 @@
 import { GetOrSet } from '../utils/types';
 import React from 'react';
-import { crash } from '../components/Errors/assert';
-import { LoadingContext } from '../components/Contexts/Contexts';
+import { useLoading } from './useLoading';
 
 /**
  * Like React.useState, but initial value is retrieved asynchronously
@@ -30,11 +29,9 @@ import { LoadingContext } from '../components/Contexts/Contexts';
  */
 export function useAsyncState<T>(
   callback: () => Promise<T | undefined> | T | undefined,
-  // Show the loading screen while the promise is being resolved
-  loadingScreen: boolean
-): GetOrSet<T | undefined> {
+): [...GetOrSet<T | undefined>, isLoading: boolean] {
   const [state, setState] = React.useState<T | undefined>(undefined);
-  const loading = React.useContext(LoadingContext);
+  const [isLoading, loading] = useLoading();
 
   /**
    * Using layout effect so that setState(undefined) runs immediately on
@@ -43,20 +40,17 @@ export function useAsyncState<T>(
   React.useLayoutEffect(() => {
     // If callback changes, state is reset while new state is fetching
     setState(undefined);
-    const wrapped = loadingScreen
-      ? loading
-      : (promise: Promise<unknown>): void => void promise.catch(crash);
-    wrapped(
+    loading(
       Promise.resolve(callback()).then((newState) =>
-        destructorCalled ? undefined : setState(newState)
-      )
+        destructorCalled ? undefined : setState(newState),
+      ),
     );
 
     let destructorCalled = false;
     return (): void => {
       destructorCalled = true;
     };
-  }, [callback, loading, loadingScreen]);
+  }, [callback, loading]);
 
-  return [state, setState];
+  return [state, setState, isLoading];
 }

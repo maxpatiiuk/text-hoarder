@@ -5,13 +5,13 @@ import { useAsyncState } from '../../hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
 import { readerText } from '../../localization/readerText';
 import { Button } from '../Atoms/Button';
-import { LoadingContext } from '../Contexts/Contexts';
 import { encoding } from '../../utils/encoding';
 import { Link } from '../Atoms/Link';
 import { useStorage } from '../../hooks/useStorage';
 import { GetOrSet } from '../../utils/types';
 import { sendRequest } from '../Background/messages';
 import { Repository } from '../../utils/storage';
+import { loadingGif, useLoading } from '../../hooks/useLoading';
 
 const currentYear = new Date().getFullYear();
 const previousYear = currentYear - 1;
@@ -24,7 +24,10 @@ const previousYearPath = encoding.urlToPath.encode(
   new URL(window.location.href),
 );
 
-export function useExistingFile(): GetOrSet<undefined | false | string> {
+export function useExistingFile(): [
+  ...GetOrSet<undefined | false | string>,
+  isLoading: boolean,
+] {
   const { github } = React.useContext(AuthContext);
   const [eagerCheckForAlreadySaved] = useStorage(
     'reader.eagerCheckForAlreadySaved',
@@ -45,7 +48,6 @@ export function useExistingFile(): GetOrSet<undefined | false | string> {
           : false,
       [github],
     ),
-    false,
   );
 }
 
@@ -80,7 +82,7 @@ export function SaveText({
       });
   }, [github, wasAlreadySaved, simpleDocument]);
 
-  const loading = React.useContext(LoadingContext);
+  const [isLoading, loading] = useLoading();
 
   const fileEditUrl =
     typeof repository === 'object' && typeof existingFile === 'string'
@@ -102,7 +104,7 @@ export function SaveText({
       {existingFile === undefined ||
       fileEditUrl === undefined ||
       mode === 'edit' ? (
-        <p>{readerText.loading}</p>
+        loadingGif
       ) : (
         <>
           <p className="flex-1">
@@ -134,6 +136,7 @@ export function SaveText({
             {readerText.delete}
           </Button.Danger>
           <Link.Info href={fileEditUrl}>{readerText.edit}</Link.Info>
+          {isLoading && loadingGif}
         </>
       )}
     </>

@@ -7,12 +7,12 @@ import { listen } from '../../utils/events';
 import { preferencesText } from '../../localization/preferencesText';
 import { useStorage } from '../../hooks/useStorage';
 import { downloadDocument } from './download';
-import { LoadingContext } from '../Contexts/Contexts';
 import { InfoTab } from './InfoTab';
 import { EnsureAuthenticated } from '../Auth';
 import { SaveText, filePathToGitHubUrl, useExistingFile } from './SaveText';
 import { listenEvent } from '../Background/messages';
 import { Link } from '../Atoms/Link';
+import { loadingGif, useLoading } from '../../hooks/useLoading';
 
 // FEATURE: use action.setIcon/setTitle/setBadgeText/setBadgeBackgroundColor to show if there are any saved texts for this page (https://developer.chrome.com/docs/extensions/reference/action/#badge)
 
@@ -28,20 +28,20 @@ export function Tools({
   >(undefined);
   const handleClose = React.useCallback(() => setSelectedTool(undefined), []);
 
-  const loading = React.useContext(LoadingContext);
+  const [, catchErrors] = useLoading();
   const [downloadFormat] = useStorage('reader.downloadFormat');
   const handleDownload = React.useCallback(
     (): void =>
       containerRef.current === null
         ? undefined
-        : loading(
+        : catchErrors(
             downloadDocument(
               downloadFormat,
               simpleDocument,
               containerRef.current,
             ),
           ),
-    [loading, downloadFormat],
+    [catchErrors, downloadFormat],
   );
 
   React.useEffect(
@@ -117,7 +117,7 @@ export function Tools({
           ) : (
             <EnsureAuthenticated>
               {existingFile === undefined ? (
-                <p>{readerText.loading}</p>
+                loadingGif
               ) : (
                 <SaveText
                   existingFile={existingFile}

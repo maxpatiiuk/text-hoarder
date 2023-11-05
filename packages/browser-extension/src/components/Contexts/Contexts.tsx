@@ -1,12 +1,9 @@
 import React from 'react';
 
-import { useBooleanState } from '../../hooks/useBooleanState';
-import type { RA } from '../../utils/types';
-import { crash, error } from '../Errors/assert';
 import { ErrorBoundary } from '../Errors/ErrorBoundary';
 import { AuthenticationProvider } from './AuthContext';
 import { StorageProvider } from '../../hooks/useStorage';
-import { readerText } from '../../localization/readerText';
+import { loadingGif } from '../../hooks/useLoading';
 
 /**
  * Provide contexts used by other components
@@ -26,47 +23,13 @@ export function Contexts({
 }: {
   readonly children: React.ReactNode;
 }): JSX.Element {
-  // Loading Context
-  const holders = React.useRef<RA<number>>([]);
-  const [isLoading, handleLoading, handleLoaded] = useBooleanState();
-  const loadingHandler = React.useCallback(
-    (promise: Promise<unknown>): void => {
-      const holderId = holders.current.length;
-      holders.current = [...holders.current, holderId];
-      handleLoading();
-      promise
-        .finally(() => {
-          holders.current = holders.current.filter((item) => item !== holderId);
-          if (holders.current.length === 0) handleLoaded();
-        })
-        .catch(crash);
-    },
-    [handleLoading, handleLoaded],
-  );
-
   return (
     <ErrorBoundary>
-      <LoadingContext.Provider key="loadingContext" value={loadingHandler}>
-        {/* FIXME: replace this with a toast, dialog, or status line */}
-        {isLoading && readerText.loading}
-        <React.Suspense fallback={<>{readerText.loading}</>}>
-          <StorageProvider>
-            <AuthenticationProvider>{children}</AuthenticationProvider>
-          </StorageProvider>
-        </React.Suspense>
-      </LoadingContext.Provider>
+      <React.Suspense fallback={loadingGif}>
+        <StorageProvider>
+          <AuthenticationProvider>{children}</AuthenticationProvider>
+        </StorageProvider>
+      </React.Suspense>
     </ErrorBoundary>
   );
 }
-
-/**
- * Display a modal loading dialog while promise is resolving.
- * Also, catch and handle erros if promise is rejected.
- * If multiple promises are resolving at the same time, the dialog is
- * visible until all promises are resolved.
- * This prevents having more than one loading dialog visible at the same time.
- */
-export const LoadingContext = React.createContext<
-  (promise: Promise<unknown>) => void
->(() => error('Not defined'));
-LoadingContext.displayName = 'LoadingContext';

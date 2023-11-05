@@ -21,6 +21,7 @@ import {
   storage,
   storageDefinitions,
 } from '../utils/storage';
+import { loadingGif } from './useLoading';
 
 const StorageContext = React.createContext<Store>({
   get: () => undefined!,
@@ -58,7 +59,6 @@ export function StorageProvider({
           ),
       [],
     ),
-    true,
   );
   setDevelopmentGlobal(`_store`, store);
 
@@ -86,7 +86,9 @@ export function StorageProvider({
   );
   const context = React.useMemo((): Store => ({ get, set }), [get, set]);
 
-  return store === undefined ? undefined : (
+  return store === undefined ? (
+    loadingGif
+  ) : (
     <StorageContext.Provider value={context}>
       {children}
     </StorageContext.Provider>
