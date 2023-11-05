@@ -77,9 +77,6 @@ const normalizeUrls = (urls: string) =>
     .join('\n')
     .trim();
 
-// FIXME: add prompt and button to ask for missing permissions
-// FIXME: add button to give all permissions at once
-
 export function RequestUrlPermissions({
   position,
 }: {
@@ -165,7 +162,6 @@ export function RequestUrlPermissions({
     </div>
   ) : undefined;
 }
-// FIXME: don't ask if already has access to all
 
 async function giveSitePermissions(
   addedOrigins: RA<string>,

@@ -30,11 +30,11 @@ export function documentToSimpleDocument(): undefined | SimpleDocument {
 
   try {
     return (
-      // FEATURE: add customization options
+      // LOW: add customization options
       new Readability(documentClone, {
         serializer: (node) => node as HTMLElement,
         classesToPreserve: Array.from(preserveClassNames),
-        // FEATURE: extends the unlikely candidates regex? https://github.com/lindylearn/unclutter/blob/main/apps/unclutter/source/content-script/modifications/contentBlock.ts#L126
+        // FEATURE: extend the unlikely candidates regex? Inspiration: https://github.com/lindylearn/unclutter/blob/main/apps/unclutter/source/content-script/modifications/contentBlock.ts#L126
       }).parse() ?? undefined
     );
   } catch (error) {

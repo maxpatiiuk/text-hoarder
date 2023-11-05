@@ -15,7 +15,6 @@ import React from 'react';
 import { listenEvent } from '../Background/messages';
 import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 
-// FEATURE: when entering reader mode, find the previous location and scroll there
 // FEATURE: add local stats CLI
 // FEATURE: add local text-to-speech CLI
 // FINAL: do accessibility testing
