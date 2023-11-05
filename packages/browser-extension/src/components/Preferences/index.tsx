@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { preferencesText } from '../../../../common/src/localization/preferencesText';
+import { preferencesText } from '@common/localization/preferencesText';
 import { Preferences } from './Preferences';
 import { IsPreferencesStandalone } from './Context';
 import { usePageStyle } from './usePageStyle';

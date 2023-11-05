@@ -4,6 +4,9 @@
   "exclude": ["**/node_modules"],
   "files": ["packages/common/src/declarations.d.ts"],
   "compilerOptions": {
+    "paths": {
+      "@common/*": ["./packages/common/src/*"]
+    },
     /* Basic Options */
     "isolatedModules": true,
     "jsx": "react",

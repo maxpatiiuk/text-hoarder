@@ -1,6 +1,6 @@
 import React from 'react';
-import { H1, H2, H3 } from '../../../../common/src/components/Atoms';
-import { preferencesText } from '../../../../common/src/localization/preferencesText';
+import { H1, H2, H3 } from '@common/components/Atoms';
+import { preferencesText } from '@common/localization/preferencesText';
 import { IsPreferencesStandalone } from './Context';
 import { useStorage } from '../../hooks/useStorage';
 import { definitions } from './definitions';

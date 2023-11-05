@@ -14,7 +14,7 @@ import React from 'react';
 import { listenEvent } from '../Background/messages';
 import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
-import { catchErrors } from '../../../../common/src/components/Errors/assert';
+import { catchErrors } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
 
 // FEATURE: add local stats CLI

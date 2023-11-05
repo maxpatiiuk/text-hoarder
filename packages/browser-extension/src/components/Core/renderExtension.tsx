@@ -1,6 +1,6 @@
 import React from 'react';
-import { renderApp } from '../../../../common/src/components/Core/renderApp';
-import { loadingGif } from '../../../../common/src/hooks/useLoading';
+import { renderApp } from '@common/components/Core/renderApp';
+import { loadingGif } from '@common/hooks/useLoading';
 import { Contexts } from '../Contexts/Contexts';
 import { ApplyTheme } from './ApplyTheme';
 import { getStyleTags } from './styleLoader';

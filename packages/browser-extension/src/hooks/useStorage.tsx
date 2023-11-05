@@ -11,9 +11,9 @@
 
 import React from 'react';
 
-import { setDevelopmentGlobal } from '../../../common/src/utils/types';
-import { useAsyncState } from '../../../common/src/hooks/useAsyncState';
-import { useLiveState } from '../../../common/src/hooks/useLiveState';
+import { setDevelopmentGlobal } from '@common/utils/types';
+import { useAsyncState } from '@common/hooks/useAsyncState';
+import { useLiveState } from '@common/hooks/useLiveState';
 import {
   StorageDefinitions,
   listenForChanges,
@@ -21,7 +21,7 @@ import {
   storage,
   storageDefinitions,
 } from '../utils/storage';
-import { loadingGif } from '../../../common/src/hooks/useLoading';
+import { loadingGif } from '@common/hooks/useLoading';
 
 const StorageContext = React.createContext<Store>({
   get: () => undefined!,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ErrorBoundary } from '../../../../common/src/components/Errors/ErrorBoundary';
+import { ErrorBoundary } from '@common/components/Errors/ErrorBoundary';
 import { AuthenticationProvider } from './AuthContext';
 import { StorageProvider } from '../../hooks/useStorage';
 

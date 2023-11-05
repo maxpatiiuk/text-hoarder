@@ -1,7 +1,7 @@
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { markdownToText } from '../ExtractContent/markdownToText';
 import { simpleDocumentToMarkdown } from '../ExtractContent/simpleDocumentToMarkdown';
-import { downloadFile } from '../../../../common/src/components/Molecules/downloadFile';
+import { downloadFile } from '@common/components/Molecules/downloadFile';
 
 export async function downloadDocument(
   downloadFormat: 'markdown' | 'html' | 'text',
