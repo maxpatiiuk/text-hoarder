@@ -2,9 +2,10 @@ import React from 'react';
 import { H1, H2, H3 } from '../../../../common/src/components/Atoms';
 import { preferencesText } from '../../../../common/src/localization/preferencesText';
 import { IsPreferencesStandalone } from './Context';
-import { StorageDefinitions, useStorage } from '../../hooks/useStorage';
+import { useStorage } from '../../hooks/useStorage';
 import { definitions } from './definitions';
 import { RequestUrlPermissions } from './AutoTriggerUrls';
+import { StorageDefinitions } from '../../../../common/src/utils/storage';
 
 export function Preferences(): JSX.Element {
   const isStandalone = React.useContext(IsPreferencesStandalone);
