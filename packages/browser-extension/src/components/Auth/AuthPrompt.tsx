@@ -3,11 +3,11 @@ import React from 'react';
 import { signInText } from '../../localization/signInText';
 import { Link } from '../Atoms/Link';
 import { Button } from '../Atoms/Button';
-import { LoadingContext } from '../Contexts/Contexts';
 import { ErrorMessage, H1 } from '../Atoms';
 import { urls } from '../../../config';
 import { readerText } from '../../localization/readerText';
 import { AuthContext } from '../Contexts/AuthContext';
+import { loadingGif, useLoading } from '../../hooks/useLoading';
 
 /**
  * This dialog is displayed on first use promoting user to sign in with GitHub
@@ -15,7 +15,7 @@ import { AuthContext } from '../Contexts/AuthContext';
  */
 export function AuthPrompt(): JSX.Element {
   const { handleAuthenticate } = React.useContext(AuthContext);
-  const loading = React.useContext(LoadingContext);
+  const [isLoading, loading] = useLoading();
   const [error, setError] = React.useState('');
   return (
     <>
@@ -46,6 +46,7 @@ export function AuthPrompt(): JSX.Element {
         {signInText.signInWithGitHub}
       </Button.Info>
       <p>{signInText.signInInstruction}</p>
+      {isLoading && loadingGif}
       {error.length > 0 && <ErrorMessage>{error}</ErrorMessage>}
       <span className="flex-1 -ml-3" />
       <p>

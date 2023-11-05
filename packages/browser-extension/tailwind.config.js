@@ -60,6 +60,9 @@ module.exports = {
           '100%': { filter: 'hue-rotate(360deg)' },
         },
       },
+      animation: {
+        'hue-rotate': '4s hue-rotate 2s linear infinite',
+      },
     },
   },
 };

@@ -6,6 +6,7 @@ import { signInText } from '../../localization/signInText';
 import { Button } from '../Atoms/Button';
 import { Link } from '../Atoms/Link';
 import { AuthContext } from '../Contexts/AuthContext';
+import { loadingGif } from '../../hooks/useLoading';
 
 export function RepositoryList(): JSX.Element | undefined {
   const { installationId, octokit } = React.useContext(AuthContext);
@@ -33,11 +34,11 @@ export function RepositoryList(): JSX.Element | undefined {
               }),
       [installationId, octokit, setRepository],
     ),
-    true,
   );
 
-  return repositories === undefined ||
-    repositories.length === 1 ? undefined : repositories.length === 0 ? (
+  return repositories === undefined ? (
+    loadingGif
+  ) : repositories.length === 1 ? undefined : repositories.length === 0 ? (
     <p>
       {signInText.noRepositories(createRepositoryLink, editPermissionsLink)}
     </p>

@@ -7,7 +7,7 @@ import { extractOrigins, preparePatterns } from '../ReaderMode/matchUrl';
 import { RA } from '../../utils/types';
 import { IsPreferencesStandalone } from './Context';
 import { useStorage } from '../../hooks/useStorage';
-import { LoadingContext } from '../Contexts/Contexts';
+import { loadingGif, useLoading } from '../../hooks/useLoading';
 
 export function AutoTriggerUrls(
   value: string,
@@ -124,7 +124,7 @@ export function RequestUrlPermissions({
   const isOnTop = position === 'top';
   const visible = isOnTop === isErrorOnLoad;
 
-  const loading = React.useContext(LoadingContext);
+  const [isLoading, loading] = useLoading();
   return isMissingPermissions && visible ? (
     <div className="flex flex-col gap-2">
       <ErrorMessage>
@@ -159,6 +159,7 @@ export function RequestUrlPermissions({
           {preferencesText.openPreferences}
         </Button.Info>
       )}
+      {isLoading && loadingGif}
     </div>
   ) : undefined;
 }
