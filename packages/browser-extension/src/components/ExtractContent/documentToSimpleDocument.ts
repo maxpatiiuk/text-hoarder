@@ -10,20 +10,30 @@ export type SimpleDocument = Exclude<
  */
 export function documentToSimpleDocument(): undefined | SimpleDocument {
   const documentClone = document.cloneNode(true) as Document;
+
+  /**
+   * Preserve syntax-highlighting related class names (used in GitHub
+   * codeblocks). Also used by turndown-plugin-gfm to output correct language
+   * identifier for fenced code blocks when converting HTML to Markdown.
+   */
+  const preserveClassNames = new Set<string>();
+  Array.from(
+    documentClone.querySelectorAll(
+      '.highlight, pre, code, :is(.highlight, pre, code) span',
+    ),
+    (node) => {
+      Array.from(node.classList).forEach((className) =>
+        preserveClassNames.add(className),
+      );
+    },
+  );
+
   try {
     return (
       // FEATURE: add customization options
       new Readability(documentClone, {
         serializer: (node) => node as HTMLElement,
-        /**
-         * Don't remove class names because turndown relies on some well-known
-         * class names for proper code block language detection.
-         *
-         * And since page is displayed in shadow dom, none of the previous class
-         * name styles should interfere
-         */
-        // FIXME: this looks bad for pages that use tailwind - replace with allowlist based on https://searchfox.org/mozilla-central/source/toolkit/components/reader/ReaderMode.sys.mjs#18 (and preserve styles?) and what is used by turndown
-        keepClasses: true,
+        classesToPreserve: Array.from(preserveClassNames),
         // FEATURE: extends the unlikely candidates regex? https://github.com/lindylearn/unclutter/blob/main/apps/unclutter/source/content-script/modifications/contentBlock.ts#L126
       }).parse() ?? undefined
     );

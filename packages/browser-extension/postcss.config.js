@@ -78,6 +78,21 @@ const useHostAlongsideHtml = {
   },
 };
 
+/**
+ * Prevent Tailwind preflight from overriding browser's default list-style (as
+ * GitHub styles do not override it either but rely on the user agent
+ * stylesheet)
+ */
+/** @type {import('postcss-load-config').ConfigPlugin} */
+const dontOverwriteListStyle = {
+  postcssPlugin: 'dontOverwriteListStyle',
+  // When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
+  Declaration(declaration) {
+    if (declaration.prop === 'list-style' && declaration.value === 'none')
+      declaration.remove();
+  },
+};
+
 /** @type {import('postcss-load-config').Config} */
 module.exports = {
   plugins: [
@@ -87,6 +102,6 @@ module.exports = {
     require('autoprefixer'),
     makeGitHubCssUseClassName,
     convertRemToEm,
-    useHostAlongsideHtml,
+    dontOverwriteListStyle,
   ],
 };
