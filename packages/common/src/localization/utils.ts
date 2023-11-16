@@ -27,7 +27,10 @@ function resolveLanguage(): Language {
 }
 
 /**
- * A tiny localization lib
+ * A tiny localization library
+ *
+ * Inspired by the one I wrote in
+ * https://github.com/specify/specify7/blob/production/specifyweb/frontend/js_src/lib/localization/utils/index.tsx
  */
 export const dictionary = <
   T extends IR<

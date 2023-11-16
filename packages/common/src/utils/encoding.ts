@@ -1,3 +1,6 @@
+export const savedFileExtension = '.md';
+const reSavedFileExtension = /\.md$/;
+
 export const encoding = {
   fileContent: {
     encode(text: string): string {
@@ -36,10 +39,14 @@ export const encoding = {
       [
         year,
         url.host,
-        ...encoding.fileName.encode(`${url.pathname.slice(1)}.md`).split('/'),
+        ...encoding.fileName
+          .encode(`${url.pathname.slice(1)}${savedFileExtension}`)
+          .split('/'),
       ].join('/'),
     decode: (path: string): readonly [year: number, url: URL] => {
-      const [year, host, ...pathname] = path.replace(/.md$/, '').split('/');
+      const [year, host, ...pathname] = path
+        .replace(reSavedFileExtension, '')
+        .split('/');
       return [
         Number.parseInt(year),
         new URL(
