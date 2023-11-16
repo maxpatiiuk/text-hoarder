@@ -56,6 +56,15 @@ export const encoding = {
       ];
     },
   },
+  date: {
+    encode: (date: Date) =>
+      [
+        date.getFullYear(),
+        (date.getMonth() + 1).toString().padStart(2, '0'),
+        date.getDate().toString().padStart(2, '0'),
+      ].join('-'),
+    decode: (date: string) => new Date(date),
+  },
 };
 
 // These characters are not allowed in Windows file names, so %-encode them

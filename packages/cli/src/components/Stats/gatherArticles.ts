@@ -30,7 +30,7 @@ export const gatherArticles = async (
     }),
   );
 
-type Article = {
+export type Article = {
   readonly year: number;
   readonly url: URL;
   readonly title: string;
