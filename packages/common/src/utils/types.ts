@@ -16,7 +16,7 @@ export type RA<V> = readonly V[];
 export type GetSet<T> = readonly [T, (value: T) => void];
 export type GetOrSet<T> = readonly [
   T,
-  (value: T | ((oldValue: T) => T)) => void
+  (value: T | ((oldValue: T) => T)) => void,
 ];
 
 /**
@@ -38,9 +38,8 @@ export function defined<T>(value: T | undefined, message?: string): T {
   else return value;
 }
 
-/** Filter undefined items out of the array */
-export const filterArray = <T>(array: RA<T | undefined>): RA<T> =>
-  array.filter((item): item is T => item !== undefined);
+export const isDefined = <T>(value: T | undefined): value is T =>
+  value !== undefined;
 
 // eslint-disable-next-line functional/prefer-readonly-type
 export type Writable<T> = {
@@ -59,7 +58,7 @@ export const writable = <T>(value: T): Writable<T> => value;
  * See more: https://github.com/microsoft/TypeScript/issues/37663
  */
 export const isFunction = <T>(
-  value: T
+  value: T,
 ): value is T & ((...args: RA<unknown>) => unknown) =>
   typeof value === 'function';
 

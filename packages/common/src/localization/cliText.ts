@@ -31,7 +31,28 @@ export const cliText = dictionary({
     en: 'The path at which a JSON file with computed stats would be emitted',
   },
   noPullOptionDescription: {
-    en: 'Do not automatically try to pull the latest changes from GitHub',
+    en: 'Do not automatically try to pull the latest changes from GitHub. \nNote, this means Text Hoarder might not know about recently saved articles. \nYou can also manually pull recent changes by running "git pull"',
+  },
+  processCommandDescription: {
+    en: 'Process articles saved since last processing, and optimize them for text-to-speech conversion',
+  },
+  sinceTagOptionDescription: {
+    en: 'Only process articles saved since the specified tag was created \nTag is usually a date in format YYYY-MM-DD. Run "git tag" to see existing tags.',
+  },
+  sinceTagOptionDefaultDescription: {
+    en: 'most recently created tag',
+  },
+  tillTagOptionDescription: {
+    en: 'Only process articles saved until the specified tag was created \nTag is usually a date in format YYYY-MM-DD. Run "git tag" to see existing tags. \nBy default would process all articles till today',
+  },
+  createTagOptionDescription: {
+    en: "The name of the git tag to create when processing is complete. \nThis will make it easy in the future to only process articles saved since today's run",
+  },
+  noCreateTagOptionDescription: {
+    en: 'Do not automatically create a git tag name for this "text-hoarder process" run. \nNew tag is created automatically, unless --since-tag or --till-tag was specified',
+  },
+  forceCreateTagOptionDescription: {
+    en: 'If tag name specified in --create-tag already exists, then overwrite it, rather than failing',
   },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

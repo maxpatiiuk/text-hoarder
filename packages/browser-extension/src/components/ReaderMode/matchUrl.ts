@@ -3,34 +3,33 @@
  * but simplified and modernized
  */
 
-import { RA, filterArray } from '@common/utils/types';
+import { RA, isDefined } from '@common/utils/types';
 
 export const preparePatterns = (patterns: string): RA<string | RegExp> =>
-  filterArray(
-    patterns
-      .split('\n')
-      // Exclude comments
-      .filter((line) => !line.startsWith('#') && line.length > 0)
-      .map((pattern) => {
-        const isRegex = pattern.startsWith('^');
-        return (
-          (isRegex ? parseRegex(pattern) : undefined) ??
-          (pattern.includes('*')
-            ? parseRegex(wildcardToRegex(pattern))
-            : undefined) ??
-          pattern
-        );
-      }),
-  );
+  patterns
+    .split('\n')
+    // Exclude comments
+    .filter((line) => !line.startsWith('#') && line.length > 0)
+    .map((pattern) => {
+      const isRegex = pattern.startsWith('^');
+      return (
+        (isRegex ? parseRegex(pattern) : undefined) ??
+        (pattern.includes('*')
+          ? parseRegex(wildcardToRegex(pattern))
+          : undefined) ??
+        pattern
+      );
+    })
+    .filter(isDefined);
 
 const reHostname = /\w+(?:\.\w+)+/;
 export const extractOrigins = (
   patterns: RA<string | RegExp>,
 ): ReadonlySet<string> =>
   new Set(
-    filterArray(
-      patterns.map((pattern) => pattern.toString().match(reHostname)?.[0]),
-    ),
+    patterns
+      .map((pattern) => pattern.toString().match(reHostname)?.[0])
+      .filter(isDefined),
   );
 
 function parseRegex(pattern: string): RegExp | undefined {
