@@ -54,5 +54,8 @@ export const cliText = dictionary({
   forceCreateTagOptionDescription: {
     en: 'If tag name specified in --create-tag already exists, then overwrite it, rather than failing',
   },
+  untagged: {
+    en: '(untagged)',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

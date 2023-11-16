@@ -3,13 +3,11 @@ import { Command, Option } from '@commander-js/extra-typings';
 import { resolveRepositoryPath } from '../Cli/util';
 import { initializeCommand } from '../Cli/initializeCommand';
 import { getUniqueName } from '@common/utils/uniquifyName';
+import { tagsToFileMeta } from '../Stats/getFileTags';
+import { encoding } from '@common/utils/encoding';
 
 const today = new Date();
-const todaysTag = [
-  today.getFullYear(),
-  (today.getMonth() + 1).toString().padStart(2, '0'),
-  today.getDate().toString().padStart(2, '0'),
-].join('-');
+const todaysTag = encoding.date.encode(today);
 
 export const registerProcessCommand = (program: Command<[], {}>) =>
   program
@@ -95,7 +93,21 @@ export const registerProcessCommand = (program: Command<[], {}>) =>
             'Ignoring --create-tag because --since-tag or --till-tag was specified',
           );
 
-        // FIXME: get names of all files between sinceTag and tillTag
+        const unbounded = sinceTag === undefined && tillTag === undefined;
+        const includedTags = new Set(
+          unbounded
+            ? tags
+            : sinceTag === undefined
+            ? tags.slice(0, tags.indexOf(tillTag!))
+            : tags.slice(tags.indexOf(sinceTag)),
+        );
+
+        const allFiles = await tagsToFileMeta(tags, git);
+        const includeUntagged = unbounded || tags.at(-1) === sinceTag;
+        const files = Object.entries(allFiles).filter(([, { tag }]) =>
+          tag === undefined ? includeUntagged : includedTags.has(tag),
+        );
+
         // FIXME: read and process file contents
 
         if (tags.includes(newTag))
