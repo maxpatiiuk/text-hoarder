@@ -38,7 +38,7 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
 
       const filesWithTags = await tagsToFileMeta(tags, git);
       const articles = await gatherArticles(cwd, filesWithTags);
-      const stats = computeStats(articles);
+      const stats = computeStats(articles, tags.length > 0);
       console.log({
         cwd,
         html,

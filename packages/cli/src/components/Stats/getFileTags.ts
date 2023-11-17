@@ -37,7 +37,13 @@ export const tagsToFileMeta = (
       return tagCommits.flatMap(
         ({ date, diff }) =>
           diff?.files
-            .filter(({ file }) => extname(file) === savedFileExtension)
+            .filter(
+              ({ file }) =>
+                // Exclude non-markdown
+                extname(file) === savedFileExtension &&
+                // Exclude files not-containing a year in path (README.md)
+                !Number.isNaN(Number.parseInt(file.split('/')[0])),
+            )
             .map(({ file }) => [file, new Date(date), tag] as const) ?? [],
       );
     }),

@@ -1,6 +1,8 @@
 import { R, RA } from '@common/utils/types';
 import { Article } from './gatherArticles';
 import { cliText } from '@common/localization/cliText';
+import { encoding } from '@common/utils/encoding';
+import { sortFunction } from '@common/utils/utils';
 
 type StatsJson = {
   readonly allStats: StatsStructure;
@@ -12,7 +14,7 @@ type StatsStructure = {
   readonly counts: Counts;
   readonly perDay: R<Counts>;
   readonly perHost: R<Counts>;
-  readonly words: R<number>;
+  readonly topWords: R<number>;
 };
 
 const uniqueWords = new WeakMap<Counts, Set<String>>();
@@ -26,7 +28,10 @@ type Counts = {
   uniqueWords: number;
 };
 
-export function computeStats(articles: RA<Article>): StatsJson {
+export function computeStats(
+  articles: RA<Article>,
+  includeTags: boolean,
+): StatsJson {
   const computed = articles.map((article) => {
     const fullContent = `${article.title}.\n${article.content}`;
     const words = extractWords(article.content.toLowerCase());
@@ -42,15 +47,16 @@ export function computeStats(articles: RA<Article>): StatsJson {
     const year = article.date.getFullYear();
     const tag = article.tag ?? cliText.untagged;
 
-    statsJson.perTag[tag] ??= initializeStatsStructure();
+    if (includeTags) statsJson.perTag[tag] ??= initializeStatsStructure();
     statsJson.perYear[year] ??= initializeStatsStructure();
 
-    mergeStatsStructure(statsJson.allStats, article, counts);
-    mergeStatsStructure(statsJson.perTag[tag], article, counts);
-    mergeStatsStructure(statsJson.perTag[year], article, counts);
+    mergeStatsStructure(statsJson.allStats, article, counts, words);
+    if (includeTags)
+      mergeStatsStructure(statsJson.perTag[tag], article, counts, words);
+    mergeStatsStructure(statsJson.perYear[year], article, counts, words);
   });
 
-  return statsJson;
+  return pickTopWords(statsJson);
 }
 
 const reWord =
@@ -81,28 +87,38 @@ const initializeStatsStructure = (): StatsStructure => ({
   counts: initializeCounts(),
   perDay: {},
   perHost: {},
-  words: {},
+  topWords: {},
 });
 
-const initializeCounts = (): Counts => ({
-  count: 0,
-  length: 0,
-  words: 0,
-  sentences: 0,
-  paragraphs: 0,
-  uniqueWords: 0,
-});
+function initializeCounts(): Counts {
+  const counts = {
+    count: 0,
+    length: 0,
+    words: 0,
+    sentences: 0,
+    paragraphs: 0,
+    uniqueWords: 0,
+  };
+  uniqueWords.set(counts, new Set());
+  return counts;
+}
 
 function mergeStatsStructure(
   structure: StatsStructure,
   article: Article,
   counts: Counts,
+  words: RA<string>,
 ): void {
-  const day = article.date.toJSON();
+  const day = encoding.date.encode(article.date);
   const host = article.url.host;
 
   structure.perDay[day] ??= initializeCounts();
   structure.perHost[host] ??= initializeCounts();
+
+  words.forEach((word) => {
+    structure.topWords[word] ??= 0;
+    structure.topWords[word] += 1;
+  });
 
   mergeCounts(structure.counts, counts);
   mergeCounts(structure.perDay[day], counts);
@@ -120,3 +136,30 @@ function mergeCounts(totalCounts: Counts, newCounts: Counts) {
   const newUniqueWords = uniqueWords.get(newCounts)!;
   Array.from(newUniqueWords).forEach((word) => totalUniqueWords.add(word));
 }
+
+const pickTopWords = (stats: StatsJson): StatsJson => ({
+  allStats: pickTopWordsFromStatsStructure(stats.allStats),
+  perTag: Object.fromEntries(
+    Object.entries(stats.perTag).map(([tag, statsStructure]) => [
+      tag,
+      pickTopWordsFromStatsStructure(statsStructure),
+    ]),
+  ),
+  perYear: Object.fromEntries(
+    Object.entries(stats.perYear).map(([year, statsStructure]) => [
+      year,
+      pickTopWordsFromStatsStructure(statsStructure),
+    ]),
+  ),
+});
+
+const pickTopWordsFromStatsStructure = (
+  statsStructure: StatsStructure,
+): StatsStructure => ({
+  ...statsStructure,
+  topWords: Object.fromEntries(
+    Object.entries(statsStructure.topWords)
+      .sort(sortFunction(([_, count]) => count, true))
+      .slice(0, 100),
+  ),
+});
