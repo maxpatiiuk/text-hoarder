@@ -26,6 +26,7 @@ export const Centered = wrap(
 export const H1 = wrap('H1', 'h1', 'text-3xl font-bold');
 export const H2 = wrap('H2', 'h2', 'text-2xl font-bold');
 export const H3 = wrap('H3', 'h3', 'text-xl font-bold');
+export const H4 = wrap('H4', 'h4', 'text-lg');
 
 export const ErrorMessage = wrap(
   'ErrorMessage',

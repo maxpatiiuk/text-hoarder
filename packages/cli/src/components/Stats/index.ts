@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import open from 'open';
 
 import { cliText } from '@common/localization/cliText';
 import { Command } from '@commander-js/extra-typings';
@@ -39,20 +40,32 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
       const filesWithTags = await tagsToFileMeta(tags, git);
       const articles = await gatherArticles(cwd, filesWithTags);
       const stats = computeStats(articles, tags.length > 0);
-      console.log({
-        cwd,
-        html,
-        autoOpen,
-        json,
-        pull,
-        tags,
-        filesWithTags,
-        articles,
-        stats,
-      });
 
-      if (typeof json === 'string')
-        await fs.writeFile(json, JSON.stringify(stats));
+      const jsonString = JSON.stringify(stats);
+      if (typeof json === 'string') await fs.writeFile(json, jsonString);
+
+      if (typeof html === 'string') {
+        const bundleUrl = './dist/web.bundle.js';
+        await fs.writeFile(
+          html,
+          `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <script>window.stats = ${jsonString};</script>
+    ${
+      process.env.NODE_ENV === 'production'
+        ? `<script>${await fs.readFile(bundleUrl).toString()}</script>`
+        : `<script src="${bundleUrl}"></script>`
+    }
+  </body>
+</html>`,
+        );
+        if (autoOpen) await open(html);
+      }
 
       // FIXME: add HTML reporter
       // TODO: handle git not being installed

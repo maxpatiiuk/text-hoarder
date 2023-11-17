@@ -56,11 +56,8 @@ declare namespace Intl {
     public constructor(
       locales?: RA<string> | string,
       options?: {
-        readonly style: 'currency';
-        readonly currency: string;
-        readonly currencyDisplay: 'narrowSymbol';
         readonly roundingMode: 'halfEven';
-        readonly trailingZeroDisplay: 'stripIfInteger';
+        readonly maximumFractionDigits: number;
       },
     );
 
@@ -74,11 +71,8 @@ export const firstDayOfWeek =
   weekInfo?.firstDay === 7 ? 0 : weekInfo?.firstDay ?? 1;
 
 const numberFormatter = new Intl.NumberFormat(getLanguage(), {
-  style: 'currency',
-  currency: process.env.NEXT_PUBLIC_CURRENCY ?? 'USD',
-  currencyDisplay: 'narrowSymbol',
   roundingMode: 'halfEven',
-  trailingZeroDisplay: 'stripIfInteger',
+  maximumFractionDigits: 2,
 });
-export const formatCurrency = (number: number): string =>
+export const formatNumber = (number: number): string =>
   numberFormatter.format(number);

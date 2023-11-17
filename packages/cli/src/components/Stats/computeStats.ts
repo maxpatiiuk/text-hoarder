@@ -4,22 +4,22 @@ import { cliText } from '@common/localization/cliText';
 import { encoding } from '@common/utils/encoding';
 import { sortFunction } from '@common/utils/utils';
 
-type StatsJson = {
+export type StatsJson = {
   readonly allStats: StatsStructure;
   readonly perTag: R<StatsStructure>;
   readonly perYear: R<StatsStructure>;
 };
 
-type StatsStructure = {
-  readonly counts: Counts;
-  readonly perDay: R<Counts>;
-  readonly perHost: R<Counts>;
+export type StatsStructure = {
+  readonly counts: StatsCounts;
+  readonly perDay: R<StatsCounts>;
+  readonly perHost: R<StatsCounts>;
   readonly topWords: R<number>;
 };
 
-const uniqueWords = new WeakMap<Counts, Set<String>>();
+const uniqueWords = new WeakMap<StatsCounts, Set<String>>();
 
-type Counts = {
+export type StatsCounts = {
   count: number;
   length: number;
   words: number;
@@ -63,7 +63,7 @@ const reWord =
   /[\p{Letter}\p{Number}\p{Dash_Punctuation}\p{Connector_Punctuation}]+/gu;
 const extractWords = (text: string): RA<string> => text.match(reWord) ?? [];
 
-function articleToCounts(content: string, words: RA<string>): Counts {
+function articleToCounts(content: string, words: RA<string>): StatsCounts {
   const wordsSet = new Set(words);
   const counts = {
     count: 1,
@@ -90,7 +90,7 @@ const initializeStatsStructure = (): StatsStructure => ({
   topWords: {},
 });
 
-function initializeCounts(): Counts {
+function initializeCounts(): StatsCounts {
   const counts = {
     count: 0,
     length: 0,
@@ -106,7 +106,7 @@ function initializeCounts(): Counts {
 function mergeStatsStructure(
   structure: StatsStructure,
   article: Article,
-  counts: Counts,
+  counts: StatsCounts,
   words: RA<string>,
 ): void {
   const day = encoding.date.encode(article.date);
@@ -125,7 +125,7 @@ function mergeStatsStructure(
   mergeCounts(structure.perHost[host], counts);
 }
 
-function mergeCounts(totalCounts: Counts, newCounts: Counts) {
+function mergeCounts(totalCounts: StatsCounts, newCounts: StatsCounts) {
   totalCounts.count += newCounts.count;
   totalCounts.length += newCounts.length;
   totalCounts.words += newCounts.words;
