@@ -103,7 +103,19 @@ function displayDialog(
   const shadowRoot = dialogDiv.attachShadow({ mode: 'closed' });
   const container = document.createElement('div');
 
-  container.classList.add('flex', 'justify-center', 'h-full', 'overflow-auto');
+  container.classList.add(
+    'flex',
+    'justify-center',
+    'h-full',
+    'overflow-auto',
+    /*
+     * Improve readability by reverting websites trying to "fix" font
+     * smoothing.
+     * See https://usabilitypost.com/2012/11/05/stop-fixing-font-smoothing/
+     */
+    'subpixel-antialiased',
+    // FEATURE: allow font-weight customization
+  );
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);
