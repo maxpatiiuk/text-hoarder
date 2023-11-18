@@ -8,9 +8,10 @@ import { dictionary } from './utils';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const statsText = dictionary({
+  filter: { en: 'Filter' },
   allYears: { en: 'All years' },
-  showStatsForYear: { en: 'Show stats for year' },
-  showStatsForTag: { en: 'Show stats for tag' },
+  years: { en: 'Years' },
+  tags: { en: 'Tags' },
   counts: { en: 'Counts' },
   savedArticles: { en: 'Saved Articles' },
   totalLength: { en: 'Total length' },
@@ -27,7 +28,7 @@ export const statsText = dictionary({
   mostCommonWords: { en: 'Most common words' },
   occurrences: { en: 'Occurrences' },
   word: { en: 'Word' },
-  forWebsite: { en: 'for website' },
+  forWebsite: { en: (website: string) => `(for website: ${website})` },
   showAll: { en: 'Show all' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

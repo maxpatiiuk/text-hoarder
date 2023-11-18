@@ -15,7 +15,7 @@ export function TopWords({
     <article className={`flex flex-1 flex-col gap-2 ${className.widget}`}>
       <H3>{statsText.mostCommonWords}</H3>
       <Table.Container
-        className={`${className.strippedTable} grid-cols-[auto,1fr]`}
+        className={`${className.strippedTable} grid-cols-[auto,1fr] max-h-[80vh]`}
       >
         <Table.Head>
           <Table.Row>

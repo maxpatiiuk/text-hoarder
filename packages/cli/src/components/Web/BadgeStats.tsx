@@ -38,7 +38,9 @@ export function BadgeStats({
           <H3>{statsText.counts}</H3>
           {typeof activeHost === 'string' && (
             <>
-              <div className="flex items-center">{`${statsText.forWebsite}: ${activeHost}`}</div>
+              <div className="flex items-center">
+                {statsText.forWebsite(activeHost)}
+              </div>
               <Button.Success onClick={(): void => setActiveHost(undefined)}>
                 {statsText.showAll}
               </Button.Success>
@@ -132,7 +134,7 @@ function BadgeCharts({
 
   const showAverage = badge !== 'count';
   return (
-    <WidgetSection className={className.widget}>
+    <WidgetSection className={`${className.widget} !flex-row flex-wrap`}>
       <div className="flex-1">
         <H3>{countLabels[badge]}</H3>
         <BarChart labels={labels} data={totalData} />

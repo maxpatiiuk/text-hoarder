@@ -79,7 +79,7 @@ export function Tools({
     <div
       className={`
         absolute top-0 right-0 flex backdrop-blur rounded-es
-        bg-white/80 dark:bg-black/70 max-h-full
+        bg-white/80 dark:bg-black/70 max-h-full border-r border-gray-400
         ${
           selectedTool === undefined
             ? 'opacity-[var(--opacity)] hover:opacity-100 focus-within:opacity-100'

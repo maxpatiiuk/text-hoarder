@@ -1,14 +1,14 @@
-import { H1, H2, WidgetSection } from '@common/components/Atoms';
+import { H1, H2, Label, WidgetSection } from '@common/components/Atoms';
 import { commonText } from '@common/localization/commonText';
 import React from 'react';
 import { StatsJson } from '../Stats/computeStats';
-import { Button } from '@common/components/Atoms/Button';
 import { State } from 'typesafe-reducer';
 import { statsText } from '@common/localization/statsText';
 import { DaysCharts } from './DaysCharts';
 import { HostsTable } from './HostsTable';
 import { TopWords } from './TopWords';
 import { BadgeStats, gitTagToHuman } from './BadgeStats';
+import { Select } from '@common/components/Atoms/Input';
 
 type Page =
   | State<'All'>
@@ -17,61 +17,47 @@ type Page =
 
 export function App({ stats }: { readonly stats: StatsJson }) {
   const [page, setPage] = React.useState<Page>({ type: 'All' });
-  const hasYears = Object.keys(stats.perYear).length > 0;
-  const hasTags = Object.keys(stats.perTag).length > 0;
-  const allButton = (
-    <Button.Info
-      onClick={(): void => setPage({ type: 'All' })}
-      aria-pressed={page.type === 'All' ? true : undefined}
-    >
-      {statsText.allYears}
-    </Button.Info>
-  );
+  const allTags = Object.keys(stats.perTag);
   return (
     <>
       <H1>{commonText.textHoarder}</H1>
-      <nav>
-        {hasYears && (
-          <>
-            <H2>{statsText.showStatsForYear}</H2>
-            <div className="flex gap-2 flex-wrap">
-              {allButton}
-              {Object.keys(stats.perYear).map((year) => (
-                <Button.Info
-                  key={year}
-                  onClick={(): void => setPage({ type: 'Year', year })}
-                  aria-pressed={
-                    page.type === 'Year' && page.year === year
-                      ? true
-                      : undefined
-                  }
-                >
-                  {year}
-                </Button.Info>
-              ))}
-            </div>
-          </>
-        )}
-        {hasTags && (
-          <>
-            <H2>{statsText.showStatsForTag}</H2>
-            <div className="flex gap-2 flex-wrap">
-              {!hasYears && allButton}
-              {Object.keys(stats.perTag).map((tag) => (
-                <Button.Info
-                  key={tag}
-                  onClick={(): void => setPage({ type: 'Tag', tag })}
-                  aria-pressed={
-                    page.type === 'Tag' && page.tag === tag ? true : undefined
-                  }
-                >
+      <Label.Inline className="gap-2">
+        {statsText.filter}
+        <Select
+          value={
+            page.type === 'All'
+              ? 'All'
+              : page.type === 'Tag'
+              ? `Tag:${page.tag}`
+              : page.year
+          }
+          onValueChange={(value): void =>
+            value === 'All'
+              ? setPage({ type: 'All' })
+              : value.startsWith('tag:')
+              ? setPage({ type: 'Tag', tag: value.slice('Tag:'.length) })
+              : setPage({ type: 'Year', year: value })
+          }
+        >
+          <option value="All">{statsText.allYears}</option>
+          <optgroup label={statsText.years}>
+            {Object.keys(stats.perYear).map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </optgroup>
+          {allTags.length > 0 && (
+            <optgroup label={statsText.tags}>
+              {allTags.map((tag) => (
+                <option key={tag} value={`Tag:tag`}>
                   {gitTagToHuman(tag)}
-                </Button.Info>
+                </option>
               ))}
-            </div>
-          </>
-        )}
-      </nav>
+            </optgroup>
+          )}
+        </Select>
+      </Label.Inline>
       <Page stats={stats} page={page} />
     </>
   );
@@ -101,13 +87,13 @@ function Page({
           ? gitTagToHuman(page.tag)
           : page.year}
       </H2>
+      <DaysCharts stats={stats.perDay} />
       <BadgeStats
         allStats={allStats}
         stats={stats}
         type={page.type === 'All' ? 'perYear' : 'perTag'}
         activeHost={activeHost}
       />
-      <DaysCharts stats={stats.perDay} />
       <WidgetSection className="!flex-row flex-wrap">
         <HostsTable hostsStats={stats.perHost} activeHost={activeHost} />
         <TopWords topWords={stats.topWords} />

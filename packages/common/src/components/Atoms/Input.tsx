@@ -128,7 +128,7 @@ export const Select = wrap<
 >(
   'Select',
   'select',
-  `w-full pr-5 bg-right cursor-pointer`,
+  className.select,
   ({ onValueChange, onValuesChange, ...props }) => ({
     ...props,
     /*
@@ -142,7 +142,7 @@ export const Select = wrap<
         (typeof props.size === 'number' && props.size > 1))
         ? ' bg-blue-100 dark:bg-blue-900'
         : ''
-    }`,
+    }${typeof props.size === 'number' && props.size > 1 ? '' : ' p-1 rounded'}`,
     /*
      * REFACTOR: don't set event listener if both onValueChange and onValuesChange
      *   are undefined
