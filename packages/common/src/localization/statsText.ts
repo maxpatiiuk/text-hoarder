@@ -19,6 +19,15 @@ export const statsText = dictionary({
   totalParagraphs: { en: 'Total paragraphs' },
   totalUniqueWords: { en: 'Total unique words' },
   average: { en: 'Average' },
-  chart: { en: 'Chart' },
+  compare: { en: 'Compare' },
+  showMoreStats: { en: 'Show more stats' },
+  hideMoreStats: { en: 'Hide more stats' },
+  topWebsites: { en: 'Top websites' },
+  website: { en: 'Website' },
+  mostCommonWords: { en: 'Most common words' },
+  occurrences: { en: 'Occurrences' },
+  word: { en: 'Word' },
+  forWebsite: { en: 'for website' },
+  showAll: { en: 'Show all' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

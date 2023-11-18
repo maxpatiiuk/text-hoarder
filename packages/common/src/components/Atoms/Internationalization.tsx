@@ -1,27 +1,5 @@
 import { getLanguage } from '../../localization/utils';
-import { f } from '../../utils/functools';
 import { RA } from '../../utils/types';
-import { DAY, MONTH, WEEK, YEAR } from './timeUnits';
-
-// Localized month names
-export const months = ['', ...getMonthNames('long')];
-
-function getMonthNames(format: 'long' | 'short'): RA<string> {
-  const months = new Intl.DateTimeFormat(getLanguage(), { month: format });
-  return f.between(0, YEAR / MONTH, (month) =>
-    months.format(new Date(0, month, 2, 0, 0, 0)),
-  );
-}
-
-// Localized week day names
-export const weekDays = getWeekDays('long');
-
-function getWeekDays(format: 'long' | 'short'): RA<string> {
-  const weekDays = new Intl.DateTimeFormat(getLanguage(), { weekday: format });
-  return f.between(1, WEEK / DAY + 1, (weekDay) =>
-    weekDays.format(new Date(2017, 0, weekDay, 0, 0, 0)),
-  );
-}
 
 /* This is an incomplete definition. For complete, see MDN Docs */
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -45,7 +23,7 @@ declare namespace Intl {
         readonly dateStyle?: 'full' | 'long' | 'medium' | 'short';
         readonly timeStyle?: 'full' | 'long' | 'medium' | 'short';
         readonly month?: 'long' | 'short';
-        readonly weekday?: 'long' | 'short';
+        readonly day?: 'numeric' | '2-digit';
       },
     );
 
@@ -65,10 +43,12 @@ declare namespace Intl {
   }
 }
 
-const locale = new Intl.Locale(getLanguage());
-const weekInfo = locale.getWeekInfo?.() ?? locale.weekInfo;
-export const firstDayOfWeek =
-  weekInfo?.firstDay === 7 ? 0 : weekInfo?.firstDay ?? 1;
+const dateFormatter = new Intl.DateTimeFormat(getLanguage(), {
+  month: 'short',
+  day: 'numeric',
+});
+export const formatDate = (date: Readonly<Date>): string =>
+  dateFormatter.format(date);
 
 const numberFormatter = new Intl.NumberFormat(getLanguage(), {
   roundingMode: 'halfEven',

@@ -43,3 +43,9 @@ export const Label = {
   Block: wrap('Label.Block', 'label', className.label),
   Inline: wrap('Label.Inline', 'label', className.labelForCheckbox),
 };
+
+export const WidgetSection = wrap(
+  'WidgetSection',
+  'section',
+  'flex flex-col gap-4',
+);

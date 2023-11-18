@@ -2,7 +2,7 @@ import { R, RA } from '@common/utils/types';
 import { Article } from './gatherArticles';
 import { cliText } from '@common/localization/cliText';
 import { encoding } from '@common/utils/encoding';
-import { sortFunction } from '@common/utils/utils';
+import { multiSortFunction } from '@common/utils/utils';
 
 export type StatsJson = {
   readonly allStats: StatsStructure;
@@ -56,7 +56,7 @@ export function computeStats(
     mergeStatsStructure(statsJson.perYear[year], article, counts, words);
   });
 
-  return pickTopWords(statsJson);
+  return pickTop(statsJson);
 }
 
 const reWord =
@@ -137,29 +137,53 @@ function mergeCounts(totalCounts: StatsCounts, newCounts: StatsCounts) {
   Array.from(newUniqueWords).forEach((word) => totalUniqueWords.add(word));
 }
 
-const pickTopWords = (stats: StatsJson): StatsJson => ({
-  allStats: pickTopWordsFromStatsStructure(stats.allStats),
+const pickTop = (stats: StatsJson): StatsJson => ({
+  allStats: pickTopFromStatsStructure(stats.allStats),
   perTag: Object.fromEntries(
     Object.entries(stats.perTag).map(([tag, statsStructure]) => [
       tag,
-      pickTopWordsFromStatsStructure(statsStructure),
+      pickTopFromStatsStructure(statsStructure),
     ]),
   ),
   perYear: Object.fromEntries(
     Object.entries(stats.perYear).map(([year, statsStructure]) => [
       year,
-      pickTopWordsFromStatsStructure(statsStructure),
+      pickTopFromStatsStructure(statsStructure),
     ]),
   ),
 });
 
-const pickTopWordsFromStatsStructure = (
+const topCount = 100;
+const reNumber = /^\d+$/;
+const pickTopFromStatsStructure = (
   statsStructure: StatsStructure,
 ): StatsStructure => ({
   ...statsStructure,
+  perHost: Object.fromEntries(
+    Object.entries(statsStructure.perHost)
+      .sort(
+        multiSortFunction(
+          ([_, { count }]) => count,
+          true,
+          ([host]) => host,
+        ),
+      )
+      .slice(0, topCount),
+  ),
   topWords: Object.fromEntries(
     Object.entries(statsStructure.topWords)
-      .sort(sortFunction(([_, count]) => count, true))
-      .slice(0, 100),
+      .sort(
+        multiSortFunction(
+          ([_, count]) => count,
+          true,
+          ([word]) => word,
+        ),
+      )
+      .slice(0, topCount)
+      /*
+       * If key is a number, add a space to prevent EcmaScript from
+       * reordering it (the spec forces all numeric keys to go first)
+       */
+      .map(([word, count]) => [reNumber.test(word) ? `${word} ` : word, count]),
   ),
 });

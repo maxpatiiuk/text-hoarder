@@ -1,7 +1,7 @@
 import { formatNumber } from '@common/components/Atoms/Internationalization';
 import { useTransitionDuration } from '@common/hooks/useReduceMotion';
 import { f } from '@common/utils/functools';
-import { RA, writable } from '@common/utils/types';
+import { RA } from '@common/utils/types';
 import {
   BarElement,
   CategoryScale,
@@ -29,12 +29,8 @@ export function BarChart({
       data.map((value, index) => ({
         label: labels[index],
         data: [value],
-        backgroundColor: data.map(
-          (_, index) => `hsl(${indexToHue(index, data.length)},100%,83%)`,
-        ),
-        borderColor: data.map(
-          (_, index) => `hsl(${indexToHue(index, data.length)},100%,69%)`,
-        ),
+        backgroundColor: `hsl(${indexToHue(index, data.length)},100%,83%)`,
+        borderColor: `hsl(${indexToHue(index, data.length)},100%,69%)`,
         borderWidth: 2,
       })),
     [data],
@@ -43,36 +39,39 @@ export function BarChart({
   const yMin = React.useMemo(() => f.min(...data) ?? 0, [data]);
 
   return (
-    <Bar
-      data={{
-        labels: writable(labels),
-        datasets,
-      }}
-      options={{
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: ({ parsed }) => formatNumber(parsed.y),
+    <div className="max-h-64">
+      <Bar
+        data={{
+          labels: [''],
+          datasets,
+        }}
+        options={{
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: ({ dataset, parsed }) =>
+                  `${dataset.label}: ${formatNumber(parsed.y)}`,
+              },
             },
           },
-        },
-        responsive: true,
-        animation: {
-          duration: transitionDuration,
-        },
-        scales: {
-          y: {
-            min: yMin >= 0 ? 0 : undefined,
-            ticks: {
-              callback: (value) =>
-                typeof value === 'number' ? formatNumber(value) : value,
+          responsive: true,
+          animation: {
+            duration: transitionDuration,
+          },
+          scales: {
+            y: {
+              min: yMin >= 0 ? 0 : undefined,
+              ticks: {
+                callback: (value) =>
+                  typeof value === 'number' ? formatNumber(value) : value,
+              },
             },
           },
-        },
-      }}
-    />
+        }}
+      />
+    </div>
   );
 }
 
 const indexToHue = (index: number, count: number): number =>
-  ((count - ((index + 2) % count)) * 360) / count;
+  (((index % count) / count) * 360 + 160) % 360;
