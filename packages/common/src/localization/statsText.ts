@@ -19,5 +19,6 @@ export const statsText = dictionary({
   totalParagraphs: { en: 'Total paragraphs' },
   totalUniqueWords: { en: 'Total unique words' },
   average: { en: 'Average' },
+  chart: { en: 'Chart' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

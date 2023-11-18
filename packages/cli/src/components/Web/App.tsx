@@ -1,13 +1,15 @@
 import { H1, H2, H3, H4 } from '@common/components/Atoms';
 import { commonText } from '@common/localization/commonText';
 import React from 'react';
-import { StatsCounts, StatsJson } from '../Stats/computeStats';
+import { StatsCounts, StatsJson, StatsStructure } from '../Stats/computeStats';
 import { Button } from '@common/components/Atoms/Button';
 import { State } from 'typesafe-reducer';
 import { statsText } from '@common/localization/statsText';
 import { className } from '@common/components/Atoms/className';
 import { formatNumber } from '@common/components/Atoms/Internationalization';
-import { RR } from '@common/utils/types';
+import { IR, RR } from '@common/utils/types';
+import { BarChart } from './BarChart';
+import { title } from 'process';
 
 type Page =
   | State<'All'>
@@ -95,6 +97,9 @@ function Page({
       : page.type === 'Tag'
       ? allStats.perTag[page.tag]
       : allStats.perYear[page.year];
+  const [activeBadge, setActiveBadge] = React.useState<
+    keyof typeof badgeLabelMapper | undefined
+  >(undefined);
   return (
     <main className="contents">
       <H2>
@@ -107,21 +112,35 @@ function Page({
       <section className="flex flex-col gap-4">
         <H3>{statsText.counts}</H3>
         <div className="grid gap-4 flex-wrap grid-cols-[repeat(auto-fit,minmax(15rem,1fr))]">
-          {Object.keys(labelMapper).map((key) => (
+          {Object.keys(badgeLabelMapper).map((key) => (
             <Badge
               key={key}
-              type={key as keyof typeof labelMapper}
+              type={key as keyof typeof badgeLabelMapper}
               counts={stats.counts}
+              isActive={activeBadge === key}
+              onClick={(): void =>
+                setActiveBadge(
+                  activeBadge === key
+                    ? undefined
+                    : (key as keyof typeof badgeLabelMapper),
+                )
+              }
             />
           ))}
         </div>
       </section>
+      {typeof activeBadge === 'string' && (
+        <BadgeCharts
+          stats={allStats[page.type === 'All' ? 'perYear' : 'perTag']}
+          badge={activeBadge}
+        />
+      )}
       <section className={`flex flex-col gap-4 ${className.widget}`}></section>
     </main>
   );
 }
 
-const labelMapper: RR<keyof StatsCounts, string> = {
+const badgeLabelMapper: RR<keyof StatsCounts, string> = {
   count: statsText.savedArticles,
   length: statsText.totalLength,
   words: statsText.totalWords,
@@ -133,24 +152,68 @@ const labelMapper: RR<keyof StatsCounts, string> = {
 function Badge({
   type,
   counts,
+  isActive,
+  onClick: handleClick,
 }: {
-  readonly type: keyof typeof labelMapper;
+  readonly type: keyof typeof badgeLabelMapper;
   readonly counts: StatsCounts;
+  readonly isActive: boolean;
+  readonly onClick: () => void;
 }): JSX.Element {
   const count = counts.count;
   const total = counts[type];
   const average = total / count;
   return (
     <article className={`${className.widget} aspect-square flex flex-col`}>
-      <H4>{labelMapper[type]}</H4>
+      <H4>{badgeLabelMapper[type]}</H4>
       <div className="flex-1 flex justify-center items-center text-6xl text-center p-3">
         {formatNumber(total)}
       </div>
-      {type !== 'count' && (
-        <p className="text-gray-700 dark:text-neutral-200">{`${
-          statsText.average
-        }: ${formatNumber(average)}`}</p>
-      )}
+      <div className="flex gap-4 flex-wrap">
+        {type !== 'count' && (
+          <p className="text-gray-700 dark:text-neutral-200">{`${
+            statsText.average
+          }: ${formatNumber(average)}`}</p>
+        )}
+        <span className="flex-1 -ml-4" />
+        <Button.LikeLink
+          aria-pressed={isActive ? true : undefined}
+          onClick={handleClick}
+        >
+          {statsText.chart}
+        </Button.LikeLink>
+      </div>
     </article>
+  );
+}
+
+function BadgeCharts({
+  stats,
+  badge,
+}: {
+  readonly stats: IR<StatsStructure>;
+  readonly badge: keyof typeof badgeLabelMapper;
+}): JSX.Element {
+  const labels = Object.keys(stats).map(tagToHuman);
+  const totalData = Object.values(stats).map(({ counts }) => counts[badge]);
+  const averageData = Object.values(stats).map(
+    ({ counts }) => counts[badge] / counts.count,
+  );
+
+  const showAverage = badge !== 'count';
+  return (
+    <section className={`flex flex-wrap gap-4 ${className.widget}`}>
+      <div className="flex-1">
+        <H3>{badgeLabelMapper[badge]}</H3>
+        <BarChart labels={labels} data={totalData} />
+      </div>
+
+      {showAverage && (
+        <div className="flex-1">
+          <H3>{statsText.average}</H3>
+          <BarChart labels={labels} data={averageData} />
+        </div>
+      )}
+    </section>
   );
 }

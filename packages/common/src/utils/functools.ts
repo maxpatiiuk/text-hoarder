@@ -1,4 +1,4 @@
-import type { RA } from './types';
+import { isDefined, type RA } from './types';
 
 /**
  * A collection of helper functions for functional programming style
@@ -36,4 +36,14 @@ export const f = {
     Array.from({ length: max - min }, (_, index) =>
       callback(min + index, index),
     ),
+
+  min(...array: RA<number | undefined>): number | undefined {
+    const data = array.filter(isDefined);
+    return data.length === 0 ? undefined : Math.min(...data);
+  },
+
+  max(...array: RA<number | undefined>): number | undefined {
+    const data = array.filter(isDefined);
+    return data.length === 0 ? undefined : Math.max(...data);
+  },
 } as const;
