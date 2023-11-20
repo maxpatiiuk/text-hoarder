@@ -18,7 +18,9 @@ export async function tagsToFileMeta(
   tags: RA<string>,
   git: SimpleGit,
 ): Promise<FilesWithTags> {
-  const initialCommit = await git.raw('rev-list', '--max-parents=0', 'HEAD');
+  const initialCommit = (
+    await git.raw('rev-list', '--max-parents=0', 'HEAD')
+  ).trim();
   return Promise.all(
     [...tags, undefined].map(async (tag, index) => {
       const { all: tagCommits } = await git.log({

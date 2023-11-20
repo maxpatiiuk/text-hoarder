@@ -122,7 +122,10 @@ function mergeStatsStructure(
   words: RA<string>,
 ): void {
   const day = encoding.date.encode(article.date);
-  const host = article.url.host;
+  const fullHost = article.url.host;
+  const host = fullHost.startsWith('www.')
+    ? fullHost.slice('www.'.length)
+    : fullHost;
 
   structure.perDay[day] ??= initializeCounts();
   structure.perHost[host] ??= initializeCounts();
