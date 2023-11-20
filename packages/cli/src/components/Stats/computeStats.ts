@@ -3,6 +3,12 @@ import { Article } from './gatherArticles';
 import { cliText } from '@common/localization/cliText';
 import { encoding } from '@common/utils/encoding';
 import { multiSortFunction } from '@common/utils/utils';
+import stopWords from './stopWords.json';
+
+/*
+ * From https://www.ranks.nl/stopwords (i.e the unofficial Google dataset)
+ */
+const stopWordsSet = new Set(stopWords);
 
 export type StatsJson = {
   readonly allStats: StatsStructure;
@@ -17,7 +23,7 @@ export type StatsStructure = {
   readonly topWords: R<number>;
 };
 
-const uniqueWords = new WeakMap<StatsCounts, Set<String>>();
+const uniqueWords = new WeakMap<StatsCounts, Set<string>>();
 
 export type StatsCounts = {
   count: number;
@@ -172,6 +178,7 @@ const pickTopFromStatsStructure = (
   ),
   topWords: Object.fromEntries(
     Object.entries(statsStructure.topWords)
+      .filter(([word]) => !stopWordsSet.has(word) && word.length > 1)
       .sort(
         multiSortFunction(
           ([_, count]) => count,
