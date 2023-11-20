@@ -18,6 +18,9 @@ export const cliText = dictionary({
   statsCommandDescription: {
     en: 'Generate statistics from saved articles',
   },
+  statsCommandProgress: {
+    en: 'Computing statistics...',
+  },
   cwdOptionDescription: {
     en: 'The repository to run the command in. Defaults to current directory',
   },

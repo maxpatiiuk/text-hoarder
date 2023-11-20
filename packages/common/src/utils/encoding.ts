@@ -1,4 +1,5 @@
 export const savedFileExtension = '.md';
+export const legacySavedFileExtension = '.txt';
 const reSavedFileExtension = /\.md$/;
 
 export const encoding = {
@@ -85,7 +86,7 @@ export const encoding = {
             }&${url.search.slice(1)}`
           : /*
            * If URL ends with /, the resulting path would look like
-           * /somep/path/.md, which creates a file without a name,
+           * /some/path/.md, which creates a file without a name,
            * which would be treated as hidden on many systems. Appending
            * & is a workaround
            */

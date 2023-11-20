@@ -37,9 +37,10 @@ export function BarChart({
   );
 
   const yMin = React.useMemo(() => f.min(...data) ?? 0, [data]);
+  const isLarge = labels.length > 30;
 
   return (
-    <div className="max-h-64">
+    <div className={isLarge ? 'h-96' : 'max-h-64'}>
       <Bar
         data={{
           labels: [''],
@@ -53,7 +54,9 @@ export function BarChart({
                   `${dataset.label}: ${formatNumber(parsed.y)}`,
               },
             },
+            legend: { display: !isLarge },
           },
+          maintainAspectRatio: false,
           responsive: true,
           animation: {
             duration: transitionDuration,

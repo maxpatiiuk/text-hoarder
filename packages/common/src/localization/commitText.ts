@@ -28,7 +28,7 @@ export const commitText = dictionary({
 This repository is used by the [Text Hoarder](${webStoreUrl}) browser extension
 for storage of saved snippets of text.
 
-If you are enjoying it, don't forget to [leave a review](${webStoreReviewUrl}) 
+If you are enjoying it, don't forget to [leave a review](${webStoreReviewUrl})
 on the Chrome Web Store!
 
 // FINAL: improve this

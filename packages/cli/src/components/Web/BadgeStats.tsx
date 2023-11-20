@@ -8,12 +8,6 @@ import React from 'react';
 import { StatsCounts, StatsJson, StatsStructure } from '../Stats/computeStats';
 import { BarChart } from './BarChart';
 
-export function gitTagToHuman(tag: string): string {
-  const date = new Date(tag);
-  const isValidDate = !Number.isNaN(date.getTime());
-  return isValidDate ? date.toLocaleDateString() : tag;
-}
-
 export function BadgeStats({
   allStats,
   stats,
@@ -95,11 +89,17 @@ function Badge({
   const count = counts.count;
   const total = counts[type];
   const average = total / count;
+  const formatted = formatNumber(total);
   return (
     <article className={`${className.widget} aspect-square flex flex-col`}>
       <H4>{countLabels[type]}</H4>
-      <div className="flex-1 flex justify-center items-center text-6xl text-center p-3">
-        {formatNumber(total)}
+      <div
+        className="flex-1 flex justify-center items-center text-center p-3"
+        style={{
+          fontSize: `${Math.floor(5 + 350 / Math.max(7, formatted.length))}px`,
+        }}
+      >
+        {formatted}
       </div>
       <div className="flex gap-4 flex-wrap">
         {type !== 'count' && (
@@ -126,7 +126,7 @@ function BadgeCharts({
   readonly stats: IR<StatsStructure>;
   readonly badge: keyof typeof countLabels;
 }): JSX.Element {
-  const labels = Object.keys(stats).map(gitTagToHuman);
+  const labels = Object.keys(stats);
   const totalData = Object.values(stats).map(({ counts }) => counts[badge]);
   const averageData = Object.values(stats).map(
     ({ counts }) => counts[badge] / counts.count,

@@ -14,8 +14,7 @@ export const className = {
     dark:active:bg-blue-500 disabled:dark:!text-neutral-600
     disabled:hover:dark:!text-neutral-600 rounded
   `,
-  strippedTable: `grid-cols-[auto,repeat(var(--column-count),minmax(6rem,1fr))]
-    [&_:is(th,td)]:p-1 [&_:is(th,td)]:sm:p-2 [&_:is(th,td)]:ring-1
+  strippedTable: `[&_:is(th,td)]:p-1 [&_:is(th,td)]:sm:p-2 [&_:is(th,td)]:ring-1
     [&_:is(th,td)]:ring-gray-300
     [&_tr:nth-child(even)_:is(th,td)]:bg-gray-200 p-px`,
   label: 'flex flex-col',
