@@ -67,6 +67,5 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
         if (autoOpen) await open(html);
       }
 
-      // FIXME: add HTML reporter
       // TODO: handle git not being installed
     });

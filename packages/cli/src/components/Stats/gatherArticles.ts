@@ -1,4 +1,4 @@
-import { encoding } from '@common/utils/encoding';
+import { encoding, savedFileExtension } from '@common/utils/encoding';
 import { RA, isDefined } from '@common/utils/types';
 import fs from 'fs/promises';
 import { join } from 'path';
@@ -17,7 +17,11 @@ export const gatherArticles = async (
         fs
           .readFile(path)
           .then((fileContent) => {
-            const fileText = markdownToText(fileContent.toString())
+            const fileText = (
+              path.endsWith(savedFileExtension)
+                ? markdownToText
+                : (content: string) => content
+            )(fileContent.toString())
               .trim()
               .split('\n');
             const title = fileText[0];

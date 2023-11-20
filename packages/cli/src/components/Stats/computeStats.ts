@@ -38,7 +38,12 @@ export function computeStats(
   articles: RA<Article>,
   includeTags: boolean,
 ): StatsJson {
-  const computed = articles.map((article) => {
+  console.log(cliText.statsCommandProgress);
+  const total = articles.length * 2;
+  const reportProgress = (index: number) =>
+    console.log(`${Math.round(((index / total) * 10_000) / 100)}%  `);
+  const computed = articles.map((article, index) => {
+    if (index % 400 === 0) reportProgress(index);
     const fullContent = `${article.title}.\n${article.content}`;
     const words = extractWords(article.content.toLowerCase());
     return { article, words, counts: articleToCounts(fullContent, words) };
@@ -49,7 +54,8 @@ export function computeStats(
     perTag: {},
     perYear: {},
   };
-  computed.forEach(({ article, words, counts }) => {
+  computed.forEach(({ article, words, counts }, index) => {
+    if (index % 400 === 0) reportProgress(articles.length + index);
     const year = article.date.getFullYear();
     const tag = article.tag ?? cliText.untagged;
 
@@ -66,7 +72,7 @@ export function computeStats(
 }
 
 const reWord =
-  /[\p{Letter}\p{Number}\p{Dash_Punctuation}\p{Connector_Punctuation}]+/gu;
+  /[\p{Letter}\p{Number}\p{Dash_Punctuation}\p{Connector_Punctuation}']+/gu;
 const extractWords = (text: string): RA<string> => text.match(reWord) ?? [];
 
 function articleToCounts(content: string, words: RA<string>): StatsCounts {
@@ -85,7 +91,7 @@ function articleToCounts(content: string, words: RA<string>): StatsCounts {
 
 // Inspired by wordcounter.net, but modified to handle non-English languages and less common sentence-ending punctuation
 const reSentence =
-  /[^.۔!?¿¡…。๏⁇‼‽⁈⁉⸘⸮︖︕！？]+(?:[.۔!?¿¡…。๏⁇‼‽⁈⁉⸘⸮︖︕！？](?![\p{Pi}\p{Pf}]?|$)[^.۔!?¿¡…。๏⁇‼‽⁈⁉⸘⸮︖︕！？]*)*[.۔!?¿¡…。๏⁇‼‽⁈⁉⸘⸮︖︕！？]?[\p{Pi}\p{Pf}]?(?=|$)(?:[.۔!?¿¡…。๏⁇‼‽⁈⁉⸘⸮︖︕！？]\p{Z}+[\p{Lu}\p{Lt}])/gu;
+  /[^.!?…⁇‼‽⁈⁉⸮]+(?:[.!?…⁇‼‽⁈⁉⸮](?!['"]?|$)[^.!?…⁇‼‽⁈⁉⸮]*)*[.!?…⁇‼‽⁈⁉⸮]?['"]?(?=|$)(?:[.!?…⁇‼‽⁈⁉⸮]\s+[\p{Lu}\p{Lt}])/gu;
 const countSentences = (content: string): number =>
   content.length === 0 ? 0 : content.split(reSentence).length + 1;
 
@@ -159,7 +165,7 @@ const pickTop = (stats: StatsJson): StatsJson => ({
   ),
 });
 
-const topCount = 100;
+const topCount = 1000;
 const reNumber = /^\d+$/;
 const pickTopFromStatsStructure = (
   statsStructure: StatsStructure,

@@ -1,4 +1,7 @@
-import { savedFileExtension } from '@common/utils/encoding';
+import {
+  legacySavedFileExtension,
+  savedFileExtension,
+} from '@common/utils/encoding';
 import { RA, RR, Writable } from '@common/utils/types';
 import { extname } from 'node:path';
 import { SimpleGit } from 'simple-git';
@@ -20,7 +23,7 @@ export const tagsToFileMeta = (
       const isFirst = index === 0;
       const isLast = tag === undefined;
       const { all: tagCommits } = await git.log({
-        format: { date: '%cI' },
+        format: { date: '%aI' },
         '--name-only': null,
         // Workaround for https://github.com/steveukx/git-js/issues/956
         ...(isFirst
@@ -40,7 +43,8 @@ export const tagsToFileMeta = (
             .filter(
               ({ file }) =>
                 // Exclude non-markdown
-                extname(file) === savedFileExtension &&
+                (extname(file) === savedFileExtension ||
+                  extname(file) === legacySavedFileExtension) &&
                 // Exclude files not-containing a year in path (README.md)
                 !Number.isNaN(Number.parseInt(file.split('/')[0])),
             )
