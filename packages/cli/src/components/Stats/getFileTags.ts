@@ -14,27 +14,19 @@ export type FilesWithTags = RR<
   }
 >;
 
-export const tagsToFileMeta = (
+export async function tagsToFileMeta(
   tags: RA<string>,
   git: SimpleGit,
-): Promise<FilesWithTags> =>
-  Promise.all(
+): Promise<FilesWithTags> {
+  const initialCommit = await git.raw('rev-list', '--max-parents=0', 'HEAD');
+  return Promise.all(
     [...tags, undefined].map(async (tag, index) => {
-      const isFirst = index === 0;
-      const isLast = tag === undefined;
       const { all: tagCommits } = await git.log({
         format: { date: '%aI' },
         '--name-only': null,
-        // Workaround for https://github.com/steveukx/git-js/issues/956
-        ...(isFirst
-          ? tag === undefined
-            ? {}
-            : { [tag]: null }
-          : {
-              from: tags[index - 1],
-              to: isLast ? undefined : tag,
-              symmetric: false,
-            }),
+        from: tags[index - 1] ?? initialCommit,
+        to: tag ?? 'HEAD',
+        symmetric: false,
       });
 
       return tagCommits.flatMap(
@@ -62,3 +54,4 @@ export const tagsToFileMeta = (
         return reduced;
       }, {}),
   );
+}
