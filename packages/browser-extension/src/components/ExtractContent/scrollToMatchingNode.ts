@@ -25,9 +25,8 @@ export function scrollToMatchingNode():
     restoreId(element);
     if (mode === 'none') return;
     // LOW: only scroll down if element is more than 1 screen down?
-    const markedElement = containerElement.querySelector(
-      `#${escapeUnsafeId(markerId)}`,
-    );
+    const shadowDom = containerElement.getRootNode() as ShadowRoot;
+    const markedElement = shadowDom.getElementById?.(markerId);
     if (markedElement !== null) restoreId(markedElement);
     markedElement?.scrollIntoView({
       behavior: mode,
@@ -48,5 +47,3 @@ function getTextNearTopOfViewport(): Node | undefined {
     return document.caretRangeFromPoint(x, y)?.startContainer;
   else return undefined;
 }
-
-const escapeUnsafeId = (id: string): string => id.replace(/([^\w-])/g, '\\$1');
