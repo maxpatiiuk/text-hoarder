@@ -39,6 +39,7 @@ import { renderExtension } from '../Core/renderExtension';
 
 // Remove previous reader mode instance
 const id = 'text-hoarder-container';
+const stylesId = 'text-hoarder-styles';
 const previousDialog = document.getElementById(id);
 const alreadyOpen = previousDialog !== null;
 
@@ -49,8 +50,9 @@ const activatedReason = new Promise((resolve) => {
   });
 });
 
-if (alreadyOpen) previousDialog?.remove();
-else {
+if (alreadyOpen) {
+  previousDialog?.remove();
+} else {
   const scrollToMatchingElement = catchErrors(scrollToMatchingNode);
   const preserveSelection = catchErrors(preserveTextSelection);
   const autoTrigger = shouldAutoTrigger();
@@ -84,6 +86,7 @@ function displayDialog(
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');
   dialog.id = id;
+  dialog.autofocus = true;
   dialog.style.width = '100vw';
   dialog.style.height = '100vh';
   dialog.style.maxWidth = 'none';
@@ -128,6 +131,7 @@ function displayDialog(
   dialog.remove = (...args: []) => {
     unmount();
     restoreBodyScroll();
+    restoreSearchingBackground();
     dialog.remove = originalRemove;
     // Trying to be as transparent with the override as possible
     return dialog.remove(...args);
@@ -136,6 +140,7 @@ function displayDialog(
 
   dialog.showModal();
   preventBodyScroll();
+  preventSearchingBackground();
   const unmount = renderExtension(
     container,
     <Dialog
@@ -166,3 +171,25 @@ function restoreBodyScroll(): void {
   document.body.style.setProperty('--old-height', '');
   document.body.style.setProperty('--old-overflow-y', '');
 }
+
+/**
+ * Unfortunately, modal dialog adding implicit "inert" to all background content
+ * is not enough to remove the background content from Find in Page results.
+ *
+ * Hiding the background content, while not an ideal option*, fixes this.
+ * *not ideal because:
+ * - may break background content when it's displayed again in case it relies on
+ *   computing styles using JavaScript
+ * - may cause JavaScript errors if background content tries to re-compute
+ *   position and sizing (i.e in response to scroll or timer)
+ * - needless performance impact because of layout reflow
+ */
+function preventSearchingBackground(): void {
+  const style = document.createElement('style');
+  style.id = stylesId;
+  style.textContent = `body > *:not(#${id}) { display: none !important; }`;
+  document.head.append(style);
+}
+
+const restoreSearchingBackground = (): void =>
+  document.getElementById(stylesId)?.remove();

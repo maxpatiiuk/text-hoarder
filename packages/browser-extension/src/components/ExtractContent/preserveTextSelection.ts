@@ -47,6 +47,9 @@ export function preserveTextSelection():
     const newSelection = window.getSelection();
     newSelection?.removeAllRanges();
     newSelection?.addRange(newRange);
+
+    newStartMarker.remove();
+    newEndMarker.remove();
   };
 }
 
