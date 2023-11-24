@@ -17,12 +17,10 @@ import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
 import { catchErrors } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
 
-// FEATURE: add local stats CLI
 // FEATURE: add local text-to-speech helper CLI
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
 // FINAL: do accessibility testing
 // FINAL: Review all code and remove unused/simplify
-// FINAL: either make options page content look nicer, or remove options page
 // LOW: use signed commits https://github.com/orgs/community/discussions/50055
 
 // FINAL: Deploy cors-auth-middleware to vercel

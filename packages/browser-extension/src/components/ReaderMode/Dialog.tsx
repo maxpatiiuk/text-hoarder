@@ -6,6 +6,7 @@ import { Tools } from './Tools';
 import { useStorage } from '../../hooks/useStorage';
 import { usePageStyle } from '../Preferences/usePageStyle';
 import { useReducedMotion } from '@common/hooks/useReduceMotion';
+import { listenToAnchors } from './anchors';
 
 /** Apply github-markdown-css styles */
 const markdownBody = 'markdown-body';
@@ -89,12 +90,17 @@ function Content({
 
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
-    const clone = node.cloneNode(true) as Element;
+    const clone = node.cloneNode(true) as HTMLElement;
     containerRef.current?.append(clone);
+
+    const anchorCleanUp = listenToAnchors(clone);
 
     handleRestoreScroll(containerRef.current!, restoreScrollMode);
 
-    return (): void => clone.remove();
+    return (): void => {
+      anchorCleanUp();
+      clone.remove();
+    };
   }, [node, handleRestoreScroll]);
 
   return <div className="contents" ref={containerRef} />;
