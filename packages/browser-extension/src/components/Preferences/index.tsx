@@ -8,6 +8,7 @@ import { Preferences } from './Preferences';
 import { IsPreferencesStandalone } from './Context';
 import { usePageStyle } from './usePageStyle';
 import { renderExtension } from '../Core/renderExtension';
+import { className } from '@common/components/Atoms/className';
 
 const container = document.createElement('main');
 
@@ -17,9 +18,8 @@ container.classList.add(
   'justify-center',
   'h-full',
   'overflow-auto',
-  'dark:bg-neutral-800',
-  'dark:text-gray-100',
   'min-h-screen',
+  ...className.base.split(' '),
 );
 
 document.body.append(container);

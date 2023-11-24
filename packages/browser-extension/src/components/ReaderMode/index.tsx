@@ -16,6 +16,7 @@ import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
 import { catchErrors } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
+import { className } from '@common/components/Atoms/className';
 
 // FEATURE: add local text-to-speech helper CLI
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
@@ -103,7 +104,13 @@ function displayDialog(
   const shadowRoot = dialogDiv.attachShadow({ mode: 'closed' });
   const container = document.createElement('div');
 
-  container.classList.add('flex', 'justify-center', 'h-max', 'overflow-auto');
+  container.classList.add(
+    'flex',
+    'justify-center',
+    'h-max',
+    'overflow-auto',
+    ...className.base.split(' '),
+  );
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);
