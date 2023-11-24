@@ -108,12 +108,6 @@ function displayDialog(
     'justify-center',
     'h-max',
     'overflow-auto',
-    /*
-     * Improve readability by reverting websites trying to "fix" font
-     * smoothing.
-     * See https://usabilitypost.com/2012/11/05/stop-fixing-font-smoothing/
-     */
-    'subpixel-antialiased',
     // FEATURE: allow font-weight customization
   );
 

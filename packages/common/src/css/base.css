@@ -4,6 +4,24 @@
  */
 
 @layer base {
+  :host {
+    /*
+     * Improve readability by reverting websites trying to "fix" font
+     * smoothing.
+     * See https://usabilitypost.com/2012/11/05/stop-fixing-font-smoothing/
+     *
+     * Also resets values for other CSS properties that penetrate into
+     * Shadow DOM. Full list of inherited properties:
+     * https://web.dev/learn/css/inheritance
+     */
+    @apply subpixel-antialiased text-gray-900 dark:text-neutral-100 cursor-[initial] tracking-[initial] indent-[initial];
+    text-align: initial;
+    text-transform: initial;
+    font-style: initial;
+    word-spacing: initial;
+    white-space: initial;
+  }
+
   * {
     @apply !ring-inset;
   }

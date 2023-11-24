@@ -78,7 +78,7 @@ export function Tools({
   return (
     <div
       className={`
-        absolute top-0 right-0 flex backdrop-blur rounded-es
+        fixed top-0 right-0 flex backdrop-blur rounded-es
         bg-white/80 dark:bg-black/70 max-h-full border-r border-gray-400
         ${
           selectedTool === undefined
