@@ -78,8 +78,12 @@ export function SaveText({
   const [wasAlreadySaved, setWasAlreadySaved] = React.useState(
     typeof existingFile === 'string',
   );
+  const requestSent = React.useRef(false);
   React.useEffect(() => {
-    if (wasAlreadySaved) return undefined;
+    if (wasAlreadySaved || requestSent.current) return undefined;
+
+    // Fix request being sent twice when React is in development mode
+    requestSent.current = true;
 
     const markdown = simpleDocumentToMarkdown(simpleDocument);
     github!
