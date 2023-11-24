@@ -92,7 +92,6 @@ function displayDialog(
   dialog.style.margin = '0';
   dialog.style.padding = '0';
   dialog.style.position = 'fixed';
-  dialog.style.overflow = 'hidden';
   dialog.style.border = 'none';
   dialog.style.outline = 'none';
 
@@ -107,7 +106,7 @@ function displayDialog(
   container.classList.add(
     'flex',
     'justify-center',
-    'h-full',
+    'h-max',
     'overflow-auto',
     /*
      * Improve readability by reverting websites trying to "fix" font

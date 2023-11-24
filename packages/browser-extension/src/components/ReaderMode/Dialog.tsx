@@ -39,7 +39,7 @@ export function Dialog({
         />
       )}
       <div
-        className={`flex flex-col gap-4 p-4 md:p-16 ${markdownBody}`}
+        className={`flex flex-col gap-4 p-4 md:p-16 h-max ${markdownBody}`}
         lang={simpleDocument?.lang}
         dir={simpleDocument?.dir}
         // Setting these as style attribute to override markdownBody styles
@@ -91,6 +91,8 @@ function Content({
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   React.useEffect(() => {
     const clone = node.cloneNode(true) as HTMLElement;
+    clone.classList.add('contents');
+
     containerRef.current?.append(clone);
 
     const anchorCleanUp = listenToAnchors(clone);
