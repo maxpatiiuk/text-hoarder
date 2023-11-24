@@ -24,6 +24,7 @@ export const preferencesText = dictionary({
   customCss: { en: 'Custom CSS' },
   customCssPlaceholder: { en: '.markdown-body {\n  color: black;\n}' },
   fontFamily: { en: 'Font family' },
+  fontWeight: { en: 'Font weight' },
   sansSerif: { en: 'Sans-serif' },
   monospace: { en: 'Monospace' },
   serif: { en: 'Serif' },

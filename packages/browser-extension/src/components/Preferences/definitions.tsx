@@ -34,6 +34,17 @@ export const definitions: IR<
       monospace: preferencesText.monospace,
       serif: preferencesText.serif,
     }),
+    'reader.fontWeight': Renderers.Range(preferencesText.fontWeight, {
+      /*
+       * Even though the spec allows values in the 1-1000 range, Chrome is
+       * not spec-compliant, thus those values are not supported. See
+       * https://bugs.chromium.org/p/chromium/issues/detail?id=1126534
+       */
+      min: 51,
+      max: 900,
+      // Supporting variable fonts
+      step: 1,
+    }),
     'reader.pageWidth': Renderers.Range(preferencesText.pageWidth, {
       min: 20,
       max: 200,

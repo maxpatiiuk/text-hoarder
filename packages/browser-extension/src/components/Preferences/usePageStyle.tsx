@@ -10,6 +10,7 @@ export function usePageStyle(): {
   const [pageWidth] = useStorage('reader.pageWidth');
   const [customCss] = useStorage('reader.customCss');
   const [fontFamily] = useStorage('reader.fontFamily');
+  const [fontWeight] = useStorage('reader.fontWeight');
   return {
     style: {
       /*
@@ -17,6 +18,7 @@ export function usePageStyle(): {
        * All children use em, which is affected by this px value
        */
       fontSize: `${fontSize}px`,
+      fontWeight,
       lineHeight,
       maxWidth: `${pageWidth}em`,
       fontFamily,

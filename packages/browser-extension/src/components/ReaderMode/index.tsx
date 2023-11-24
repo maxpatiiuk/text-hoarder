@@ -103,13 +103,7 @@ function displayDialog(
   const shadowRoot = dialogDiv.attachShadow({ mode: 'closed' });
   const container = document.createElement('div');
 
-  container.classList.add(
-    'flex',
-    'justify-center',
-    'h-max',
-    'overflow-auto',
-    // FEATURE: allow font-weight customization
-  );
+  container.classList.add('flex', 'justify-center', 'h-max', 'overflow-auto');
 
   shadowRoot.append(container);
   dialog.append(dialogDiv);

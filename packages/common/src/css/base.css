@@ -14,7 +14,7 @@
      * Shadow DOM. Full list of inherited properties:
      * https://web.dev/learn/css/inheritance
      */
-    @apply subpixel-antialiased text-gray-900 dark:text-neutral-100 cursor-[initial] tracking-[initial] indent-[initial];
+    @apply subpixel-antialiased cursor-[initial] tracking-[initial] indent-[initial];
     text-align: initial;
     text-transform: initial;
     font-style: initial;

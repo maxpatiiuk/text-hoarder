@@ -20,6 +20,7 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   'reader.lineHeight': 1.5 as number,
   'reader.pageWidth': 60 as number,
   'reader.fontFamily': 'sans-serif' as 'sans-serif' | 'monospace' | 'serif',
+  'reader.fontWeight': 400 as number,
   'reader.customCss': '' as string,
   'reader.autoTriggerUrls': '' as string,
   'reader.unfocusedMenuOpacity': 75 as number,
