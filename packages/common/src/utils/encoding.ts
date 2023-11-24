@@ -78,7 +78,17 @@ export const encoding = {
 
       url.hash = '';
       if (!keepQueryString) url.search = '';
-      const pathname = url.pathname.slice(1);
+
+      /*
+       * Empty path segment are not allowed in file names. Hopefully this
+       * doesn't change the semantics as per the target web server. Assuming
+       * here that double slack is accidental. Alternatively, would have to
+       * URL-encode it (replace with %2F)
+       */
+      const rawPathname = url.pathname.replaceAll(/\/{2,}/g, '/');
+      // Remove trailing slash
+      const pathname = rawPathname.slice(1);
+
       const searchString =
         url.search.length > 1
           ? `${
