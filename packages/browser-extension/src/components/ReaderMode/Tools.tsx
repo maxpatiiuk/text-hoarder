@@ -13,6 +13,7 @@ import { SaveText, filePathToGitHubUrl, useExistingFile } from './SaveText';
 import { listenEvent } from '../Background/messages';
 import { Link } from '@common/components/Atoms/Link';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
+import { className } from '@common/components/Atoms/className';
 
 export function Tools({
   simpleDocument,
@@ -80,6 +81,7 @@ export function Tools({
       className={`
         fixed top-0 right-0 flex backdrop-blur rounded-es
         bg-white/80 dark:bg-black/70 max-h-full border-r border-gray-400
+        ${className.baseText}
         ${
           selectedTool === undefined
             ? 'opacity-[var(--opacity)] hover:opacity-100 focus-within:opacity-100'

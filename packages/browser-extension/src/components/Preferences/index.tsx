@@ -19,7 +19,6 @@ container.classList.add(
   'h-full',
   'overflow-auto',
   'min-h-screen',
-  ...className.base.split(' '),
 );
 
 document.body.append(container);
@@ -32,7 +31,7 @@ function PreferencesPage(): JSX.Element {
   return (
     <IsPreferencesStandalone.Provider value>
       <div
-        className="flex flex-col gap-4 p-4 max-w-[40rem]"
+        className={`flex flex-col gap-4 p-4 max-w-[40rem] ${className.base}`}
         style={{
           ...style,
           fontFamily:

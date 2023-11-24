@@ -1,8 +1,10 @@
 const current = 'aria-[pressed]:brightness-150 aria-[current]:brightness-150';
 const link = `text-blue-600 dark:text-blue-400 transition hover:text-black dark:hover:text-white underline ${current}`;
 const inputBackground = 'bg-gray-300 dark:bg-neutral-700';
+const baseText = 'text-gray-900 dark:text-neutral-100';
 export const className = {
-  base: 'bg-white dark:bg-neutral-800 text-gray-900 dark:text-neutral-100',
+  baseText,
+  base: `bg-white dark:bg-neutral-800 ${baseText}`,
   input: `rounded pl-1 pr-1 sm:pl-3 sm:pr-3 border-none ring-1 ring-black ${inputBackground}`,
   select: `w-full pr-5 bg-right cursor-pointer ${inputBackground}`,
   button: `inline-flex justify-center items-center px-4 py-2 rounded-md border-none text-white ${current}`,

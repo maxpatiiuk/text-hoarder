@@ -25,6 +25,7 @@ export function Dialog({
     'reader.allowScrollPastLastLine',
   );
   const { style, customCss } = usePageStyle();
+  const { maxWidth, fontFamily, ...restStyles } = style;
 
   return (
     <>
@@ -39,30 +40,35 @@ export function Dialog({
         />
       )}
       <div
-        className={`flex flex-col gap-4 p-4 md:p-16 h-max ${markdownBody}`}
+        className={`flex flex-col gap-4 p-4 md:p-16 h-max w-full items-center ${markdownBody}`}
         lang={simpleDocument?.lang}
         dir={simpleDocument?.dir}
         // Setting these as style attribute to override markdownBody styles
         style={{
-          ...style,
+          ...restStyles,
           fontFamily:
-            style.fontFamily === 'sans-serif'
-              ? /* default */ undefined
-              : style.fontFamily,
+            fontFamily === 'sans-serif' ? /* default */ undefined : fontFamily,
         }}
       >
-        {simpleDocument === undefined ? (
-          <p>{readerText.noContentFound}</p>
-        ) : (
-          <>
-            <H1>{simpleDocument.title ?? document.title}</H1>
-            <Content
-              node={simpleDocument.content}
-              onRestoreScroll={handleRestoreScroll}
-            />
-            {allowScrollPastLastLine && <div className="min-h-full" />}
-          </>
-        )}
+        <div
+          style={{
+            // Have to apply this style to element below the container so that container is full width so that it's background is full width
+            maxWidth,
+          }}
+        >
+          {simpleDocument === undefined ? (
+            <p>{readerText.noContentFound}</p>
+          ) : (
+            <>
+              <H1>{simpleDocument.title ?? document.title}</H1>
+              <Content
+                node={simpleDocument.content}
+                onRestoreScroll={handleRestoreScroll}
+              />
+              {allowScrollPastLastLine && <div className="min-h-full" />}
+            </>
+          )}
+        </div>
         {customCss}
       </div>
     </>

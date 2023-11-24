@@ -7,7 +7,6 @@ import { renderApp } from '@common/components/Core/renderApp';
 import { commonText } from '@common/localization/commonText';
 import { StatsJson } from '../Stats/computeStats';
 import { App } from './App';
-import { className } from '@common/components/Atoms/className';
 
 const container = document.createElement('main');
 
@@ -19,7 +18,6 @@ container.classList.add(
   'overflow-auto',
   'min-h-screen',
   'p-4',
-  ...className.base.split(' '),
 );
 
 document.body.append(container);

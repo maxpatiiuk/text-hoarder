@@ -9,6 +9,7 @@ import { HostsTable } from './HostsTable';
 import { TopWords } from './TopWords';
 import { BadgeStats } from './BadgeStats';
 import { Select } from '@common/components/Atoms/Input';
+import { className } from '@common/components/Atoms/className';
 
 type Page =
   | State<'All'>
@@ -20,7 +21,7 @@ export function App({ stats }: { readonly stats: StatsJson }) {
   const years = Object.keys(stats.perYear);
   const allTags = Object.keys(stats.perTag);
   return (
-    <>
+    <div className={`contents ${className.base}`}>
       <H1>{commonText.textHoarder}</H1>
       <Label.Inline className="gap-2">
         {statsText.filter}
@@ -70,7 +71,7 @@ export function App({ stats }: { readonly stats: StatsJson }) {
             : stats.perTag[allTags[allTags.indexOf(page.tag) - 1]]
         }
       />
-    </>
+    </div>
   );
 }
 
