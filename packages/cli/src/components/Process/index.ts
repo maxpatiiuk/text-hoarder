@@ -109,6 +109,7 @@ export const registerProcessCommand = (program: Command<[], {}>) =>
         );
 
         // FIXME: read and process file contents
+        // FIXME: export files for 2023-11-18
 
         if (tags.includes(newTag))
           if (forceCreateTag) await git.tag(['-d', newTag]);

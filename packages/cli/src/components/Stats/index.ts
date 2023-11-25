@@ -67,5 +67,5 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
         if (autoOpen) await open(html);
       }
 
-      // TODO: handle git not being installed
+      // FEATURE: handle git not being installed
     });
