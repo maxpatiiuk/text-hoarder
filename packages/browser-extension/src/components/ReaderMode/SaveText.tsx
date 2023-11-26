@@ -164,4 +164,7 @@ export function SaveText({
 export const filePathToGitHubUrl = (
   { owner, name, branch }: Repository,
   filePath: string,
-) => `https://github.com/${owner}/${name}/edit/${branch}/${filePath}`;
+) =>
+  `https://github.com/${owner}/${name}/edit/${branch}/${encodeURIComponent(
+    filePath,
+  )}`;

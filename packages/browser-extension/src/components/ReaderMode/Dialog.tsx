@@ -111,5 +111,5 @@ function Content({
     };
   }, [node, handleRestoreScroll]);
 
-  return <div className="contents" ref={containerRef} />;
+  return <div ref={containerRef} />;
 }

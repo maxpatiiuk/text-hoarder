@@ -17,9 +17,12 @@ import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
 import { catchErrors } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
 
+// BUG: scroll loss on exiting reader mode (i.e in https://hackernoon.com/unleashing-the-power-of-typescript-improving-standard-library-types?utm_source=tldrwebdev)
 // FEATURE: add local text-to-speech helper CLI
+// LOW: add stats UI to the web extension (https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-tar amd https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API)
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
 // FINAL: do accessibility testing
+// FINAL: add webpack dev server for stats? https://morioh.com/a/c6e73ed575bb/how-to-package-nodejs-application-using-webpack#google_vignette
 // FINAL: Review all code and remove unused/simplify
 // LOW: use signed commits https://github.com/orgs/community/discussions/50055
 
@@ -115,8 +118,8 @@ function displayDialog(
   const originalRemove = dialog.remove;
   dialog.remove = (...args: []) => {
     unmount();
-    restoreBodyScroll();
     restoreSearchingBackground();
+    restoreBodyScroll();
     dialog.remove = originalRemove;
     // Trying to be as transparent with the override as possible
     return dialog.remove(...args);

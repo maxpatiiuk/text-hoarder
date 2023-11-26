@@ -76,7 +76,12 @@ export const encoding = {
         queryString.length <= 4 &&
         url.pathname.split(/[\/_ -]/m).length < 4;
 
-      url.hash = '';
+      /*
+       * Gmail uses URLs like
+       * https://mail.google.com/mail/u/0/#label/Backlog%2FDeep/FMfcgzGwHfwGdcMxdmZzqQXKZHlPRrQd,
+       * thus hash is important
+       */
+      if (url.host !== 'mail.google.com') url.hash = '';
       if (!keepQueryString) url.search = '';
 
       /*
@@ -92,23 +97,23 @@ export const encoding = {
       const searchString =
         url.search.length > 1
           ? `${
-              pathname.endsWith('/') || pathname.length === 0 ? '' : '/'
+              pathname === '' || pathname.endsWith('/') ? '' : '/'
             }&${url.search.slice(1)}`
-          : /*
-           * If URL ends with /, the resulting path would look like
-           * /some/path/.md, which creates a file without a name,
-           * which would be treated as hidden on many systems. Appending
-           * & is a workaround
-           */
-          pathname === '' || pathname.endsWith('/')
-          ? '&'
           : '';
 
+      const compiled = `${pathname}${searchString}${url.hash}`;
+      /*
+       * If URL ends with /, the resulting path would look like
+       * /some/path/.md, which creates a file without a name,
+       * which would be treated as hidden on many systems. Appending
+       * & is a workaround
+       */
+      const slash = compiled === '' || compiled.endsWith('/') ? '&' : '';
       return [
         year,
         url.host,
         ...encoding.fileName
-          .encode(`${pathname}${searchString}${savedFileExtension}`)
+          .encode(`${compiled}${slash}${savedFileExtension}`)
           .split('/'),
       ].join('/');
     },
@@ -139,7 +144,7 @@ export const encoding = {
 // FIXME: try out creating files from very long URLs
 
 // These characters are not allowed in Windows file names, so %-encode them
-const unsafeCharacters = ['<', '>', ':', '"', '\\', '|', '*'];
+const unsafeCharacters = ['#', '<', '>', ':', '"', '\\', '|', '*'];
 const encodedUnsafeCharacters = unsafeCharacters.map((r) =>
   r === '*' ? '%2A' : encodeURIComponent(r),
 );
