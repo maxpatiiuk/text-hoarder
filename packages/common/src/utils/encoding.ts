@@ -79,9 +79,15 @@ export const encoding = {
       /*
        * Gmail uses URLs like
        * https://mail.google.com/mail/u/0/#label/Backlog%2FDeep/FMfcgzGwHfwGdcMxdmZzqQXKZHlPRrQd,
-       * thus hash is important
+       * thus hash is important.
+       * Zenhub and StoryBook does too. In all cases, hash includes
+       * a slash.
+       * Hoping that in other cases it's safe to remove it (or at least
+       * the trade off with cleaner file names is worth the occasional
+       * misses)
        */
-      if (url.host !== 'mail.google.com') url.hash = '';
+      if (!url.hash.includes('/')) url.hash = '';
+
       if (!keepQueryString) url.search = '';
 
       /*
