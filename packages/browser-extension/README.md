@@ -59,7 +59,7 @@ Pre-requisites:
 Checkout this repository:
 
 ```sh
-git clone https://github.com/maxxxxxdlp/text-hoarder
+git clone https://github.com/maxpatiiuk/text-hoarder
 cd packages/browser-extension
 ```
 
@@ -114,5 +114,5 @@ npx tsc
 
 Note, this project does not include tests, which is an intentional decision.
 Read the commit message in
-[af2eedf](https://github.com/maxxxxxdlp/text-hoarder/commit/af2eedf) to see
+[af2eedf](https://github.com/maxpatiiuk/text-hoarder/commit/af2eedf) to see
 several justifications (and why this may be reversed in the future).

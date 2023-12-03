@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/maxxxxxdlp/text-hoarder"
+    "url": "https://github.com/maxpatiiuk/text-hoarder"
   },
   "scripts": {
     "build": "next build",

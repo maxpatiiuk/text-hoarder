@@ -14,7 +14,7 @@ Pre-requisites:
 Checkout this repository:
 
 ```sh
-git clone https://github.com/maxxxxxdlp/text-hoarder
+git clone https://github.com/maxpatiiuk/text-hoarder
 cd packages/cli
 ```
 
