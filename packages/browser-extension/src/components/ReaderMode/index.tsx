@@ -16,6 +16,7 @@ import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
 import { catchErrors } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
+import { applyHostPageStyles, extensionContainerId } from './styles';
 
 // BUG: scroll loss on exiting reader mode (i.e in https://hackernoon.com/unleashing-the-power-of-typescript-improving-standard-library-types?utm_source=tldrwebdev)
 // FEATURE: add local text-to-speech helper CLI
@@ -39,11 +40,11 @@ import { renderExtension } from '../Core/renderExtension';
 //   to install the app
 
 // Remove previous reader mode instance
-const id = 'text-hoarder-container';
-const stylesId = 'text-hoarder-styles';
-const previousDialog = document.getElementById(id);
+const previousDialog = document.getElementById(extensionContainerId);
 const alreadyOpen = previousDialog !== null;
 
+// BUG: if already open, delayed "ActiveExtension" should not close again
+// FEATURE: if unable to extract information, but user had selected text, use that as information
 const activatedReason = new Promise((resolve) => {
   const stopListening = listenEvent('ActivateExtension', ({ action }) => {
     stopListening();
@@ -86,7 +87,7 @@ function displayDialog(
 ): void {
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');
-  dialog.id = id;
+  dialog.id = extensionContainerId;
   dialog.autofocus = true;
   dialog.style.width = '100vw';
   dialog.style.height = '100vh';
@@ -111,6 +112,8 @@ function displayDialog(
   shadowRoot.append(container);
   dialog.append(dialogDiv);
 
+  const restoreHostPageStyles = applyHostPageStyles();
+
   /**
    * Override instance method so that if ReaderMode bundle is connected to page
    * again, it can properly dispose of previous instance (i.e toggle the reader)
@@ -118,8 +121,7 @@ function displayDialog(
   const originalRemove = dialog.remove;
   dialog.remove = (...args: []) => {
     unmount();
-    restoreSearchingBackground();
-    restoreBodyScroll();
+    restoreHostPageStyles();
     dialog.remove = originalRemove;
     // Trying to be as transparent with the override as possible
     return dialog.remove(...args);
@@ -127,8 +129,6 @@ function displayDialog(
   document.body.append(dialog);
 
   dialog.showModal();
-  preventBodyScroll();
-  preventSearchingBackground();
   const unmount = renderExtension(
     container,
     <Dialog
@@ -140,44 +140,3 @@ function displayDialog(
 
   dialog.addEventListener('close', dialog.remove, { once: true });
 }
-
-function preventBodyScroll(): void {
-  document.body.style.setProperty('--old-height', document.body.style.height);
-  document.body.style.setProperty(
-    '--old-overflow-y',
-    document.body.style.overflowY,
-  );
-  document.body.style.height = '100vh';
-  document.body.style.overflowY = 'hidden';
-}
-
-function restoreBodyScroll(): void {
-  document.body.style.height =
-    document.body.style.getPropertyValue('--old-height');
-  document.body.style.overflowY =
-    document.body.style.getPropertyValue('--old-overflow-y');
-  document.body.style.setProperty('--old-height', '');
-  document.body.style.setProperty('--old-overflow-y', '');
-}
-
-/**
- * Unfortunately, modal dialog adding implicit "inert" to all background content
- * is not enough to remove the background content from Find in Page results.
- *
- * Hiding the background content, while not an ideal option*, fixes this.
- * *not ideal because:
- * - may break background content when it's displayed again in case it relies on
- *   computing styles using JavaScript
- * - may cause JavaScript errors if background content tries to re-compute
- *   position and sizing (i.e in response to scroll or timer)
- * - needless performance impact because of layout reflow
- */
-function preventSearchingBackground(): void {
-  const style = document.createElement('style');
-  style.id = stylesId;
-  style.textContent = `body > *:not(#${id}) { display: none !important; }`;
-  document.head.append(style);
-}
-
-const restoreSearchingBackground = (): void =>
-  document.getElementById(stylesId)?.remove();

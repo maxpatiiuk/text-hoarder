@@ -37,7 +37,10 @@ export function AutoTriggerUrls(
       {!isStandalone && (
         <div className="flex gap-1 flex-wrap">
           <Button.Info
-            onClick={(): void => updateValue(`${value}\n${location.origin}`)}
+            onClick={(): void =>
+              // FEATURE: either add to top, or scroll down - otherwise makes it seem like nothing happened
+              updateValue(`${value}\n${location.origin}`)
+            }
           >
             {preferencesText.addCurrentSite}
           </Button.Info>
