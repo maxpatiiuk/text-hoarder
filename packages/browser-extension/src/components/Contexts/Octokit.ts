@@ -106,9 +106,6 @@ export function wrapOctokit(
           branch,
           sha,
         })
-        .then((response) => {
-          console.log(response);
-          return undefined;
-        }),
+        .then(() => undefined),
   };
 }

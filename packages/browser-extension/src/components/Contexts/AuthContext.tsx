@@ -2,9 +2,6 @@ import React from 'react';
 import { sendRequest } from '../Background/messages';
 import { useStorage } from '../../hooks/useStorage';
 import { Octokit } from 'octokit';
-import { ajax } from '@common/utils/ajax';
-import { formatUrl, parseUrl } from '@common/utils/queryString';
-import { corsAuthMiddlewareUrl } from '../../../config';
 import { OctokitWrapper, wrapOctokit } from './Octokit';
 
 /**
@@ -17,9 +14,7 @@ export const AuthContext = React.createContext<Auth>({
   handleAuthenticate: () => {
     throw new Error('Not loaded');
   },
-  handleSignOut: () => {
-    throw new Error('Not loaded');
-  },
+  handleSignOut: undefined,
 });
 AuthContext.displayName = 'AuthContext';
 
@@ -31,7 +26,7 @@ type Auth = {
   readonly github: OctokitWrapper | undefined;
   readonly installationId: number | undefined;
   readonly handleAuthenticate: () => Promise<void>;
-  readonly handleSignOut: () => void;
+  readonly handleSignOut: (() => void) | undefined;
 };
 
 export function AuthenticationProvider({
@@ -45,13 +40,13 @@ export function AuthenticationProvider({
 
   const handleAuthenticate = React.useCallback(
     async (interactive: boolean) =>
-      sendRequest('Authenticate', { interactive })
-        .then(resolveAuthToken)
-        .then(({ token, installationId }) => {
+      sendRequest('Authenticate', { interactive }).then(
+        ({ token, installationId }) => {
           setToken(token);
           setInstallationId(installationId);
           if (process.env.NODE_ENV === 'development') console.log(token);
-        }),
+        },
+      ),
     [setToken, setInstallationId],
   );
 
@@ -74,13 +69,16 @@ export function AuthenticationProvider({
       github,
       installationId,
       handleAuthenticate: handleAuthenticate.bind(undefined, true),
-      handleSignOut: () => {
-        // FIXME: delete the token?
-        setToken(undefined);
-        setRepository(undefined);
-        // FIXME: delete the installation?
-        // await octokit?.rest.apps.revokeInstallationAccessToken().catch(console.error);
-      },
+      handleSignOut:
+        token === undefined
+          ? undefined
+          : () => {
+              // FIXME: delete the token?
+              setToken(undefined);
+              setRepository(undefined);
+              // FIXME: delete the installation?
+              // await octokit?.rest.apps.revokeInstallationAccessToken().catch(console.error);
+            },
     };
   }, [
     repository,
@@ -92,32 +90,4 @@ export function AuthenticationProvider({
   ]);
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-}
-
-async function resolveAuthToken({
-  callbackUrl,
-  originalState,
-}: {
-  // Example URL: https://bjknebjiadgjchmhppdfdiddfegmcaao.chromiumapp.org/?code=ace8eda36ec23fb106a1&installation_id=43127586&setup_action=install&state=13915511021528948
-  callbackUrl: string | undefined;
-  originalState: string;
-}): Promise<{ readonly token: string; readonly installationId: number }> {
-  if (callbackUrl === undefined) throw new Error('Authentication was canceled');
-  const {
-    code,
-    state: returnedState,
-    installation_id: installationIdString,
-  } = parseUrl(callbackUrl);
-  const installationId = Number.parseInt(installationIdString);
-  if (
-    typeof code !== 'string' ||
-    originalState !== returnedState ||
-    Number.isNaN(installationId)
-  )
-    throw new Error('Authentication failed');
-  return ajax(formatUrl(corsAuthMiddlewareUrl, { code }), {
-    method: 'POST',
-  })
-    .then((response) => response.text())
-    .then((token) => ({ token, installationId }));
 }

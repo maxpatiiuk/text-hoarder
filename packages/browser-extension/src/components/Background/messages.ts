@@ -12,7 +12,7 @@ type AuthenticateRequest = State<
     };
     readonly response: State<
       'Authenticated',
-      { readonly callbackUrl: string; readonly originalState: string }
+      { readonly token: string; readonly installationId: number }
     >;
   }
 >;

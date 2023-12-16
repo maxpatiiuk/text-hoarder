@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,
@@ -9,8 +11,21 @@
     "module": "esnext",
     "moduleResolution": "node",
     "isolatedModules": true,
-    "plugins": [{ "name": "next" }]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

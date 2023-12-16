@@ -17,11 +17,11 @@ export async function POST(request: NextRequest): Promise<Response> {
       client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
       code,
     }),
-    { method: 'POST', headers: { Accept: 'application/json' } }
+    { method: 'POST', headers: { Accept: 'application/json' } },
   )
     .then((response) => response.json())
     .then(
-      (response: { readonly access_token: string }) => response.access_token
+      (response: { readonly access_token: string }) => response.access_token,
     )
     .then(
       (accessToken) =>
@@ -32,13 +32,13 @@ export async function POST(request: NextRequest): Promise<Response> {
             'Access-Control-Allow-Origin':
               process.env.ACCESS_CONTROL_ALLOW_ORIGIN,
           },
-        })
+        }),
     );
 }
 
 function formatUrl(
   url: string,
-  parameters: Readonly<Record<string, string>>
+  parameters: Readonly<Record<string, string>>,
 ): string {
   const urlObject = new URL(url);
   urlObject.search = new URLSearchParams({

@@ -30,9 +30,11 @@ export function InfoTab(): JSX.Element {
         {readerText.requestFeature}
       </Link.Info>
       <Link.Info href={urls.reportIssue}>{readerText.reportIssue}</Link.Info>
-      <Button.Danger onClick={handleSignOut}>
-        {signInText.signOut}
-      </Button.Danger>
+      {typeof handleSignOut === 'function' && (
+        <Button.Danger onClick={handleSignOut}>
+          {signInText.signOut}
+        </Button.Danger>
+      )}
       <p>
         {signInText.privacyPolicyDescription}
         <Link.Default href={urls.privacyPolicy}>

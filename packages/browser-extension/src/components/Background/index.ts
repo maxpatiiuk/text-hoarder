@@ -5,11 +5,12 @@
 import type { State } from 'typesafe-reducer';
 
 import { ActivateExtension, emitEvent, type Requests } from './messages';
-import { formatUrl } from '@common/utils/queryString';
-import { gitHubAppName } from '../../../config';
+import { formatUrl, parseUrl } from '@common/utils/queryString';
+import { corsAuthMiddlewareUrl, gitHubAppName } from '../../../config';
 import { RA } from '@common/utils/types';
 import { preparePatterns, urlMatches } from '../ReaderMode/matchUrl';
 import { listenToStorage, setStorage } from '../../utils/storage';
+import { ajax } from '@common/utils/ajax';
 
 /**
  * Listen for a message from the front-end and send back the response
@@ -73,12 +74,12 @@ const requestHandlers: {
         if (callbackUrl === undefined)
           throw new Error('Authentication was canceled');
         else
-          return {
-            type: 'Authenticated',
+          return resolveAuthToken({
             callbackUrl,
             originalState: state,
-          } as const;
-      });
+          });
+      })
+      .then((response) => ({ type: 'Authenticated', ...response }));
   },
 
   OpenUrl: (url, { tab }) =>
@@ -177,3 +178,36 @@ runtime.onUpdate(async details => {
     }
 })
  */
+
+async function resolveAuthToken({
+  callbackUrl,
+  originalState,
+}: {
+  // Example URL: https://bjknebjiadgjchmhppdfdiddfegmcaao.chromiumapp.org/?code=ace8eda36ec23fb106a1&installation_id=43127586&setup_action=install&state=13915511021528948
+  callbackUrl: string | undefined;
+  originalState: string;
+}): Promise<{ readonly token: string; readonly installationId: number }> {
+  if (callbackUrl === undefined) throw new Error('Authentication was canceled');
+  const {
+    code,
+    state: returnedState,
+    installation_id: installationIdString,
+  } = parseUrl(callbackUrl);
+  const installationId = Number.parseInt(installationIdString);
+  if (
+    typeof code !== 'string' ||
+    originalState !== returnedState ||
+    Number.isNaN(installationId)
+  )
+    throw new Error('Authentication failed');
+  /**
+   * This request should be made from the background script rather than host
+   * page for security reasons (to avoid CORS issues, and to avoid tampering
+   * with the response)
+   */
+  return ajax(formatUrl(corsAuthMiddlewareUrl, { code }), {
+    method: 'POST',
+  })
+    .then((response) => response.text())
+    .then((token) => ({ token, installationId }));
+}
