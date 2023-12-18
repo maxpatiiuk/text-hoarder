@@ -71,6 +71,7 @@ export function computeStats(
   return pickTop(statsJson);
 }
 
+// REFACTOR: Use Intl.Segmenter to split words and sentences
 const reWord =
   /[\p{Letter}\p{Number}\p{Dash_Punctuation}\p{Connector_Punctuation}']+/gu;
 const extractWords = (text: string): RA<string> => text.match(reWord) ?? [];

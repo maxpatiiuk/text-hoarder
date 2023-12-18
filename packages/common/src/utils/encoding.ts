@@ -3,10 +3,13 @@ export const legacySavedFileExtension = '.txt';
 const reSavedFileExtension = /\.md$/;
 
 export const encoding = {
+  /** More on this: https://web.dev/articles/base64-encoding */
   fileContent: {
     encode(text: string): string {
       const bytes = new TextEncoder().encode(text);
-      const binString = String.fromCodePoint(...bytes);
+      const binString = Array.from(bytes, (byte) =>
+        String.fromCodePoint(byte),
+      ).join('');
       return btoa(binString);
     },
     decode(base64: string): string {
