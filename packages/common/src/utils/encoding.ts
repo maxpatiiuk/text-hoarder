@@ -77,7 +77,7 @@ export const encoding = {
       const keepQueryString =
         queryString.length > 0 &&
         queryString.length <= 4 &&
-        url.pathname.split(/[\/_ -]/m).length < 4;
+        !isUrlPartComplicated(url.pathname);
 
       /*
        * Gmail uses URLs like
@@ -149,6 +149,9 @@ export const encoding = {
     decode: (date: string) => new Date(date),
   },
 };
+
+export const isUrlPartComplicated = (part: string) =>
+  part.split(/[\/_ -]/m).length >= 4;
 
 // FIXME: try out creating files from very long URLs
 

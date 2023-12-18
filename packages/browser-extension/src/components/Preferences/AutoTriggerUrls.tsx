@@ -9,6 +9,7 @@ import { IsPreferencesStandalone } from './Context';
 import { useStorage } from '../../hooks/useStorage';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
 import { sendRequest } from '../Background/messages';
+import { isUrlPartComplicated } from '@common/utils/encoding';
 
 export function AutoTriggerUrls(
   value: string,
@@ -24,12 +25,14 @@ export function AutoTriggerUrls(
   );
 
   const currentSite = location.origin;
-  const currentPath = `${location.origin}/${location.pathname.split('/')[1]}`;
-  const hasCurrentSite = lines.includes(currentSite);
-  const hasCurrentPath = lines.includes(currentPath);
+  const lastPart = location.pathname.split('/')[1];
+  const keepLastPart = !isUrlPartComplicated(lastPart);
+  const currentPath = `${location.origin}/${lastPart}`;
+  const canAddCurrentSite = !lines.includes(currentSite);
+  const canAddCurrentPath = !lines.includes(currentPath) && keepLastPart;
 
   const isStandalone = React.useContext(IsPreferencesStandalone);
-  const showButtons = !isStandalone && (!hasCurrentSite || !hasCurrentPath);
+  const showButtons = !isStandalone && (canAddCurrentSite || canAddCurrentPath);
   return (
     <>
       <Label.Block>
@@ -44,7 +47,7 @@ export function AutoTriggerUrls(
       </Label.Block>
       {showButtons && (
         <div className="flex gap-1 flex-wrap">
-          {!hasCurrentSite && (
+          {canAddCurrentSite && (
             <Button.Info
               onClick={(): void =>
                 // FEATURE: either add to top, or scroll down - otherwise makes it seem like nothing happened
@@ -54,13 +57,11 @@ export function AutoTriggerUrls(
               {preferencesText.addCurrentSite}
             </Button.Info>
           )}
-          {!hasCurrentPath && (
+          {canAddCurrentPath && (
             <Button.Info
               onClick={(): void => updateValue(`${value}\n${currentPath}`)}
             >
-              {preferencesText.addCurrentSiteWithSuffix(
-                location.pathname.split('/')[1],
-              )}
+              {preferencesText.addCurrentSiteWithSuffix(lastPart)}
             </Button.Info>
           )}
         </div>
