@@ -130,6 +130,20 @@ function displayDialog(
   dialog.style.border = 'none';
   dialog.style.outline = 'none';
 
+  // Prevent scrolljacking 😡
+  dialog.addEventListener('scroll', (event) => event.stopPropagation(), {
+    capture: true,
+    passive: false,
+  });
+  dialog.addEventListener('wheel', (event) => event.stopPropagation(), {
+    capture: true,
+    passive: false,
+  });
+  dialog.addEventListener('touchmove', (event) => event.stopPropagation(), {
+    capture: true,
+    passive: false,
+  });
+
   // Can't attach shadow directly to dialog, so create an intermediate
   const dialogDiv = document.createElement('div');
   dialogDiv.style.display = 'contents';
