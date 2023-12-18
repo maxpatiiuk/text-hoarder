@@ -115,13 +115,16 @@ function connect(
   if (typeof tabId !== 'number' || tabId === chrome.tabs.TAB_ID_NONE) return;
 
   const toggleReader = (): Promise<void> =>
-    chrome.scripting
-      .executeScript({
-        target: { tabId },
-        injectImmediately: true,
-        files: ['./dist/readerMode.bundle.js'],
-        world: 'ISOLATED',
-      })
+    chrome.storage.local
+      .set({ activatedReason: action })
+      .then(() =>
+        chrome.scripting.executeScript({
+          target: { tabId },
+          injectImmediately: true,
+          files: ['./dist/readerMode.bundle.js'],
+          world: 'ISOLATED',
+        }),
+      )
       .then(() => emit(false))
       .catch(console.error);
 
