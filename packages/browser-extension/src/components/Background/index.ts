@@ -85,6 +85,8 @@ const requestHandlers: {
   OpenUrl: (url, { tab }) =>
     chrome.tabs.create({ openerTabId: tab?.id, url }).then(() => undefined),
 
+  OpenPreferences: async () => void chrome.runtime.openOptionsPage(),
+
   async ReloadExtension() {
     chrome.tabs.reload();
     chrome.runtime.reload();

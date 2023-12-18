@@ -8,6 +8,7 @@ import { RA } from '@common/utils/types';
 import { IsPreferencesStandalone } from './Context';
 import { useStorage } from '../../hooks/useStorage';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
+import { sendRequest } from '../Background/messages';
 
 export function AutoTriggerUrls(
   value: string,
@@ -158,7 +159,9 @@ export function RequestUrlPermissions({
           </Button.Info>
         </div>
       ) : (
-        <Button.Info onClick={(): void => chrome.runtime.openOptionsPage()}>
+        <Button.Info
+          onClick={(): void => void sendRequest('OpenPreferences', undefined)}
+        >
           {preferencesText.openPreferences}
         </Button.Info>
       )}
