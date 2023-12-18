@@ -14,6 +14,7 @@ export function AutoTriggerUrls(
   value: string,
   setValue: (newValue: string, apply: boolean) => void,
 ): JSX.Element {
+  const lines = React.useMemo(() => value.split('\n'), [value]);
   const updateValue = React.useCallback(
     (rawValue: string): void => {
       const newValue = normalizeUrls(rawValue);
@@ -22,7 +23,13 @@ export function AutoTriggerUrls(
     [setValue],
   );
 
+  const currentSite = location.origin;
+  const currentPath = `${location.origin}/${location.pathname.split('/')[1]}`;
+  const hasCurrentSite = lines.includes(currentSite);
+  const hasCurrentPath = lines.includes(currentPath);
+
   const isStandalone = React.useContext(IsPreferencesStandalone);
+  const showButtons = !isStandalone && (!hasCurrentSite || !hasCurrentPath);
   return (
     <>
       <Label.Block>
@@ -35,29 +42,27 @@ export function AutoTriggerUrls(
           placeholder={urlsPlaceholder}
         />
       </Label.Block>
-      {!isStandalone && (
+      {showButtons && (
         <div className="flex gap-1 flex-wrap">
-          <Button.Info
-            onClick={(): void =>
-              // FEATURE: either add to top, or scroll down - otherwise makes it seem like nothing happened
-              updateValue(`${value}\n${location.origin}`)
-            }
-          >
-            {preferencesText.addCurrentSite}
-          </Button.Info>
-          <Button.Info
-            onClick={(): void =>
-              updateValue(
-                `${value}\n${location.origin}/${
-                  location.pathname.split('/')[1]
-                }`,
-              )
-            }
-          >
-            {preferencesText.addCurrentSiteWithSuffix(
-              location.pathname.split('/')[1],
-            )}
-          </Button.Info>
+          {!hasCurrentSite && (
+            <Button.Info
+              onClick={(): void =>
+                // FEATURE: either add to top, or scroll down - otherwise makes it seem like nothing happened
+                updateValue(`${value}\n${currentSite}`)
+              }
+            >
+              {preferencesText.addCurrentSite}
+            </Button.Info>
+          )}
+          {!hasCurrentPath && (
+            <Button.Info
+              onClick={(): void => updateValue(`${value}\n${currentPath}`)}
+            >
+              {preferencesText.addCurrentSiteWithSuffix(
+                location.pathname.split('/')[1],
+              )}
+            </Button.Info>
+          )}
         </div>
       )}
       <RequestUrlPermissions position="inline" />
