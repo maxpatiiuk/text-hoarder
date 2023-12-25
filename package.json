@@ -1,7 +1,8 @@
 {
-  "name": "text-hoarder-base",
+  "name": "text-hoarder",
   "private": true,
   "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/maxpatiiuk/text-hoarder.git"

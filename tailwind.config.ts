@@ -3,8 +3,9 @@
  * https://github.com/tailwindlabs/tailwindcss/blob/master/stubs/defaultConfig.stub.js
  */
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss';
+
+export default {
   content: ['./packages/*/index.html', './packages/*/src/**/*.{ts,tsx}'],
   // Disable unneeded components to reduce performance impact
   corePlugins: {
@@ -65,4 +66,4 @@ module.exports = {
       },
     },
   },
-};
+} satisfies Config;

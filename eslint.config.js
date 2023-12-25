@@ -1,6 +1,6 @@
-const eslintConfig = require('@maxxxxxdlp/eslint-config');
-const eslintConfigReact = require('@maxxxxxdlp/eslint-config-react');
-const globals = require('globals');
+import eslintConfig from '@maxxxxxdlp/eslint-config';
+import eslintConfigReact from '@maxxxxxdlp/eslint-config-react';
+import globals from 'globals';
 
 const abbreviationsConfig = eslintConfig
   .map((rules) =>
@@ -15,7 +15,7 @@ const abbreviationsConfig = eslintConfig
 if (abbreviationsConfig === undefined)
   throw new Error('Unable to find unicorn/prevent-abbreviations config');
 
-module.exports = [
+export default [
   ...eslintConfig,
   ...eslintConfigReact,
   {

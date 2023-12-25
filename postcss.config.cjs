@@ -20,8 +20,8 @@ const makeGitHubCssUseClassName = {
         media.params === '(prefers-color-scheme: dark)'
           ? '.dark'
           : media.params === '(prefers-color-scheme: light)'
-          ? '.light'
-          : undefined;
+            ? '.light'
+            : undefined;
       if (scopeSelector === undefined) return;
 
       media.each((child) => {
@@ -101,6 +101,7 @@ module.exports = {
     require('tailwindcss'),
     require('autoprefixer'),
     makeGitHubCssUseClassName,
+    useHostAlongsideHtml,
     convertRemToEm,
     dontOverwriteListStyle,
   ],

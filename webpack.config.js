@@ -2,25 +2,36 @@
  * WebPack config for development and production
  */
 
-const path = require('node:path');
-const webpack = require('webpack');
-const fs = require('fs');
+import path from 'node:path';
+import webpack from 'webpack';
+import fs from 'fs';
+import { fileURLToPath } from 'node:url';
 
 const version = JSON.parse(
   fs.readFileSync('packages/browser-extension/manifest.json').toString(),
 ).version;
 
-module.exports = ({ cwd }, { mode }) => {
+export default function ({ cwd }, { mode }) {
   const pathParts = cwd?.split(path.sep) ?? [];
   const packagesPathPart = pathParts.indexOf('packages');
-  const package = pathParts[packagesPathPart + 1] ?? 'browser-extension';
-  return package === 'browser-extension'
-    ? makeConfig(package, mode)
-    : [makeConfig(package, mode, 'node'), makeConfig(package, mode, 'web')];
-};
+  const packageName = pathParts[packagesPathPart + 1] ?? 'browser-extension';
+  return packageName === 'browser-extension'
+    ? makeConfig(packageName, mode)
+    : [
+        makeConfig(packageName, mode, 'node'),
+        makeConfig(packageName, mode, 'web'),
+      ];
+}
 
-function makeConfig(package, mode, target = 'web') {
-  const outputPath = path.resolve(__dirname, 'packages', package, 'dist');
+const rootDirectory = path.dirname(fileURLToPath(import.meta.url));
+
+function makeConfig(packageName, mode, target = 'web') {
+  const outputPath = path.resolve(
+    rootDirectory,
+    'packages',
+    packageName,
+    'dist',
+  );
   return /** @type { import('webpack').Configuration } */ ({
     target,
     module: {
@@ -36,9 +47,10 @@ function makeConfig(package, mode, target = 'web') {
               // See https://stackoverflow.com/a/68995851/8584605
               loader: 'style-loader',
               options:
-                package === 'browser-extension'
+                packageName === 'browser-extension'
                   ? {
-                      insert: require.resolve(
+                      insert: path.resolve(
+                        rootDirectory,
                         './packages/browser-extension/src/components/Core/styleLoader.ts',
                       ),
                     }
@@ -82,7 +94,7 @@ function makeConfig(package, mode, target = 'web') {
       extensions: ['.ts', '.tsx', '.js'],
       symlinks: false,
       alias: {
-        '@common': path.resolve(__dirname, 'packages/common/src'),
+        '@common': path.resolve(rootDirectory, 'packages/common/src'),
       },
     },
     // Set appropriate process.env.NODE_ENV
@@ -94,7 +106,7 @@ function makeConfig(package, mode, target = 'web') {
      */
     devtool: mode === 'development' ? 'cheap-module-source-map' : 'source-map',
     entry:
-      package === 'browser-extension'
+      packageName === 'browser-extension'
         ? {
             preferences:
               mode === 'development'
@@ -108,12 +120,12 @@ function makeConfig(package, mode, target = 'web') {
                 : './packages/browser-extension/src/components/ReaderMode/index.tsx',
           }
         : target === 'web'
-        ? {
-            web: './packages/cli/src/components/Web/index.tsx',
-          }
-        : {
-            cli: './packages/cli/src/components/Cli/index.ts',
-          },
+          ? {
+              web: './packages/cli/src/components/Web/index.tsx',
+            }
+          : {
+              cli: './packages/cli/src/components/Cli/index.ts',
+            },
     plugins: [
       mode === 'development'
         ? new webpack.optimize.LimitChunkCountPlugin({
