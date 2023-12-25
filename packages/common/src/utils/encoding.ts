@@ -1,6 +1,5 @@
 export const savedFileExtension = '.md';
 export const legacySavedFileExtension = '.txt';
-const reSavedFileExtension = /\.md$/;
 
 export const encoding = {
   /** More on this: https://web.dev/articles/base64-encoding */
@@ -38,17 +37,40 @@ export const encoding = {
         name,
       ),
   },
+  /**
+   * Converting URL to file path is rather tricky. Reasons:
+   * - Not all characters allowed in URL are allowed in Windows file names -
+   *   have to encode disallowed characters, but only encode the bare minimum to
+   *   keep the file name readable
+   * - URLs may contain query string or hashes - those may or may not be
+   *   important - I have some heuristics here to decide if to keep them
+   * - Path may not end with /.md as that would create a file without a name,
+   *   which may be treated as empty file - thus stripping trailing slashes
+   *   (after I done testing on many websites so confirm that this is safe in
+   *   predominant majority of cases - the misses are worth the trade off with
+   *   cleaner file paths)
+   */
   urlToPath: {
     encode: (year: number, rawUrl: URL): string => {
       const url = new URL(rawUrl);
+
+      /*
+       * Empty path segment are not allowed in file names. Hopefully this
+       * doesn't change the semantics as per the target web server. Assuming
+       * here that double slash is accidental. Alternatively, would have to
+       * URL-encode it (replace with %2F)
+       */
+      const rawPathname = url.pathname.replaceAll(/\/{2,}/g, '/');
+      // Remove leading slash
+      const pathname = decodeURIComponent(rawPathname.slice(1));
 
       /**
        * For some URLs, query string is significant and thus shouldn't be removed
        *
        * If after removing likely-insignificant query string arguments, a single
        * query string argument remains, and the URL path is short (defined as
-       * containing fewer than 3 of / _ - or space characters), then preserve
-       * the query string.
+       * containing none of the following characters: "/", "_", "-", " "), then
+       * preserve the query string.
        *
        * Examples:
        * - https://nightsky.jpl.nasa.gov/news-display.cfm?News_ID=573
@@ -67,17 +89,17 @@ export const encoding = {
        * - https://us11.campaign-archive.com/?e=01d2b095a0&u=9d7ced8c4bbd6c2f238673f0f&id=6e71bb1932
        * - https://storybook.com/redacted/?path=/docs/references-t9n-for-components--docs
        */
-      const queryString = Array.from(url.searchParams.entries()).filter(
-        ([key, value]) => {
-          const keep = filterQueryString(key, value);
-          if (!keep) url.searchParams.delete(key);
-          return keep;
-        },
-      );
+      Array.from(url.searchParams.entries()).forEach(([key, value]) => {
+        const keep = filterQueryString(key, value);
+        if (!keep) url.searchParams.delete(key);
+      });
       const keepQueryString =
-        queryString.length > 0 &&
-        queryString.length <= 4 &&
-        !isUrlPartComplicated(url.pathname);
+        url.searchParams.size > 0 &&
+        url.searchParams.size <= 4 &&
+        !isUrlPartComplicated(
+          pathname.endsWith('/') ? pathname.slice(0, -1) : pathname,
+        );
+      if (!keepQueryString) url.search = '';
 
       /*
        * Gmail uses URLs like
@@ -91,51 +113,44 @@ export const encoding = {
        */
       if (!url.hash.includes('/')) url.hash = '';
 
-      if (!keepQueryString) url.search = '';
+      const compiled = `${pathname}${url.search}${url.hash}`;
+      const compiledWithoutSlash = compiled.endsWith('/')
+        ? compiled.slice(0, -1)
+        : compiled;
 
       /*
-       * Empty path segment are not allowed in file names. Hopefully this
-       * doesn't change the semantics as per the target web server. Assuming
-       * here that double slack is accidental. Alternatively, would have to
-       * URL-encode it (replace with %2F)
+       * Make every URL have at least some pathname to not have any markdown
+       * files outside the folder for a given domain
        */
-      const rawPathname = url.pathname.replaceAll(/\/{2,}/g, '/');
-      // Remove trailing slash
-      const pathname = rawPathname.slice(1);
+      const separator = compiledWithoutSlash === '' ? '?' : '';
 
-      const searchString =
-        url.search.length > 1
-          ? `${
-              pathname === '' || pathname.endsWith('/') ? '' : '/'
-            }&${url.search.slice(1)}`
-          : '';
-
-      const compiled = `${pathname}${searchString}${url.hash}`;
-      /*
-       * If URL ends with /, the resulting path would look like
-       * /some/path/.md, which creates a file without a name,
-       * which would be treated as hidden on many systems. Appending
-       * & is a workaround
-       */
-      const slash = compiled === '' || compiled.endsWith('/') ? '&' : '';
       return [
         year,
         url.host,
         ...encoding.fileName
-          .encode(`${compiled}${slash}${savedFileExtension}`)
+          .encode(`${compiledWithoutSlash}${separator}${savedFileExtension}`)
           .split('/'),
       ].join('/');
     },
-    decode: (path: string): readonly [year: number, url: URL] => {
-      const [year, host, ...pathname] = path
-        .replace(reSavedFileExtension, '')
-        .split('/');
+    decode: (rawPath: string): readonly [year: number, url: URL] => {
+      // Trim file extension
+      const path = rawPath.endsWith(savedFileExtension)
+        ? rawPath.slice(0, -savedFileExtension.length)
+        : rawPath.endsWith(legacySavedFileExtension)
+          ? rawPath.slice(0, -legacySavedFileExtension.length)
+          : rawPath;
+
+      const [year, host, ...pathname] = path.split('/');
+
       const urlString = encoding.fileName.decode(pathname.join('/'));
-      const decoded = urlString.replace('&', '?');
-      const url = new URL(
-        decoded.endsWith('?') ? decoded.slice(0, -1) : decoded,
-        `https://${host}`,
-      );
+      const url = new URL(urlString, `https://${host}`);
+
+      /*
+       * If href ends with ?, url.search would falsely be empty string. By
+       * force-setting search string again, ? is removed from the href
+       */
+      if (url.search === '') url.search = '';
+
       return [Number.parseInt(year), url];
     },
   },
@@ -146,17 +161,25 @@ export const encoding = {
         (date.getMonth() + 1).toString().padStart(2, '0'),
         date.getDate().toString().padStart(2, '0'),
       ].join('-'),
-    decode: (date: string) => new Date(date),
+    decode: (date: string) => {
+      const [year, month, day] = date
+        .split('-')
+        .map((value) => Number.parseInt(value));
+      return new Date(year, month - 1, day);
+    },
   },
 };
 
 export const isUrlPartComplicated = (part: string) =>
-  part.split(/[\/_ -]/m).length >= 4;
+  part.split(/[\/_ -]+/gu).length >= 3;
 
 // FIXME: try out creating files from very long URLs
 
-// These characters are not allowed in Windows file names, so %-encode them
-const unsafeCharacters = ['#', '<', '>', ':', '"', '\\', '|', '*'];
+/*
+ * These  characters are not allowed in Windows file names, so %-encode them.
+ * See https://stackoverflow.com/a/31976060/8584605
+ */
+const unsafeCharacters = ['#', '<', '>', ':', '"', '\\', '|', '?', '*'];
 const encodedUnsafeCharacters = unsafeCharacters.map((r) =>
   r === '*' ? '%2A' : encodeURIComponent(r),
 );
@@ -209,3 +232,7 @@ function filterQueryString(rawName: string, value: string): boolean {
 
   return true;
 }
+
+export const exportsForTests = {
+  filterQueryString,
+};

@@ -9,7 +9,7 @@ import { useStorage } from '../../hooks/useStorage';
 import { downloadDocument } from './download';
 import { InfoTab } from './InfoTab';
 import { EnsureAuthenticated } from '../Auth';
-import { SaveText, filePathToGitHubUrl, useExistingFile } from './SaveText';
+import { SaveText, buildRepositoryUrl, useExistingFile } from './SaveText';
 import { listenEvent } from '../Background/messages';
 import { Link } from '@common/components/Atoms/Link';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
@@ -49,8 +49,8 @@ export function Tools({
         action === 'saveText' || action === 'editText'
           ? setSelectedTool(action)
           : action === 'download'
-          ? handleDownload()
-          : undefined,
+            ? handleDownload()
+            : undefined,
       ),
     [downloadDocument, setSelectedTool],
   );
@@ -150,7 +150,7 @@ export function Tools({
         />
         {typeof existingFile === 'string' && typeof repository === 'object' ? (
           <Link.Icon
-            href={filePathToGitHubUrl(repository, existingFile)}
+            href={buildRepositoryUrl(repository, existingFile)}
             icon="pencil"
             title={readerText.editOnGitHub}
             aria-controls={panelId}

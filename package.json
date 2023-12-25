@@ -15,7 +15,8 @@
   "scripts": {
     "build": "npx webpack --mode production --env cwd=$INIT_CWD",
     "package": "tsc && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
-    "watch": "npx webpack --mode development --watch --env cwd=$INIT_CWD"
+    "watch": "npx webpack --mode development --watch --env cwd=$INIT_CWD",
+    "test": "cd $INIT_CWD && node --loader tsx/esm --test **/__tests__/*.test.ts"
   },
   "dependencies": {
     "@commander-js/extra-typings": "^11.1.0",
@@ -45,6 +46,7 @@
     "@maxxxxxdlp/eslint-config-react": "^3.0.0",
     "@maxxxxxdlp/prettier-config": "^1.0.4",
     "@stylelint/postcss-css-in-js": "^0.38.0",
+    "@swc-node/register": "^1.6.8",
     "@types/chrome": "^0.0.253",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.38",
@@ -68,7 +70,6 @@
     "style-loader": "^3.3.3",
     "tailwindcss": "^3.3.5",
     "typescript": "^5.3.2",
-    "ts-node": "^10.9.1",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },

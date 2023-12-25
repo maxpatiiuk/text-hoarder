@@ -8,7 +8,7 @@ import { Button } from '@common/components/Atoms/Button';
 import { encoding } from '@common/utils/encoding';
 import { Link } from '@common/components/Atoms/Link';
 import { useStorage } from '../../hooks/useStorage';
-import { GetOrSet } from '@common/utils/types';
+import { GetOrSet, isDefined } from '@common/utils/types';
 import { sendRequest } from '../Background/messages';
 import { Repository } from '../../utils/storage';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
@@ -102,7 +102,7 @@ export function SaveText({
 
   const fileEditUrl =
     typeof repository === 'object' && typeof existingFile === 'string'
-      ? filePathToGitHubUrl(repository, existingFile)
+      ? buildRepositoryUrl(repository, existingFile)
       : undefined;
   const openFileUrl = mode === 'edit' ? fileEditUrl : undefined;
   React.useEffect(
@@ -161,10 +161,25 @@ export function SaveText({
   );
 }
 
-export const filePathToGitHubUrl = (
+export const buildRepositoryUrl = (
   { owner, name, branch }: Repository,
-  filePath: string,
+  filePath?: string,
 ) =>
-  `https://github.com/${owner}/${name}/edit/${branch}/${encodeURIComponent(
-    filePath,
-  )}`;
+  [
+    'https://github.com/',
+    owner,
+    '/',
+    name,
+    filePath === undefined ? '/tree/' : '/edit/',
+    // Branch name may contain special characters
+    encoding.fileName.encode(branch),
+    '/',
+    /*
+     * URL encode % so that browser does not decode the URL encoded characters
+     * in the file name. I.e if file name has ?, it is replaced by %3F.
+     * Turn that into %253F so that GitHub sees %3F and not ?
+     */
+    filePath?.replaceAll('%', encodeURIComponent('%')),
+  ]
+    .filter(isDefined)
+    .join('');
