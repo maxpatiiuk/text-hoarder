@@ -1,4 +1,4 @@
-import { isDefined, type RA } from './types';
+import { IR, isDefined, type RA } from './types';
 
 /**
  * A collection of helper functions for functional programming style
@@ -36,6 +36,21 @@ export const f = {
     Array.from({ length: max - min }, (_, index) =>
       callback(min + index, index),
     ),
+
+  /** Like Promise.all, but accepts a dictionary instead of an array */
+  all: async <T extends IR<unknown>>(dictionary: {
+    readonly [PROMISE_NAME in keyof T]:
+      | Promise<T[PROMISE_NAME]>
+      | T[PROMISE_NAME];
+  }): Promise<T> =>
+    Object.fromEntries(
+      await Promise.all(
+        Object.entries(dictionary).map(async ([promiseName, promise]) => [
+          promiseName,
+          await promise,
+        ]),
+      ),
+    ) as T,
 
   min(...array: RA<number | undefined>): number | undefined {
     const data = array.filter(isDefined);

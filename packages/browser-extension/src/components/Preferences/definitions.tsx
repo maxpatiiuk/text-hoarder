@@ -83,5 +83,8 @@ export const definitions: IR<
     'reader.eagerCheckForAlreadySaved': Renderers.Checkbox(
       preferencesText.eagerCheckForAlreadySaved,
     ),
+    'github.undoUsingForcePush': Renderers.Checkbox(
+      preferencesText.undoUsingForcePush,
+    ),
   },
 };

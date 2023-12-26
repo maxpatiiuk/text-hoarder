@@ -115,6 +115,8 @@ export function SaveText({
     [openFileUrl],
   );
 
+  const [undoUsingForcePush] = useStorage('github.undoUsingForcePush');
+
   return (
     <>
       {existingFile === undefined ||
@@ -130,17 +132,18 @@ export function SaveText({
             onClick={(): void =>
               typeof existingFile === 'string'
                 ? loading(
-                    github!
-                      .fetchSha(existingFile)
-                      .then((sha) =>
-                        sha === undefined
+                    (undoUsingForcePush
+                      ? github!
+                          .deleteFileUsingForcePush(existingFile)
+                          .catch(() => false)
+                      : Promise.resolve(false)
+                    )
+                      .then((deleted) =>
+                        deleted
                           ? undefined
                           : github!.deleteFile(
                               existingFile,
-                              commitText.repositoryInitialize(
-                                simpleDocument.title,
-                              ),
-                              sha,
+                              simpleDocument.title,
                             ),
                       )
                       .then(() => {

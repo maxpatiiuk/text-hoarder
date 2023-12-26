@@ -72,5 +72,8 @@ export const preferencesText = dictionary({
   dontRestoreScroll: {
     en: "Don't Restore Scroll",
   },
+  undoUsingForcePush: {
+    en: 'Undo using force push when possible',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

@@ -31,6 +31,7 @@ export const storageDefinitions = ensure<IR<unknown>>()({
     | 'instant'
     | 'none',
   'markdownToText.includeImageAltText': true as boolean,
+  'github.undoUsingForcePush': true as boolean,
 } as const);
 
 export const storage = chrome.storage.sync;
