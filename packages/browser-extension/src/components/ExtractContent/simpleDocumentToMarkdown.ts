@@ -8,7 +8,7 @@ import { SimpleDocument } from './documentToSimpleDocument';
 export function simpleDocumentToMarkdown(
   simpleDocument: SimpleDocument,
 ): string {
-  return `# ${simpleDocument.title}\n${elementToMarkdown(
+  return `# ${simpleDocument.title}\n\n${elementToMarkdown(
     simpleDocument.content,
   )}`;
 }
@@ -24,7 +24,11 @@ turndownService.use(gfm);
 
 function elementToMarkdown(element: HTMLElement): string {
   try {
-    return turndownService.turndown(element);
+    return turndownService
+      .turndown(element)
+      .split('\n')
+      .map((line) => line.trimEnd())
+      .join('\n');
   } catch (error) {
     console.error(error);
     return element.innerHTML;

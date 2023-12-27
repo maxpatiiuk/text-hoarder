@@ -19,11 +19,11 @@ const currentYear = new Date().getFullYear();
 const previousYear = currentYear - 1;
 const currentYearPath = encoding.urlToPath.encode(
   currentYear,
-  new URL(window.location.href),
+  globalThis.location.href,
 );
 const previousYearPath = encoding.urlToPath.encode(
   previousYear,
-  new URL(window.location.href),
+  globalThis.location.href,
 );
 
 export function useExistingFile(): GetOrSet<undefined | false | string> {

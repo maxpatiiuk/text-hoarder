@@ -10,20 +10,8 @@
     /* Basic Options */
     "isolatedModules": true,
     "jsx": "react",
-    "lib": [
-      "es6",
-      "dom",
-      "dom.iterable",
-      "es2015",
-      "es2016",
-      "es2017",
-      "es2018",
-      "es2019",
-      "es2020",
-      "es2021",
-      "esnext"
-    ],
-    "module": "CommonJS",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
     "noEmit": true,
     "sourceMap": true,
     "target": "esnext",

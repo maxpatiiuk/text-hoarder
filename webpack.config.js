@@ -11,8 +11,8 @@ const version = JSON.parse(
   fs.readFileSync('packages/browser-extension/manifest.json').toString(),
 ).version;
 
-export default function ({ cwd }, { mode }) {
-  const pathParts = cwd?.split(path.sep) ?? [];
+export default function ({ cwd = process.cwd() }, { mode }) {
+  const pathParts = cwd.split(path.sep);
   const packagesPathPart = pathParts.indexOf('packages');
   const packageName = pathParts[packagesPathPart + 1] ?? 'browser-extension';
   return packageName === 'browser-extension'

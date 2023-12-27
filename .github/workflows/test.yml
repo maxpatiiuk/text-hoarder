@@ -21,17 +21,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build front-end
+      - name: Build browser extension
+        working-directory: ./packages/browser-extension
         run: npx webpack --mode production
 
-      - name: TypeCheck front-end
-        run: npm run typeCheck
+      - name: Build CLI
+        working-directory: ./packages/cli
+        run: npx webpack --mode production
 
-        # See https://jestjs.io/docs/troubleshooting#tests-are-extremely-slow-on-docker-andor-continuous-integration-ci-server
-      - name: Get number of CPU cores
-        id: cpu-cores
-        uses: SimenB/github-actions-cpu-cores@v1
+      - name: Build cors-auth-middleware
+        working-directory: ./packages/cors-auth-middleware
+        run: npx run build
+
+      - name: Typecheck
+        run: npx tsc
 
       - name: Run JS test suite
-        run: |
-          npm run unitTests -- --maxWorkers ${{ steps.cpu-cores.outputs.count }}
+        working-directory: ./packages/common/src
+        run: npm run test

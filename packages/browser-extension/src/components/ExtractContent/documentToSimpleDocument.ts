@@ -9,9 +9,9 @@ export type SimpleDocument = Exclude<
 /**
  * Create simplified DOM based on page's DOM
  */
-export function documentToSimpleDocument(): undefined | SimpleDocument {
-  const documentClone = document.cloneNode(true) as Document;
-
+export function documentToSimpleDocument(
+  documentClone = document.cloneNode(true) as Document,
+): undefined | SimpleDocument {
   /**
    * Preserve syntax-highlighting related class names (used in GitHub
    * codeblocks). Also used by turndown-plugin-gfm to output correct language
