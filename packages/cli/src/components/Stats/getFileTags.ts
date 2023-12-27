@@ -1,7 +1,4 @@
-import {
-  legacySavedFileExtension,
-  savedFileExtension,
-} from '@common/utils/encoding';
+import { savedFileExtension } from '@common/utils/encoding';
 import { RA, RR, Writable } from '@common/utils/types';
 import { extname } from 'node:path';
 import { SimpleGit } from 'simple-git';
@@ -35,8 +32,7 @@ export async function tagsToFileMeta(
             .filter(
               ({ file }) =>
                 // Exclude non-markdown
-                (extname(file) === savedFileExtension ||
-                  extname(file) === legacySavedFileExtension) &&
+                extname(file) === savedFileExtension &&
                 // Exclude files not-containing a year in path (README.md)
                 !Number.isNaN(Number.parseInt(file.split('/')[0])),
             )

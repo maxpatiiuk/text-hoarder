@@ -44,7 +44,7 @@ export const gatherArticles = async (
 
 export type Article = {
   readonly year: number;
-  readonly url: URL;
+  readonly url: string;
   readonly title: string;
   readonly content: string;
   readonly date: Date;

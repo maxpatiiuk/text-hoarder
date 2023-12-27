@@ -1,5 +1,4 @@
 export const savedFileExtension = '.md';
-export const legacySavedFileExtension = '.txt';
 
 export const encoding = {
   /** More on this: https://web.dev/articles/base64-encoding */
@@ -51,18 +50,12 @@ export const encoding = {
    *   cleaner file paths)
    */
   urlToPath: {
-    encode: (year: number, rawUrl: URL): string => {
+    encode: (year: number, rawUrl: string): string => {
       const url = new URL(rawUrl);
 
-      /*
-       * Empty path segment are not allowed in file names. Hopefully this
-       * doesn't change the semantics as per the target web server. Assuming
-       * here that double slash is accidental. Alternatively, would have to
-       * URL-encode it (replace with %2F)
-       */
-      const rawPathname = url.pathname.replaceAll(/\/{2,}/g, '/');
+      const normalizedPathname = normalizePart(url.pathname);
       // Remove leading slash
-      const pathname = decodeURIComponent(rawPathname.slice(1));
+      const pathname = normalizedPathname.slice(1);
 
       /**
        * For some URLs, query string is significant and thus shouldn't be removed
@@ -95,10 +88,9 @@ export const encoding = {
       });
       const keepQueryString =
         url.searchParams.size > 0 &&
-        url.searchParams.size <= 4 &&
-        !isUrlPartComplicated(
-          pathname.endsWith('/') ? pathname.slice(0, -1) : pathname,
-        );
+        url.searchParams.size <= 3 &&
+        !isUrlPartComplicated(trimTrailingSlash(pathname));
+
       if (!keepQueryString) url.search = '';
 
       /*
@@ -111,47 +103,44 @@ export const encoding = {
        * the trade off with cleaner file names is worth the occasional
        * misses)
        */
-      if (!url.hash.includes('/')) url.hash = '';
+      const keepHash = url.hash.includes('/');
+      if (!keepHash) url.hash = '';
 
-      const compiled = `${pathname}${url.search}${url.hash}`;
-      const compiledWithoutSlash = compiled.endsWith('/')
-        ? compiled.slice(0, -1)
-        : compiled;
+      const compiled = trimTrailingSlash(
+        normalizePart(`${pathname}${url.search}${url.hash}`),
+      );
 
       /*
        * Make every URL have at least some pathname to not have any markdown
        * files outside the folder for a given domain
        */
-      const separator = compiledWithoutSlash === '' ? '?' : '';
+      const separator = compiled === '' ? '?' : '';
 
       return [
         year,
         url.host,
         ...encoding.fileName
-          .encode(`${compiledWithoutSlash}${separator}${savedFileExtension}`)
+          .encode(`${compiled}${separator}${savedFileExtension}`)
           .split('/'),
       ].join('/');
     },
-    decode: (rawPath: string): readonly [year: number, url: URL] => {
+    decode: (rawPath: string): readonly [year: number, url: string] => {
       // Trim file extension
-      const path = rawPath.endsWith(savedFileExtension)
+      let path = rawPath.endsWith(savedFileExtension)
         ? rawPath.slice(0, -savedFileExtension.length)
-        : rawPath.endsWith(legacySavedFileExtension)
-          ? rawPath.slice(0, -legacySavedFileExtension.length)
-          : rawPath;
+        : rawPath;
 
       const [year, host, ...pathname] = path.split('/');
 
       const urlString = encoding.fileName.decode(pathname.join('/'));
-      const url = new URL(urlString, `https://${host}`);
+      const trimmedUrl = urlString.endsWith('?')
+        ? urlString.slice(0, -1)
+        : urlString;
 
-      /*
-       * If href ends with ?, url.search would falsely be empty string. By
-       * force-setting search string again, ? is removed from the href
-       */
-      if (url.search === '') url.search = '';
-
-      return [Number.parseInt(year), url];
+      return [
+        Number.parseInt(year),
+        `https://${host}${trimmedUrl.length > 0 ? '/' : ''}${trimmedUrl}`,
+      ];
     },
   },
   date: {
@@ -172,6 +161,20 @@ export const encoding = {
 
 export const isUrlPartComplicated = (part: string) =>
   part.split(/[\/_ -]+/gu).length >= 3;
+
+/**
+ * Empty path segment are not allowed in file names. Hopefully this
+ * doesn't change the semantics as per the target web server. Assuming
+ * here that double slash is accidental. Alternatively, would have to
+ * URL-encode it (replace with %2F)
+ */
+const normalizeSlashes = (part: string) => part.replaceAll(/\/{2,}/g, '/');
+
+const normalizePart = (part: string) =>
+  decodeURIComponent(normalizeSlashes(part));
+
+const trimTrailingSlash = (part: string) =>
+  part.endsWith('/') ? part.slice(0, -1) : part;
 
 // FIXME: try out creating files from very long URLs
 

@@ -95,7 +95,8 @@ export function SaveText({
       .then((response) => {
         if (response.type === 'AlreadyExists') setWasAlreadySaved(true);
         handleSaved(currentYearPath);
-      });
+      })
+      .catch(console.error);
   }, [github, wasAlreadySaved, simpleDocument]);
 
   const [isLoading, loading] = useLoading();

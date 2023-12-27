@@ -22,6 +22,8 @@ describe('urlToPath', () => {
   const year = 2020;
   const urls = {
     'https://example.com/abc': '2020/example.com/abc.md',
+    'https://en.wikipedia.org/wiki/Hershey–Chase_experiment':
+      '2020/en.wikipedia.org/wiki/Hershey–Chase_experiment.md',
 
     // Don't preserve scheme - assume https
     'http://example.com/abc': [
@@ -68,8 +70,8 @@ describe('urlToPath', () => {
       // Not preserving trailing slash
       'https://example.com/abc?a=b',
     ],
-    // Exclude query string if has more than 4 parts
-    'https://example.com/abc?a=b&b=c&c=d&d=e&e=f': [
+    // Exclude query string if has more than 3 parts
+    'https://example.com/abc?a=b&b=c&c=d&d=e': [
       '2020/example.com/abc.md',
       'https://example.com/abc',
     ],
@@ -81,8 +83,12 @@ describe('urlToPath', () => {
     // Test real-world URLs with meaningful query strings:
     'https://nightsky.jpl.nasa.gov/news-display.cfm?News_ID=573':
       '2020/nightsky.jpl.nasa.gov/news-display.cfm%3FNews_ID=573.md',
-    'https://www.urbandictionary.com/define.php?term=omega%20male%2F':
-      '2020/www.urbandictionary.com/define.php%3Fterm=omega%20male%2F.md',
+    'https://www.urbandictionary.com/define.php?term=omega%20male%2F': [
+      '2020/www.urbandictionary.com/define.php%3Fterm=omega male.md',
+      'https://www.urbandictionary.com/define.php?term=omega male',
+    ],
+    'https://www.urbandictionary.com/define.php?term=omega male':
+      '2020/www.urbandictionary.com/define.php%3Fterm=omega male.md',
     'https://arstechnica.com/civis/viewtopic.php?t=200746':
       '2020/arstechnica.com/civis/viewtopic.php%3Ft=200746.md',
     'https://wiki.c2.com/?WhyWikiWorks': '2020/wiki.c2.com/%3FWhyWikiWorks.md',
@@ -111,11 +117,11 @@ describe('urlToPath', () => {
       const path = Array.isArray(result) ? result[0] : result;
       const finalUrl = Array.isArray(result) ? result[1] : url;
       test('encode', () =>
-        assert.equal(encoding.urlToPath.encode(year, new URL(url)), path));
+        assert.equal(encoding.urlToPath.encode(year, url), path));
       test('decode', () => {
         const [newYear, newUrl] = encoding.urlToPath.decode(path);
         assert.equal(newYear, year);
-        assert.equal(newUrl.href, finalUrl);
+        assert.equal(newUrl, finalUrl);
       });
     }),
   );

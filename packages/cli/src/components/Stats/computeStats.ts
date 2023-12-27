@@ -46,7 +46,11 @@ export function computeStats(
     if (index % 400 === 0) reportProgress(index);
     const fullContent = `${article.title}.\n${article.content}`;
     const words = extractWords(article.content.toLowerCase());
-    return { article, words, counts: articleToCounts(fullContent, words) };
+    return {
+      article: { ...article, host: new URL(article.url).host },
+      words,
+      counts: articleToCounts(fullContent, words),
+    };
   });
 
   const statsJson: StatsJson = {
@@ -118,12 +122,12 @@ function initializeCounts(): StatsCounts {
 
 function mergeStatsStructure(
   structure: StatsStructure,
-  article: Article,
+  article: Article & { readonly host: string },
   counts: StatsCounts,
   words: RA<string>,
 ): void {
   const day = encoding.date.encode(article.date);
-  const fullHost = article.url.host;
+  const fullHost = article.host;
   const host = fullHost.startsWith('www.')
     ? fullHost.slice('www.'.length)
     : fullHost;
