@@ -34,21 +34,37 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
       './stats.json',
     )
     .option('--no-pull', cliText.noPullOptionDescription)
-    .action(async ({ cwd, html, autoOpen, json, pull }) => {
-      const { git, tags } = await initializeCommand(cwd, pull);
+    .action(generateStatsPage);
 
-      const filesWithTags = await tagsToFileMeta(tags, git);
-      const articles = await gatherArticles(cwd, filesWithTags);
-      const stats = computeStats(articles, tags.length > 0);
+type GenerateStatsProps = {
+  readonly cwd: string;
+  readonly html: string;
+  readonly autoOpen: boolean;
+  readonly json: string;
+  readonly pull: boolean;
+};
 
-      const jsonString = JSON.stringify(stats);
-      if (typeof json === 'string') await fs.writeFile(json, jsonString);
+export async function generateStatsPage({
+  cwd,
+  html,
+  autoOpen,
+  json,
+  pull,
+}: GenerateStatsProps): Promise<void> {
+  const { git, tags } = await initializeCommand(cwd, pull);
 
-      if (typeof html === 'string') {
-        const bundleUrl = './dist/web.bundle.js';
-        await fs.writeFile(
-          html,
-          `<!doctype html>
+  const filesWithTags = await tagsToFileMeta(tags, git);
+  const articles = await gatherArticles(cwd, filesWithTags);
+  const stats = computeStats(articles, tags.length > 0);
+
+  const jsonString = JSON.stringify(stats);
+  if (typeof json === 'string') await fs.writeFile(json, jsonString);
+
+  if (typeof html === 'string') {
+    const bundleUrl = './dist/web.bundle.js';
+    await fs.writeFile(
+      html,
+      `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -63,9 +79,9 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
     }
   </body>
 </html>`,
-        );
-        if (autoOpen) await open(html);
-      }
+    );
+    if (autoOpen) await open(html);
+  }
 
-      // FEATURE: handle git not being installed
-    });
+  // FEATURE: handle git not being installed
+}
