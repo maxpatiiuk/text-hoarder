@@ -59,9 +59,13 @@ declare global {
   }
 }
 
-declare module 'turndown-plugin-gfm' {
+declare module '@joplin/turndown-plugin-gfm' {
   import TurndownService from 'turndown';
   export declare const gfm: TurndownService.Plugin;
+}
+
+declare module '@joplin/turndown' {
+  export { default } from 'turndown';
 }
 
 declare namespace chrome.permissions {

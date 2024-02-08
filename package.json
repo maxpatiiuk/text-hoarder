@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@commander-js/extra-typings": "^11.1.0",
+    "@joplin/turndown": "^4.0.72",
+    "@joplin/turndown-plugin-gfm": "^1.0.2",
     "@mozilla/readability": "^0.4.4",
     "@types/turndown": "^5.0.4",
     "chart.js": "^4.4.0",
@@ -32,8 +34,6 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "simple-git": "^3.21.0",
-    "turndown": "^7.1.2",
-    "turndown-plugin-gfm": "^1.0.2",
     "typesafe-reducer": "^1.0.4"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
-import TurndownService from 'turndown';
-import { gfm } from 'turndown-plugin-gfm';
+import TurndownService from '@joplin/turndown';
+import { gfm } from '@joplin/turndown-plugin-gfm';
 import { SimpleDocument } from './documentToSimpleDocument';
 
 /**
@@ -22,6 +22,12 @@ const turndownService = new TurndownService({
 });
 turndownService.use(gfm);
 
+// Workaround for https://github.com/laurent22/joplin/issues/9885
+const tableRule = turndownService.rules.array[2];
+if (!tableRule.filter.toString().includes('TABLE'))
+  throw new Error('Incorrect rule selected. Expected to find table rule');
+tableRule.filter = ['table'];
+
 function elementToMarkdown(element: HTMLElement): string {
   try {
     return turndownService
@@ -31,6 +37,6 @@ function elementToMarkdown(element: HTMLElement): string {
       .join('\n');
   } catch (error) {
     console.error(error);
-    return element.innerHTML;
+    return element.innerText.replaceAll('.', '.\n');
   }
 }

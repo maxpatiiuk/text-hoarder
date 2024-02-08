@@ -91,6 +91,12 @@ function makeConfig(packageName, mode, target = 'web') {
       ],
     },
     resolve: {
+      // Workaround for https://github.com/laurent22/joplin/issues/9884
+      fallback: {
+        fs: false,
+        path: false,
+        url: false,
+      },
       extensions: ['.ts', '.tsx', '.js'],
       symlinks: false,
       alias: {
