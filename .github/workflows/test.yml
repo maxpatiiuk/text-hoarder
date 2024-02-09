@@ -23,11 +23,11 @@ jobs:
 
       - name: Build browser extension
         working-directory: ./packages/browser-extension
-        run: npx webpack --mode production
+        run: npm run build
 
       - name: Build CLI
         working-directory: ./packages/cli
-        run: npx webpack --mode production
+        run: npm run build
 
       - name: Build cors-auth-middleware
         working-directory: ./packages/cors-auth-middleware
