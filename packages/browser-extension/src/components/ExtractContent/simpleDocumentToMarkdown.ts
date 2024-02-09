@@ -27,8 +27,20 @@ const tableRule = turndownService.rules.array[2];
 if (!tableRule.filter.toString().includes('TABLE'))
   throw new Error('Incorrect rule selected. Expected to find table rule');
 tableRule.filter = ['table'];
+if (tableRule.replacement?.toString().toLowerCase().includes('caption'))
+  throw new Error(
+    'Turndown received caption support - workaround should be removed',
+  );
+const originalReplacement = tableRule.replacement;
+tableRule.replacement = (content, node, ...rest) => {
+  const caption = (node as HTMLTableElement).caption?.textContent || '';
+  const table = originalReplacement?.(content, node, ...rest) ?? '';
+  return caption === '' ? table : `${caption}\n\n${table.trimStart()}`;
+};
 
-function elementToMarkdown(element: HTMLElement): string {
+turndownService.remove(['caption', 'colgroup', 'col']);
+
+export function elementToMarkdown(element: HTMLElement): string {
   try {
     return turndownService
       .turndown(element)
