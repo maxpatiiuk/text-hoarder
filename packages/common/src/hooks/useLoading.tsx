@@ -3,7 +3,18 @@ import { RA } from '../utils/types';
 import { useBooleanState } from './useBooleanState';
 import { readerText } from '../localization/readerText';
 
-// LOW: don't set isLoading if occurs only briefly. https://github.com/specify/specify7/blob/e7d7e29cf72641ad61ab65efd823d3dac13df18c/specifyweb/frontend/js_src/lib/components/Core/Contexts.tsx#L149-L188
+/**
+ * Wait 50ms before displaying loading screen
+ *   -> to avoid blinking a loading screen for resolved promises
+ * Wait 50sm before removing loading screen
+ *   -> to avoid flashing the screen when one loading screen is immediately
+ *      followed by another one
+ * 50ms was chosen as the longest delay that I don't notice in comparison to 0ms
+ * (on an fast MacBook Pro with high refresh rate). The value might have to be
+ * adjusted in the future
+ */
+const loadingScreenDelay = 50;
+
 /**
  * Provide a callback that can be called with a promise. While promise is
  * resolving, this hook will set isLoading to "true". Can have multiple promises
@@ -20,16 +31,24 @@ export function useLoading(): readonly [
   const [error, setError] = React.useState<string | undefined>(undefined);
 
   const holders = React.useRef<RA<number>>([]);
+  const loadingTimeout = React.useRef<
+    ReturnType<typeof setTimeout> | undefined
+  >(undefined);
+
   const loadingHandler = React.useCallback(
     (promise: Promise<unknown>): void => {
-      const holderId = holders.current.length;
+      const holderId = Math.max(-1, ...holders.current) + 1;
       holders.current = [...holders.current, holderId];
-      handleLoading();
+
+      clearTimeout(loadingTimeout.current);
+      loadingTimeout.current = setTimeout(handleLoading, loadingScreenDelay);
       promise
         .finally(() => {
           holders.current = holders.current.filter((item) => item !== holderId);
-          if (holders.current.length === 0) handleLoaded();
-          setError(undefined);
+          if (holders.current.length > 0) return;
+
+          clearTimeout(loadingTimeout.current);
+          loadingTimeout.current = setTimeout(handleLoaded, loadingScreenDelay);
         })
         .catch((error) => {
           console.error(error);
