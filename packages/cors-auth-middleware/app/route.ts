@@ -11,10 +11,19 @@ export async function POST(request: NextRequest): Promise<Response> {
   const code = request.nextUrl.searchParams.get('code');
   if (typeof code !== 'string')
     return new Response('"code" query parameter is missing', { status: 400 });
+  const clientId = process.env.GITHUB_APP_CLIENT_ID;
+  const clientSecret = process.env.GITHUB_APP_CLIENT_SECRET;
+  const allowOrigin = process.env.ACCESS_CONTROL_ALLOW_ORIGIN;
+  if (
+    typeof clientId !== 'string' ||
+    typeof clientSecret !== 'string' ||
+    typeof allowOrigin !== 'string'
+  )
+    return new Response('Environment variables are missing', { status: 500 });
   return fetch(
     formatUrl('https://github.com/login/oauth/access_token', {
-      client_id: process.env.GITHUB_APP_CLIENT_ID,
-      client_secret: process.env.GITHUB_APP_CLIENT_SECRET,
+      client_id: clientId,
+      client_secret: clientSecret,
       code,
     }),
     { method: 'POST', headers: { Accept: 'application/json' } },
@@ -29,8 +38,7 @@ export async function POST(request: NextRequest): Promise<Response> {
           status: 200,
           headers: {
             'Content-Type': 'text/plain',
-            'Access-Control-Allow-Origin':
-              process.env.ACCESS_CONTROL_ALLOW_ORIGIN,
+            'Access-Control-Allow-Origin': allowOrigin,
           },
         }),
     );
