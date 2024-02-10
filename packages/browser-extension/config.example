@@ -18,10 +18,21 @@ export const gitHubClientId = 'Iv1.aaaaaaaaaaaaaaaa';
  * Set this to the URL at which cors-auth-middleware is running
  * (see /packages/cors-auth-middleware/README.md)
  */
-export const authCorsMiddlewareUrl = 'http://localhost:3000';
+export const corsAuthMiddlewareUrl = 'http://localhost:3000';
 
 /**
  * Id of your extension. See README.md for instructions on getting extension
  * id
  */
-export const extensionId = 'kgbbebdcmdgkbopcffmpgkgcmcoomhmh';
+export const extensionId = 'bjknebjiadgjchmhppdfdiddfegmcaao';
+const webStoreUrl = `https://chromewebstore.google.com/u/1/detail/${extensionId}`;
+export const urls = {
+  privacyPolicy: 'https://calendar-plus.patii.uk/docs/privacy/',
+  sourceCode: 'https://github.com/maxxxxxdlp/text-hoarder',
+  requestFeature:
+    'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md',
+  reportIssue:
+    'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=bug&projects=&template=bug_report.md',
+  webStoreUrl,
+  webStoreReviewUrl: `${webStoreUrl}/reviews`,
+};

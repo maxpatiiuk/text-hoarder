@@ -23,7 +23,9 @@ jobs:
 
       - name: Build browser extension
         working-directory: ./packages/browser-extension
-        run: npm run build
+        run: |
+          cp config.example config.ts
+          npm run build
 
       - name: Build CLI
         working-directory: ./packages/cli
@@ -31,7 +33,9 @@ jobs:
 
       - name: Build cors-auth-middleware
         working-directory: ./packages/cors-auth-middleware
-        run: npx run build
+        run: |
+          cp example.env.local .env.local
+          npx run build
 
       - name: Typecheck
         run: npx tsc
