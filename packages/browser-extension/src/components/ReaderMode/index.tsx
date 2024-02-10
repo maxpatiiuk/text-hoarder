@@ -19,6 +19,7 @@ import { applyHostPageStyles, extensionContainerId } from './styles';
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 
+// TEST: text hoarder test print mode
 // BUG: scroll loss on exiting reader mode (i.e in https://hackernoon.com/unleashing-the-power-of-typescript-improving-standard-library-types?utm_source=tldrwebdev)
 // FEATURE: add local text-to-speech helper CLI
 // FEATURE: if unable to extract information, but user had selected text, use that as information
@@ -40,6 +41,7 @@ const activatedReason = chrome.storage.local.get('activatedReason');
 // FINAL: Submit to Chrome Web Store and post link in several places
 // FINAL: In GitHub App settings, set "Make this GitHub App public" to allow others
 //   to install the app
+// FINAL: once published, send link to coworkers & friends
 
 // Remove previous reader mode instance
 const previousDialog = document.getElementById(extensionContainerId);
@@ -117,6 +119,10 @@ function displayDialog(
   ) => void,
 ): void {
   // Isolate from parent page's tabindex and scroll
+  // FEATURE: consider using an iframe instead. While dialog is easy to use,
+  // it does not provide sufficient isolation from styles, scroll jacking,
+  // keyboard intercept, css filters, and the rest, even inside the shadow
+  // dom
   const dialog = document.createElement('dialog');
   dialog.id = extensionContainerId;
   dialog.autofocus = true;
@@ -143,6 +149,25 @@ function displayDialog(
     capture: true,
     passive: false,
   });
+  /*
+   * While dialog has default close behavior on Escape, some websites (like
+   * twitter) overwrite that - this fixes that so that Escape works on all
+   * sites
+   */
+  dialog.addEventListener(
+    'keydown',
+    (event) => {
+      if (
+        event.key === 'Escape' &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey &&
+        !event.shiftKey
+      )
+        event.stopPropagation();
+    },
+    { capture: true, passive: false },
+  );
 
   // Can't attach shadow directly to dialog, so create an intermediate
   const dialogDiv = document.createElement('div');
