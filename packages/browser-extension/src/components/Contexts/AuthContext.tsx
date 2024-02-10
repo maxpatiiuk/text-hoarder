@@ -73,11 +73,8 @@ export function AuthenticationProvider({
         token === undefined
           ? undefined
           : () => {
-              // FIXME: delete the token?
               setToken(undefined);
               setRepository(undefined);
-              // FIXME: delete the installation?
-              // await octokit?.rest.apps.revokeInstallationAccessToken().catch(console.error);
             },
     };
   }, [

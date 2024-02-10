@@ -31,12 +31,15 @@ export function useExistingFile(): GetOrSet<undefined | false | string> {
   const [eagerCheckForAlreadySaved] = useStorage(
     'reader.eagerCheckForAlreadySaved',
   );
-  const [file, setFile] = useAsyncState(
-    React.useCallback(
-      () =>
-        eagerCheckForAlreadySaved
-          ? github
-              ?.hasFile(currentYearPath)
+  const eagerCheckRef = React.useRef(eagerCheckForAlreadySaved);
+  const [file, setFile] = React.useState<undefined | false | string>(undefined);
+  React.useEffect(
+    () =>
+      eagerCheckRef.current
+        ? github === undefined
+          ? setFile(undefined)
+          : void github
+              .hasFile(currentYearPath)
               .then((hasFile) =>
                 hasFile
                   ? currentYearPath
@@ -44,9 +47,10 @@ export function useExistingFile(): GetOrSet<undefined | false | string> {
                       .hasFile(previousYearPath)
                       .then((hasFile) => (hasFile ? previousYearPath : false)),
               )
-          : false,
-      [github],
-    ),
+              .then(setFile)
+              .catch(console.error)
+        : setFile(false),
+    [github],
   );
 
   React.useEffect(() => {
