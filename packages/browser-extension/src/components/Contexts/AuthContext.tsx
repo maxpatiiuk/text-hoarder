@@ -18,7 +18,6 @@ export const AuthContext = React.createContext<Auth>({
 });
 AuthContext.displayName = 'AuthContext';
 
-// FINAL: handle errors in all places where Octokit is used (https://docs.github.com/en/rest/guides/scripting-with-the-rest-api-and-javascript?apiVersion=2022-11-28#catching-errors) (i.e 401 when auth token got revoked by user). or 422 with json .message on double //
 // FINAL: use pagination (https://docs.github.com/en/rest/guides/scripting-with-the-rest-api-and-javascript?apiVersion=2022-11-28#making-paginated-requests:~:text=const%20iterator%20%3D%20octokit.paginate.iterator(octokit,see%20%22Using%20pagination%20in%20the%20REST%20API.%22)
 
 type Auth = {
@@ -28,6 +27,10 @@ type Auth = {
   readonly handleAuthenticate: () => Promise<void>;
   readonly handleSignOut: (() => void) | undefined;
 };
+
+// Unsafe because it might be accessed before being set
+let unsafeAuth: Auth | undefined = undefined;
+export const unsafeGetAuth = (): Auth | undefined => unsafeAuth;
 
 export function AuthenticationProvider({
   children,
@@ -85,6 +88,7 @@ export function AuthenticationProvider({
     setToken,
     setRepository,
   ]);
+  unsafeAuth = auth;
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 }

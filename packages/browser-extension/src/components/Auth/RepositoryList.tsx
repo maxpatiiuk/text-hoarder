@@ -7,12 +7,13 @@ import { Button } from '@common/components/Atoms/Button';
 import { Link } from '@common/components/Atoms/Link';
 import { AuthContext } from '../Contexts/AuthContext';
 import { loadingGif } from '@common/hooks/useLoading';
+import { ErrorMessage } from '@common/components/Atoms';
 
 export function RepositoryList(): JSX.Element | undefined {
   const { installationId, octokit } = React.useContext(AuthContext);
   const [_, setRepository] = useStorage('setup.repository');
 
-  const [repositories] = useAsyncState(
+  const [repositories, __, ___, error] = useAsyncState(
     React.useCallback(
       () =>
         installationId === undefined
@@ -38,6 +39,8 @@ export function RepositoryList(): JSX.Element | undefined {
 
   return repositories === undefined ? (
     loadingGif
+  ) : typeof error === 'string' ? (
+    <ErrorMessage>{error}</ErrorMessage>
   ) : repositories.length === 1 ? undefined : repositories.length === 0 ? (
     <p>
       {signInText.noRepositories(createRepositoryLink, editPermissionsLink)}

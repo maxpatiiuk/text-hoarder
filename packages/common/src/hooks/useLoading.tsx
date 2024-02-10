@@ -3,7 +3,7 @@ import { RA } from '../utils/types';
 import { useBooleanState } from './useBooleanState';
 import { readerText } from '../localization/readerText';
 
-// LOW: don't set isLoading if occurs only briefly. https://github.com/specify/specify7/blob/xml-editor/specifyweb/frontend/js_src/lib/components/Core/Contexts.tsx#L149-L188
+// LOW: don't set isLoading if occurs only briefly. https://github.com/specify/specify7/blob/e7d7e29cf72641ad61ab65efd823d3dac13df18c/specifyweb/frontend/js_src/lib/components/Core/Contexts.tsx#L149-L188
 /**
  * Provide a callback that can be called with a promise. While promise is
  * resolving, this hook will set isLoading to "true". Can have multiple promises
@@ -13,9 +13,11 @@ import { readerText } from '../localization/readerText';
  */
 export function useLoading(): readonly [
   isLoading: boolean,
+  error: string | undefined,
   loading: (promise: Promise<unknown>) => void,
 ] {
   const [isLoading, handleLoading, handleLoaded] = useBooleanState();
+  const [error, setError] = React.useState<string | undefined>(undefined);
 
   const holders = React.useRef<RA<number>>([]);
   const loadingHandler = React.useCallback(
@@ -27,13 +29,17 @@ export function useLoading(): readonly [
         .finally(() => {
           holders.current = holders.current.filter((item) => item !== holderId);
           if (holders.current.length === 0) handleLoaded();
+          setError(undefined);
         })
-        .catch(console.error);
+        .catch((error) => {
+          console.error(error);
+          setError(error instanceof Error ? error.message : String(error));
+        });
     },
     [handleLoading, handleLoaded],
   );
 
-  return [isLoading, loadingHandler];
+  return [isLoading, error, loadingHandler];
 }
 
 export const loadingGif = (

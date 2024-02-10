@@ -13,7 +13,7 @@ import {
 import React from 'react';
 import { scrollToMatchingNode } from '../ExtractContent/scrollToMatchingNode';
 import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
-import { catchErrors } from '@common/components/Errors/assert';
+import { silenceError } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
 import { applyHostPageStyles, extensionContainerId } from './styles';
 import { ActivateExtension } from '../Background/messages';
@@ -55,8 +55,8 @@ const action = alreadyOpen
  * latency
  */
 function makeRenderFunction() {
-  const scrollToMatchingElement = catchErrors(scrollToMatchingNode);
-  const preserveSelection = catchErrors(preserveTextSelection);
+  const scrollToMatchingElement = silenceError(scrollToMatchingNode);
+  const preserveSelection = silenceError(preserveTextSelection);
   const autoTrigger = shouldAutoTrigger();
   const simpleDocument = documentToSimpleDocument();
 
@@ -112,7 +112,7 @@ activatedReason.then(({ activatedReason }) => {
 });
 
 function displayDialog(
-  simpleDocument: SimpleDocument | undefined,
+  simpleDocument: SimpleDocument | string | undefined,
   activatedReason: ActivateExtension['action'],
   scrollToMatchingElement: (
     containerElement: Element,

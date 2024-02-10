@@ -29,9 +29,13 @@ import { useLoading } from './useLoading';
  */
 export function useAsyncState<T>(
   callback: () => Promise<T | undefined> | T | undefined,
-): [...GetOrSet<T | undefined>, isLoading: boolean] {
+): [
+  ...GetOrSet<T | undefined>,
+  isLoading: boolean,
+  errorMessage: string | undefined,
+] {
   const [state, setState] = React.useState<T | undefined>(undefined);
-  const [isLoading, loading] = useLoading();
+  const [isLoading, errorMessage, loading] = useLoading();
 
   /**
    * Using layout effect so that setState(undefined) runs immediately on
@@ -52,5 +56,5 @@ export function useAsyncState<T>(
     };
   }, [callback, loading]);
 
-  return [state, setState, isLoading];
+  return [state, setState, isLoading, errorMessage];
 }

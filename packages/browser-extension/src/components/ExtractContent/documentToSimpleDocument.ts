@@ -1,4 +1,4 @@
-import { catchErrors } from '@common/components/Errors/assert';
+import { silenceError } from '@common/components/Errors/assert';
 import { Readability } from '@mozilla/readability';
 
 export type SimpleDocument = Exclude<
@@ -11,7 +11,7 @@ export type SimpleDocument = Exclude<
  */
 export function documentToSimpleDocument(
   documentClone = document.cloneNode(true) as Document,
-): undefined | SimpleDocument {
+): undefined | string | SimpleDocument {
   /**
    * Preserve syntax-highlighting related class names (used in GitHub
    * codeblocks). Also used by turndown-plugin-gfm to output correct language
@@ -43,12 +43,12 @@ export function documentToSimpleDocument(
       // Workaround for https://github.com/mozilla/readability/issues/820
       title:
         typeof result.title === 'string'
-          ? catchErrors(() => htmlDecode(result.title)) ?? result.title
+          ? silenceError(() => htmlDecode(result.title)) ?? result.title
           : result.title,
     };
   } catch (error) {
     console.error(error);
-    return undefined;
+    return error instanceof Error ? error.message : String(error);
   }
 }
 

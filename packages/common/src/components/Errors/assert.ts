@@ -1,4 +1,4 @@
-export function catchErrors<T>(callback: () => T): T | undefined {
+export function silenceError<T>(callback: () => T): T | undefined {
   try {
     return callback();
   } catch (error) {

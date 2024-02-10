@@ -127,7 +127,7 @@ function connect(
 
   const emit = (retry: boolean): Promise<void> =>
     emitEvent(tabId, { type: 'ActivateExtension', action }).catch(
-      retry ? toggleReader : () => {},
+      retry ? toggleReader : () => undefined,
     );
 
   if (action === 'open') toggleReader();

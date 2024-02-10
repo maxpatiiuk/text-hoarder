@@ -1,3 +1,4 @@
+import { unsafeGetAuth } from '../../../browser-extension/src/components/Contexts/AuthContext';
 import { IR, RA } from './types';
 
 export const http = {
@@ -5,6 +6,7 @@ export const http = {
   created: 201,
   noContent: 204,
   notModified: 304,
+  unauthorized: 401,
   unprocessableContent: 422,
 };
 
@@ -36,6 +38,9 @@ export const ajax = async (
   }).then((response) => {
     if (!response.ok) {
       console.error('Failed to fetch', response);
+      // Sign out if it auth token expired or was revoked by the user
+      if (response.status === http.unauthorized)
+        unsafeGetAuth()?.handleSignOut?.();
       throw new Error(
         `Failed to fetch ${url}: ${response.status} ${response.statusText}`,
       );

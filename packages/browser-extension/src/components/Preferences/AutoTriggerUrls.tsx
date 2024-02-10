@@ -147,7 +147,7 @@ export function RequestUrlPermissions({
   const isOnTop = position === 'top';
   const visible = isOnTop === isErrorOnLoad;
 
-  const [isLoading, loading] = useLoading();
+  const [isLoading, error, loading] = useLoading();
   return isMissingPermissions && visible ? (
     <div className="flex flex-col gap-2">
       <ErrorMessage>
@@ -185,28 +185,27 @@ export function RequestUrlPermissions({
         </Button.Info>
       )}
       {isLoading && loadingGif}
+      {typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
     </div>
   ) : undefined;
 }
 
-async function giveSitePermissions(
+const giveSitePermissions = async (
   addedOrigins: RA<string>,
   removedOrigins: RA<string>,
-): Promise<void> {
-  if (addedOrigins.length > 0)
-    await chrome.permissions
-      .request({
-        origins: formatOrigins(addedOrigins) as string[],
-      })
-      .catch(console.error);
-
-  if (removedOrigins.length > 0)
-    await chrome.permissions
-      .remove({
-        origins: formatOrigins(removedOrigins) as string[],
-      })
-      .catch(console.error);
-}
+): Promise<void> =>
+  Promise.all([
+    addedOrigins.length > 0
+      ? chrome.permissions.request({
+          origins: formatOrigins(addedOrigins) as string[],
+        })
+      : undefined,
+    removedOrigins.length > 0
+      ? chrome.permissions.remove({
+          origins: formatOrigins(removedOrigins) as string[],
+        })
+      : undefined,
+  ]).then(() => undefined);
 
 const giveAllPermissions = async (): Promise<void> =>
   chrome.permissions

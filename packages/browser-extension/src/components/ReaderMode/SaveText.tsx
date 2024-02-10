@@ -1,7 +1,6 @@
 import React from 'react';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { simpleDocumentToMarkdown } from '../ExtractContent/simpleDocumentToMarkdown';
-import { useAsyncState } from '@common/hooks/useAsyncState';
 import { AuthContext } from '../Contexts/AuthContext';
 import { readerText } from '@common/localization/readerText';
 import { Button } from '@common/components/Atoms/Button';
@@ -14,6 +13,7 @@ import { Repository } from '../../utils/storage';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
 import { commonText } from '@common/localization/commonText';
 import { commitText } from '@common/localization/commitText';
+import { ErrorMessage } from '@common/components/Atoms';
 
 const currentYear = new Date().getFullYear();
 const previousYear = currentYear - 1;
@@ -48,7 +48,10 @@ export function useExistingFile(): GetOrSet<undefined | false | string> {
                       .then((hasFile) => (hasFile ? previousYearPath : false)),
               )
               .then(setFile)
-              .catch(console.error)
+              .catch((error) => {
+                console.error(error);
+                return false;
+              })
         : setFile(false),
     [github],
   );
@@ -79,6 +82,8 @@ export function SaveText({
   const { github } = React.useContext(AuthContext);
   const repository = useStorage('setup.repository')[0];
 
+  const [isLoading, error, loading] = useLoading();
+
   const [wasAlreadySaved, setWasAlreadySaved] = React.useState(
     typeof existingFile === 'string',
   );
@@ -90,20 +95,19 @@ export function SaveText({
     requestSent.current = true;
 
     const markdown = simpleDocumentToMarkdown(simpleDocument);
-    github!
-      .createFile(
-        currentYearPath,
-        commitText.createFile(simpleDocument.title),
-        markdown,
-      )
-      .then((response) => {
-        if (response.type === 'AlreadyExists') setWasAlreadySaved(true);
-        handleSaved(currentYearPath);
-      })
-      .catch(console.error);
-  }, [github, wasAlreadySaved, simpleDocument]);
-
-  const [isLoading, loading] = useLoading();
+    loading(
+      github!
+        .createFile(
+          currentYearPath,
+          commitText.createFile(simpleDocument.title),
+          markdown,
+        )
+        .then((response) => {
+          if (response.type === 'AlreadyExists') setWasAlreadySaved(true);
+          handleSaved(currentYearPath);
+        }),
+    );
+  }, [loading, github, wasAlreadySaved, simpleDocument]);
 
   const fileEditUrl =
     typeof repository === 'object' && typeof existingFile === 'string'
@@ -113,11 +117,9 @@ export function SaveText({
   React.useEffect(
     () =>
       typeof openFileUrl === 'string'
-        ? void sendRequest('OpenUrl', openFileUrl)
-            .then(handleClose)
-            .catch(console.error)
+        ? loading(sendRequest('OpenUrl', openFileUrl).then(handleClose))
         : undefined,
-    [openFileUrl, handleClose],
+    [openFileUrl, loading, handleClose],
   );
 
   const [undoUsingForcePush] = useStorage('github.undoUsingForcePush');
@@ -163,6 +165,7 @@ export function SaveText({
           </Button.Danger>
           <Link.Info href={fileEditUrl}>{readerText.edit}</Link.Info>
           {isLoading && loadingGif}
+          {typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
         </>
       )}
     </>

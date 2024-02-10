@@ -15,8 +15,7 @@ import { commonText } from '@common/localization/commonText';
  */
 export function AuthPrompt(): JSX.Element {
   const { handleAuthenticate } = React.useContext(AuthContext);
-  const [isLoading, loading] = useLoading();
-  const [error, setError] = React.useState('');
+  const [isLoading, error, loading] = useLoading();
   return (
     <>
       <H1>{commonText.textHoarder}</H1>
@@ -36,18 +35,12 @@ export function AuthPrompt(): JSX.Element {
         ))}
       </p>
       <Step number={3} />
-      <Button.Info
-        onClick={(): void =>
-          loading(
-            handleAuthenticate().catch((error) => setError(error.message)),
-          )
-        }
-      >
+      <Button.Info onClick={(): void => loading(handleAuthenticate())}>
         {signInText.signInWithGitHub}
       </Button.Info>
       <p>{signInText.signInInstruction}</p>
       {isLoading && loadingGif}
-      {error.length > 0 && <ErrorMessage>{error}</ErrorMessage>}
+      {typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
       <span className="flex-1 -ml-3" />
       <p>
         {signInText.privacyPolicyDescription}

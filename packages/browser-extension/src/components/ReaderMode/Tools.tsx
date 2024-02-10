@@ -29,7 +29,7 @@ export function Tools({
   >(undefined);
   const handleClose = React.useCallback(() => setSelectedTool(undefined), []);
 
-  const [, catchErrors] = useLoading();
+  const [_, __, catchErrors] = useLoading();
   const [downloadFormat] = useStorage('reader.downloadFormat');
   const handleDownload = React.useCallback(
     (): void =>

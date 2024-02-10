@@ -1,7 +1,7 @@
 import React from 'react';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { readerText } from '@common/localization/readerText';
-import { H1 } from '@common/components/Atoms';
+import { ErrorMessage, H1 } from '@common/components/Atoms';
 import { Tools } from './Tools';
 import { useStorage } from '../../hooks/useStorage';
 import { usePageStyle } from '../Preferences/usePageStyle';
@@ -17,7 +17,7 @@ export function Dialog({
   onRestoreScroll: handleRestoreScroll,
   activatedReason,
 }: {
-  readonly simpleDocument: SimpleDocument | undefined;
+  readonly simpleDocument: SimpleDocument | string | undefined;
   readonly onRestoreScroll: (
     containerElement: Element,
     mode: 'smooth' | 'instant' | 'none',
@@ -45,8 +45,12 @@ export function Dialog({
       )}
       <div
         className={`flex flex-col gap-4 p-4 md:p-16 print:!p-0 h-max w-full items-center ${markdownBody}`}
-        lang={simpleDocument?.lang}
-        dir={simpleDocument?.dir}
+        lang={
+          typeof simpleDocument === 'object' ? simpleDocument.lang : undefined
+        }
+        dir={
+          typeof simpleDocument === 'object' ? simpleDocument.dir : undefined
+        }
         // Setting these as style attribute to override markdownBody styles
         style={{
           ...restStyles,
@@ -62,6 +66,8 @@ export function Dialog({
         >
           {simpleDocument === undefined ? (
             <p>{readerText.noContentFound}</p>
+          ) : typeof simpleDocument === 'string' ? (
+            <ErrorMessage>{simpleDocument}</ErrorMessage>
           ) : (
             <>
               <H1>{simpleDocument.title ?? document.title}</H1>

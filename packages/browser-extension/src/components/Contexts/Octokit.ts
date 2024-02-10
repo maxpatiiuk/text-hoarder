@@ -25,7 +25,7 @@ export function wrapOctokit(
   octokit: Octokit,
   { owner, name: repo, branch }: Repository,
 ): OctokitWrapper {
-  const fetchFileSha = (fileName: string): Promise<string | undefined> =>
+  const fetchFileSha = async (fileName: string): Promise<string | undefined> =>
     octokit.rest.repos
       .getContent({
         owner,
@@ -38,7 +38,7 @@ export function wrapOctokit(
       )
       .catch(() => undefined);
 
-  const fetchBranchSha = (): Promise<string | undefined> =>
+  const fetchBranchSha = async (): Promise<string | undefined> =>
     octokit.rest.git
       .getRef({
         owner,
@@ -51,7 +51,7 @@ export function wrapOctokit(
   return {
     owner,
     repo,
-    hasFile: (fileName) =>
+    hasFile: async (fileName) =>
       octokit.rest.repos
         .getContent({
           owner,
@@ -67,7 +67,7 @@ export function wrapOctokit(
             status === http.notModified,
         )
         .catch(() => false),
-    createFile: (name, commitMessage, content) =>
+    createFile: async (name, commitMessage, content) =>
       octokit.rest.repos
         .createOrUpdateFileContents({
           owner,
@@ -100,7 +100,7 @@ export function wrapOctokit(
             return { type: 'AlreadyExists' };
           throw response;
         }),
-    deleteFile: (name, commitMessage) =>
+    deleteFile: async (name, commitMessage) =>
       fetchFileSha(name)
         .then((sha) =>
           sha === undefined
