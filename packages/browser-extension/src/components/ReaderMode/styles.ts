@@ -21,7 +21,7 @@ const hideBackgroundContent = `body > *:not(#${extensionContainerId}) {
 /**
  * If parent page has a scroll bar, temporary hide that
  */
-const preventDuplicateScrollBar = `body {
+const preventDuplicateScrollBar = `html, body {
   height: 100dvh !important;
   overflow-y: hidden !important;
 }`;
@@ -33,6 +33,12 @@ export function applyHostPageStyles(): () => void {
     ${preventDuplicateScrollBar} 
     ${hideBackgroundContent}
   `;
+  const htmlScrollTop = document.documentElement.scrollTop;
+  const bodyScrollTop = document.body.scrollTop;
   document.head.append(style);
-  return (): void => document.getElementById(stylesId)?.remove();
+  return (): void => {
+    document.getElementById(stylesId)?.remove();
+    document.documentElement.scrollTop = htmlScrollTop;
+    document.body.scrollTop = bodyScrollTop;
+  };
 }
