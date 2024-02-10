@@ -30,6 +30,7 @@ export const storageDefinitions = ensure<IR<unknown>>()({
     | 'smooth'
     | 'instant'
     | 'none',
+  'reader.allowBackgroundKeyboardShortcuts': true as boolean,
   'markdownToText.includeImageAltText': true as boolean,
   'github.undoUsingForcePush': true as boolean,
 } as const);

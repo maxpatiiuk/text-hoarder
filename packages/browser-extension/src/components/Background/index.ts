@@ -65,21 +65,18 @@ const requestHandlers: {
       },
     );
 
-    return chrome.identity
-      .launchWebAuthFlow({
-        url: authUrl,
-        interactive,
-      })
-      .then((callbackUrl) => {
-        if (callbackUrl === undefined)
-          throw new Error('Authentication was canceled');
-        else
-          return resolveAuthToken({
-            callbackUrl,
-            originalState: state,
-          });
-      })
-      .then((response) => ({ type: 'Authenticated', ...response }));
+    const callbackUrl = await chrome.identity.launchWebAuthFlow({
+      url: authUrl,
+      interactive,
+    });
+
+    if (callbackUrl === undefined)
+      throw new Error('Authentication was canceled');
+    const response = await resolveAuthToken({
+      callbackUrl,
+      originalState: state,
+    });
+    return { type: 'Authenticated', ...response };
   },
 
   OpenUrl: (url, { tab }) =>
@@ -136,7 +133,6 @@ function connect(
   if (action === 'open') toggleReader();
   else emit(true);
 }
-// FIXME: decide if keyboard shortcuts should work before first activation
 
 let matchUrls: RA<string | RegExp> = [];
 listenToStorage('reader.autoTriggerUrls', async (value) => {

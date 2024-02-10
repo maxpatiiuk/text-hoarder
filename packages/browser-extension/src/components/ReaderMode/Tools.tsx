@@ -10,7 +10,7 @@ import { downloadDocument } from './download';
 import { InfoTab } from './InfoTab';
 import { EnsureAuthenticated } from '../Auth';
 import { SaveText, buildRepositoryUrl, useExistingFile } from './SaveText';
-import { listenEvent } from '../Background/messages';
+import { ActivateExtension, listenEvent } from '../Background/messages';
 import { Link } from '@common/components/Atoms/Link';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
 import { className } from '@common/components/Atoms/className';
@@ -18,9 +18,11 @@ import { className } from '@common/components/Atoms/className';
 export function Tools({
   simpleDocument,
   style,
+  activatedReason,
 }: {
   readonly simpleDocument: SimpleDocument;
   readonly style: React.CSSProperties;
+  readonly activatedReason: ActivateExtension['action'];
 }): JSX.Element {
   const [selectedTool, setSelectedTool] = React.useState<
     undefined | 'saveText' | 'editText' | 'infoTab' | 'preferences'
@@ -43,16 +45,32 @@ export function Tools({
     [catchErrors, downloadFormat],
   );
 
+  const handleActivated = React.useCallback(
+    (action: ActivateExtension['action']) =>
+      action === 'saveText' || action === 'editText'
+        ? setSelectedTool(action)
+        : action === 'download'
+          ? handleDownload()
+          : undefined,
+    [handleDownload],
+  );
+
+  const [allowBackgroundKeyboardShortcuts] = useStorage(
+    'reader.allowBackgroundKeyboardShortcuts',
+  );
+  const allowBackgroundKeysRef = React.useRef(allowBackgroundKeyboardShortcuts);
+  const activatedReasonRef = React.useRef(activatedReason);
+  React.useEffect(() => {
+    if (allowBackgroundKeysRef.current) {
+      allowBackgroundKeysRef.current = false;
+      handleActivated(activatedReasonRef.current);
+    }
+  }, []);
+
   React.useEffect(
     () =>
-      listenEvent('ActivateExtension', ({ action }) =>
-        action === 'saveText' || action === 'editText'
-          ? setSelectedTool(action)
-          : action === 'download'
-            ? handleDownload()
-            : undefined,
-      ),
-    [downloadDocument, setSelectedTool],
+      listenEvent('ActivateExtension', ({ action }) => handleActivated(action)),
+    [handleActivated],
   );
 
   // Close on outside click

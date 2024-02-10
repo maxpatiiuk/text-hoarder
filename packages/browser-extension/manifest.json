@@ -42,13 +42,13 @@
         "mac": "Command+Shift+E",
         "default": "Ctrl+Shift+E"
       },
-      "description": "Save current page to GitHub repository (while extension is active)"
+      "description": "Save current page to GitHub repository"
     },
     "editText": {
-      "description": "Open Editor for current page in GitHub repository (while extension is active)"
+      "description": "Open Editor for current page in GitHub repository"
     },
     "download": {
-      "description": "Download current webpage (while extension is active)"
+      "description": "Download current webpage"
     }
   }
 }

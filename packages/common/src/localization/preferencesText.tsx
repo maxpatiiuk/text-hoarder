@@ -57,6 +57,9 @@ export const preferencesText = dictionary({
   eagerCheckForAlreadySaved: {
     en: 'Check ahead of time if current article has already been saved (less green for the planet)',
   },
+  allowBackgroundKeyboardShortcuts: {
+    en: 'Allow keyboard shortcuts for saving or downloading current page to work even while extension is not open',
+  },
   restoreScrollPosition: {
     en: 'Restore scroll position',
   },

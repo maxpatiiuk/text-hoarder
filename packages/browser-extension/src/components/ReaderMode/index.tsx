@@ -16,6 +16,7 @@ import { preserveTextSelection } from '../ExtractContent/preserveTextSelection';
 import { catchErrors } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
 import { applyHostPageStyles, extensionContainerId } from './styles';
+import { ActivateExtension } from '../Background/messages';
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 
@@ -60,15 +61,15 @@ function makeRenderFunction() {
   const simpleDocument = documentToSimpleDocument();
 
   const canAutoTrigger = autoTrigger && typeof simpleDocument === 'object';
-  return (activatedReason: 'automaticTrigger' | 'open') => {
+  return (activatedReason: ActivateExtension['action']) => {
     /**
      * If page doesn't look readable, or failed to extract content, and
      * extension was activated automatically, then don't do anything. If
-     * extension was triggered by user, a display dialog with an error message
+     * extension was triggered by user, display a dialog with an error message
      */
     if (!canAutoTrigger && activatedReason === 'automaticTrigger') return;
 
-    displayDialog(simpleDocument, (containerElement, mode) => {
+    displayDialog(simpleDocument, activatedReason, (containerElement, mode) => {
       scrollToMatchingElement?.(containerElement, mode);
       preserveSelection?.(containerElement);
     });
@@ -82,14 +83,15 @@ function makeRenderFunction() {
  * message and waiting for it adds large amount of latency. Thus, relying on
  * local storage to pass the argument.
  *
- * The storage approach still ads 80ms, and mail fail if multiples tabs are
+ * The storage approach still ads 80ms, and mail fail if multiple tabs are
  * opened at the same time, but that's the best I could come up with.
  *
  * The other solution is to have two separate ReaderMode bundles (3.5mb) that
  * would differ only in the value of isAutomaticTrigger boolean at the top, but
- * that seems rather inefficient.
+ * that seems rather inefficient and not scalable.
  */
 activatedReason.then(({ activatedReason }) => {
+  const reason: ActivateExtension['action'] = activatedReason;
   const symbol = Symbol.for('text-hoarder-was-activated');
   const wasActivatedBefore =
     Object.getOwnPropertyDescriptor(window, symbol)?.value === true;
@@ -99,18 +101,19 @@ activatedReason.then(({ activatedReason }) => {
    * Also, for some pages the page can pass from loading to loaded multiple
    * times
    * (i.e https://www.theverge.com/23935029/microsoft-edge-forced-windows-10-google-chrome-fight)
-   * In such case don't do anything:
+   * In such cases don't do anything:
    */
-  if (wasActivatedBefore && activatedReason === 'automaticTrigger') return;
+  if (wasActivatedBefore && reason === 'automaticTrigger') return;
   Object.defineProperty(window, symbol, { value: true, enumerable: false });
 
   chrome.storage.local.remove('activatedReason');
 
-  action(activatedReason);
+  action(reason);
 });
 
 function displayDialog(
   simpleDocument: SimpleDocument | undefined,
+  activatedReason: ActivateExtension['action'],
   scrollToMatchingElement: (
     containerElement: Element,
     mode: 'smooth' | 'instant' | 'none',
@@ -203,6 +206,7 @@ function displayDialog(
     <Dialog
       simpleDocument={simpleDocument}
       onRestoreScroll={scrollToMatchingElement}
+      activatedReason={activatedReason}
     />,
     shadowRoot,
   );

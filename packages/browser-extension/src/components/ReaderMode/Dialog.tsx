@@ -7,6 +7,7 @@ import { useStorage } from '../../hooks/useStorage';
 import { usePageStyle } from '../Preferences/usePageStyle';
 import { useReducedMotion } from '@common/hooks/useReduceMotion';
 import { listenToAnchors } from './anchors';
+import { ActivateExtension } from '../Background/messages';
 
 /** Apply github-markdown-css styles */
 const markdownBody = 'markdown-body';
@@ -14,12 +15,14 @@ const markdownBody = 'markdown-body';
 export function Dialog({
   simpleDocument,
   onRestoreScroll: handleRestoreScroll,
+  activatedReason,
 }: {
   readonly simpleDocument: SimpleDocument | undefined;
   readonly onRestoreScroll: (
     containerElement: Element,
     mode: 'smooth' | 'instant' | 'none',
   ) => void;
+  readonly activatedReason: ActivateExtension['action'];
 }): JSX.Element {
   const [allowScrollPastLastLine] = useStorage(
     'reader.allowScrollPastLastLine',
@@ -37,6 +40,7 @@ export function Dialog({
            * (breaks Link.Info) but do want user styles
            */
           style={style}
+          activatedReason={activatedReason}
         />
       )}
       <div

@@ -83,6 +83,9 @@ export const definitions: IR<
     'reader.eagerCheckForAlreadySaved': Renderers.Checkbox(
       preferencesText.eagerCheckForAlreadySaved,
     ),
+    'reader.allowBackgroundKeyboardShortcuts': Renderers.Checkbox(
+      preferencesText.allowBackgroundKeyboardShortcuts,
+    ),
     'github.undoUsingForcePush': Renderers.Checkbox(
       preferencesText.undoUsingForcePush,
     ),
