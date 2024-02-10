@@ -135,6 +135,7 @@ function displayDialog(
   dialog.style.position = 'fixed';
   dialog.style.border = 'none';
   dialog.style.outline = 'none';
+  dialog.style.filter = 'unset';
 
   // Prevent scrolljacking 😡
   dialog.addEventListener('scroll', (event) => event.stopPropagation(), {
