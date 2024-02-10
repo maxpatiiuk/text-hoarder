@@ -1,11 +1,10 @@
 /**
- * Basic CSS styles common to all pages. Have to be careful with this not to
- * overwrite default Google Calendar Styles
+ * Basic CSS styles common to all pages
  */
 
 @layer base {
   /*
-   * Prevent any host page's styles from bleeding into shadow dom (i.e inherited
+   * Prevent any host page's styles from bleeding into Shadow DOM (i.e inherited
    * properties like font-style)
    */
   :host > div {
@@ -22,5 +21,16 @@
    */
   .sr-only {
     @apply top-0;
+  }
+
+  /*
+   * Fixes <pre> with long lines not having a scroll bar but widening the page
+   * when inside of <fieldset>.
+   *
+   * As seen on this page in reader mode:font-style:
+   * https://www.crockford.com/navigator.html
+   */
+  fieldset {
+    min-inline-size: unset;
   }
 }
