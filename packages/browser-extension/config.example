@@ -27,7 +27,7 @@ export const corsAuthMiddlewareUrl = 'http://localhost:3000';
 export const extensionId = 'bjknebjiadgjchmhppdfdiddfegmcaao';
 const webStoreUrl = `https://chromewebstore.google.com/u/1/detail/${extensionId}`;
 export const urls = {
-  privacyPolicy: 'https://calendar-plus.patii.uk/docs/privacy/',
+  privacyPolicy: 'https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/privacy/README.md',
   sourceCode: 'https://github.com/maxxxxxdlp/text-hoarder',
   requestFeature:
     'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md',
