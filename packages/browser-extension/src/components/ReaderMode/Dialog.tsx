@@ -40,7 +40,7 @@ export function Dialog({
         />
       )}
       <div
-        className={`flex flex-col gap-4 p-4 md:p-16 h-max w-full items-center ${markdownBody}`}
+        className={`flex flex-col gap-4 p-4 md:p-16 print:!p-0 h-max w-full items-center ${markdownBody}`}
         lang={simpleDocument?.lang}
         dir={simpleDocument?.dir}
         // Setting these as style attribute to override markdownBody styles

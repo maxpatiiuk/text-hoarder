@@ -13,7 +13,8 @@ const stylesId = 'text-hoarder-styles';
  *   position and sizing (i.e in response to scroll or timer)
  * - needless performance impact because of layout reflow
  */
-const hideBackgroundContent = `body > *:not(#${extensionContainerId}) {
+const nonDialogContent = `body > *:not(#${extensionContainerId})`;
+const hideBackgroundContent = `${nonDialogContent} {
   visibility: hidden !important;
   opacity: 0 !important;
 }`;
@@ -26,12 +27,27 @@ const preventDuplicateScrollBar = `html, body {
   overflow-y: hidden !important;
 }`;
 
+/**
+ * Fix dialog content not appearing correctly when printing
+ */
+const adaptDialogForPrinting = `@media print {
+  dialog {
+    position: static !important;
+    height: max-content !important;
+  }
+
+  ${nonDialogContent} {
+    display: none !important;
+  }
+}`;
+
 export function applyHostPageStyles(): () => void {
   const style = document.createElement('style');
   style.id = stylesId;
   style.textContent = `
     ${preventDuplicateScrollBar} 
     ${hideBackgroundContent}
+    ${adaptDialogForPrinting}
   `;
   const htmlScrollTop = document.documentElement.scrollTop;
   const bodyScrollTop = document.body.scrollTop;

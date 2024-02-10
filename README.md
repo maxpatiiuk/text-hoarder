@@ -4,6 +4,11 @@
 
 Features:
 
+- Bypass flashing ads, distracting elements, scrolljacking and other
+  inconveniences of modern day web browsing.
+- Can download simplified page as html, markdown or plain text
+- Can print simplified page or convert it to PDF using browser's print dialog
+
 FINAL: complete this section
 
 FINAL: advertise the extension as accessibility-improving feature

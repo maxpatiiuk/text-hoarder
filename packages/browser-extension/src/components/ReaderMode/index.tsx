@@ -19,8 +19,6 @@ import { applyHostPageStyles, extensionContainerId } from './styles';
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 
-// TEST: text hoarder test print mode
-// BUG: scroll loss on exiting reader mode (i.e in https://hackernoon.com/unleashing-the-power-of-typescript-improving-standard-library-types?utm_source=tldrwebdev)
 // FEATURE: add local text-to-speech helper CLI
 // FEATURE: if unable to extract information, but user had selected text, use that as information
 // LOW: add stats UI to the web extension (https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-tar amd https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API)

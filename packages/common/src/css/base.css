@@ -33,4 +33,9 @@
   fieldset {
     min-inline-size: unset;
   }
+
+  /* Try not to split code sample between pages when printing */
+  pre {
+    @apply break-inside-avoid;
+  }
 }
