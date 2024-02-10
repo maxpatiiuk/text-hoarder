@@ -176,10 +176,8 @@ const normalizePart = (part: string) =>
 const trimTrailingSlash = (part: string) =>
   part.endsWith('/') ? part.slice(0, -1) : part;
 
-// FIXME: try out creating files from very long URLs
-
 /*
- * These  characters are not allowed in Windows file names, so %-encode them.
+ * These characters are not allowed in Windows file names, so %-encode them.
  * See https://stackoverflow.com/a/31976060/8584605
  */
 const unsafeCharacters = ['#', '<', '>', ':', '"', '\\', '|', '?', '*'];
