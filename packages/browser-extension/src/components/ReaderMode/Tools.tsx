@@ -81,11 +81,16 @@ export function Tools({
         ? undefined
         : listen(containerRef.current.getRootNode(), 'click', (event) =>
             event.target instanceof Element &&
-            containerRef.current?.contains(event.target) === false
-              ? setSelectedTool(undefined)
+            containerRef.current?.contains(event.target) === false &&
+            /*
+             * If the button was removed from DOM on click, it won't be inside
+             * of it's parent anymore, but doesn't mean it's an outside click
+             */
+            event.target.isConnected === true
+              ? handleClose()
               : undefined,
           ),
-    [selectedTool, setSelectedTool],
+    [selectedTool, handleClose],
   );
 
   const [existingFile, setExistingFile] = useExistingFile();
@@ -115,6 +120,7 @@ export function Tools({
       ref={containerRef}
     >
       {selectedTool !== undefined && (
+        // REFACTOR: use popover once it's well supported
         <aside
           className={`
             flex flex-col gap-4 p-4 overflow-auto w-[20rem]

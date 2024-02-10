@@ -117,7 +117,7 @@ export function SaveText({
             .then(handleClose)
             .catch(console.error)
         : undefined,
-    [openFileUrl],
+    [openFileUrl, handleClose],
   );
 
   const [undoUsingForcePush] = useStorage('github.undoUsingForcePush');

@@ -143,10 +143,6 @@ export const Select = wrap<
         ? ' bg-blue-100 dark:bg-blue-900'
         : ''
     }${typeof props.size === 'number' && props.size > 1 ? '' : ' p-1 rounded'}`,
-    /*
-     * REFACTOR: don't set event listener if both onValueChange and onValuesChange
-     *   are undefined
-     */
     onChange(event): void {
       const options = Array.from(
         (event.target as HTMLSelectElement).querySelectorAll('option'),

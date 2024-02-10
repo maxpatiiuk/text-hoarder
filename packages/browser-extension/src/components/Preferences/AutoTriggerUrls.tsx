@@ -33,6 +33,15 @@ export function AutoTriggerUrls(
 
   const isStandalone = React.useContext(IsPreferencesStandalone);
   const showButtons = !isStandalone && (canAddCurrentSite || canAddCurrentPath);
+
+  const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const scrollBottom = (): void =>
+    void setTimeout(() => {
+      const textArea = textAreaRef.current;
+      if (textArea === null) return;
+      textArea.scrollTop = textArea.scrollHeight;
+      textArea.focus();
+    }, 0);
   return (
     <>
       <Label.Block>
@@ -43,23 +52,27 @@ export function AutoTriggerUrls(
           onBlur={(): void => updateValue(value)}
           className="h-32"
           placeholder={urlsPlaceholder}
+          forwardRef={textAreaRef}
         />
       </Label.Block>
       {showButtons && (
         <div className="flex gap-1 flex-wrap">
           {canAddCurrentSite && (
             <Button.Info
-              onClick={(): void =>
-                // FEATURE: either add to top, or scroll down - otherwise makes it seem like nothing happened
-                updateValue(`${value}\n${currentSite}`)
-              }
+              onClick={(): void => {
+                updateValue(`${value}\n${currentSite}`);
+                scrollBottom();
+              }}
             >
               {preferencesText.addCurrentSite}
             </Button.Info>
           )}
           {canAddCurrentPath && (
             <Button.Info
-              onClick={(): void => updateValue(`${value}\n${currentPath}`)}
+              onClick={(): void => {
+                updateValue(`${value}\n${currentPath}`);
+                scrollBottom();
+              }}
             >
               {preferencesText.addCurrentSiteWithSuffix(lastPart)}
             </Button.Info>
