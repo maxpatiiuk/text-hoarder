@@ -4,6 +4,7 @@ import { cliText } from '@common/localization/cliText';
 import { encoding } from '@common/utils/encoding';
 import { multiSortFunction } from '@common/utils/utils';
 import stopWords from './stopWords.json';
+import { getLanguage } from '@common/localization/utils';
 
 /*
  * From https://www.ranks.nl/stopwords (i.e the unofficial Google dataset)
@@ -37,11 +38,13 @@ export type StatsCounts = {
 export function computeStats(
   articles: RA<Article>,
   includeTags: boolean,
+  preciseStats: boolean,
 ): StatsJson {
   console.log(cliText.statsCommandProgress);
   const total = articles.length * 2;
   const reportProgress = (index: number) =>
-    console.log(`${Math.round(((index / total) * 10_000) / 100)}%  `);
+    console.log(`${Math.round(((index / total) * 10_000) / 100)}%`);
+  const extractWords = preciseStats ? extractWordsSegmenter : extractWordsRegex;
   const computed = articles.map((article, index) => {
     if (index % 400 === 0) reportProgress(index);
     const fullContent = `${article.title}.\n${article.content}`;
@@ -49,7 +52,7 @@ export function computeStats(
     return {
       article: { ...article, host: new URL(article.url).host },
       words,
-      counts: articleToCounts(fullContent, words),
+      counts: articleToCounts(fullContent, words, preciseStats),
     };
   });
 
@@ -75,13 +78,36 @@ export function computeStats(
   return pickTop(statsJson);
 }
 
-// REFACTOR: Use Intl.Segmenter to split words and sentences
+const wordSegmenter =
+  'Segmenter' in Intl
+    ? new Intl.Segmenter(getLanguage(), {
+        granularity: 'word',
+      })
+    : undefined;
 const reWord =
   /[\p{Letter}\p{Number}\p{Dash_Punctuation}\p{Connector_Punctuation}']+/gu;
-const extractWords = (text: string): RA<string> => text.match(reWord) ?? [];
+const extractWordsRegex = (text: string): RA<string> =>
+  text.match(reWord) ?? [];
+const extractWordsSegmenter =
+  wordSegmenter === undefined
+    ? extractWordsRegex
+    : (text: string): RA<string> => {
+        // Not using Array.from/filter/map due to out-of-memory errors
+        let words = [];
+        for (const { segment, isWordLike } of wordSegmenter.segment(text))
+          if (isWordLike) words.push(segment);
+        return words;
+      };
 
-function articleToCounts(content: string, words: RA<string>): StatsCounts {
+function articleToCounts(
+  content: string,
+  words: RA<string>,
+  preciseStats: boolean,
+): StatsCounts {
   const wordsSet = new Set(words);
+  const countSentences = preciseStats
+    ? countSentencesSegmenter
+    : countSentencesRegex;
   const counts = {
     count: 1,
     length: content.length,
@@ -94,11 +120,27 @@ function articleToCounts(content: string, words: RA<string>): StatsCounts {
   return counts;
 }
 
+const sentenceSegmenter =
+  'Segmenter' in Intl
+    ? new Intl.Segmenter(getLanguage(), {
+        granularity: 'sentence',
+      })
+    : undefined;
 // Inspired by wordcounter.net, but modified to handle non-English languages and less common sentence-ending punctuation
 const reSentence =
   /[^.!?…⁇‼‽⁈⁉⸮]+(?:[.!?…⁇‼‽⁈⁉⸮](?!['"]?|$)[^.!?…⁇‼‽⁈⁉⸮]*)*[.!?…⁇‼‽⁈⁉⸮]?['"]?(?=|$)(?:[.!?…⁇‼‽⁈⁉⸮]\s+[\p{Lu}\p{Lt}])/gu;
-const countSentences = (content: string): number =>
+const countSentencesRegex = (content: string): number =>
   content.length === 0 ? 0 : content.split(reSentence).length + 1;
+const countSentencesSegmenter =
+  sentenceSegmenter === undefined
+    ? countSentencesRegex
+    : (content: string): number => {
+        // Not using Array.from due to out-of-memory errors
+        let count = 0;
+        for (const { segment } of sentenceSegmenter.segment(content))
+          if (segment.trimEnd().length > 0) count += 1;
+        return count;
+      };
 
 const initializeStatsStructure = (): StatsStructure => ({
   counts: initializeCounts(),

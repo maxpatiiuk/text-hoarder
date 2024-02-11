@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import open from 'open';
+import path from 'node:path';
 
 import { cliText } from '@common/localization/cliText';
 import { Command } from '@commander-js/extra-typings';
@@ -27,6 +28,7 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
       './stats.html',
     )
     .option('--no-auto-open', cliText.noAutoOpenOptionDescription)
+    .option('--precise-stats', cliText.preciseStatsOptionDescription, false)
     .option(
       '--json <path>',
       cliText.jsonOptionDescription,
@@ -42,6 +44,7 @@ type GenerateStatsProps = {
   readonly autoOpen: boolean;
   readonly json: string;
   readonly pull: boolean;
+  readonly preciseStats: boolean;
 };
 
 export async function generateStatsPage({
@@ -50,12 +53,15 @@ export async function generateStatsPage({
   autoOpen,
   json,
   pull,
+  preciseStats,
 }: GenerateStatsProps): Promise<void> {
+  console.log(cliText.gatheringData);
   const { git, tags } = await initializeCommand(cwd, pull);
 
   const filesWithTags = await tagsToFileMeta(tags, git);
   const articles = await gatherArticles(cwd, filesWithTags);
-  const stats = computeStats(articles, tags.length > 0);
+  const stats = computeStats(articles, tags.length > 0, preciseStats);
+  console.log(cliText.finalizingOutput);
 
   const jsonString = JSON.stringify(stats);
   if (typeof json === 'string') await fs.writeFile(json, jsonString);

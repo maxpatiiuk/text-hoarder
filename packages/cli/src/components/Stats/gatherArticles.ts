@@ -23,6 +23,7 @@ export const gatherArticles = async (
                 : (content: string) => content
             )(fileContent.toString())
               .trim()
+              .replaceAll('’', "'")
               .split('\n');
             const title = fileText[0];
             const content = fileText.slice(1).join('\n').trim();
