@@ -161,16 +161,6 @@ updatePermissions();
 chrome.permissions.onAdded.addListener(updatePermissions);
 chrome.permissions.onRemoved.addListener(updatePermissions);
 
-/*
-// FINAL: add migration scripts when necessary
-runtime.onUpdate(async details => {
-    if (details.previousVersion[0] < '9' && runtime.getCurrentVersion() >
-        '8.0.0') {
-        await action.migrateStorage()
-    }
-})
- */
-
 async function resolveAuthToken({
   callbackUrl,
   originalState,

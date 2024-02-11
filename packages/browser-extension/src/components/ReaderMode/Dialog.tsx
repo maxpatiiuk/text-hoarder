@@ -75,7 +75,7 @@ export function Dialog({
                 node={simpleDocument.content}
                 onRestoreScroll={handleRestoreScroll}
               />
-              {allowScrollPastLastLine && <div className="min-h-full" />}
+              {allowScrollPastLastLine && <div className="h-[80vh]" />}
             </>
           )}
         </div>

@@ -17,11 +17,11 @@ import { silenceError } from '@common/components/Errors/assert';
 import { renderExtension } from '../Core/renderExtension';
 import { applyHostPageStyles, extensionContainerId } from './styles';
 import { ActivateExtension } from '../Background/messages';
+import { commonText } from '@common/localization/commonText';
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
-// FINAL: do accessibility testing
 // FINAL: add webpack dev server for stats? https://morioh.com/a/c6e73ed575bb/how-to-package-nodejs-application-using-webpack#google_vignette
 // FINAL: Review all code and remove unused/simplify
 
@@ -117,6 +117,7 @@ function displayDialog(
 ): void {
   // Isolate from parent page's tabindex and scroll
   const dialog = document.createElement('dialog');
+  dialog.ariaLabel = commonText.textHoarder;
   dialog.id = extensionContainerId;
   dialog.autofocus = true;
   dialog.style.width = '100vw';

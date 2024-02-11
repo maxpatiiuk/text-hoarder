@@ -31,6 +31,8 @@ export const storageDefinitions = ensure<IR<unknown>>()({
     | 'instant'
     | 'none',
   'reader.allowBackgroundKeyboardShortcuts': true as boolean,
+  // REFACTOR: this should really be in local storage
+  'reader.toolsCollapsed': false as boolean,
   'markdownToText.includeImageAltText': true as boolean,
   'github.undoUsingForcePush': true as boolean,
 } as const);

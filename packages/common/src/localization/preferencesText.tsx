@@ -8,6 +8,8 @@ import { dictionary } from './utils';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const preferencesText = dictionary({
+  collapseMenu: { en: 'Collapse menu' },
+  expandMenu: { en: 'Expand menu' },
   preferences: { en: 'Preferences' },
   theme: { en: 'Theme' },
   system: { en: 'System' },

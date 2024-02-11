@@ -29,6 +29,8 @@ export function Tools({
   >(undefined);
   const handleClose = React.useCallback(() => setSelectedTool(undefined), []);
 
+  const [collapsed, setCollapsed] = useStorage('reader.toolsCollapsed');
+
   const [_, __, catchErrors] = useLoading();
   const [downloadFormat] = useStorage('reader.downloadFormat');
   const handleDownload = React.useCallback(
@@ -103,7 +105,7 @@ export function Tools({
     <div
       className={`
         fixed top-0 right-0 flex backdrop-blur rounded-es print:hidden
-        bg-white/80 dark:bg-black/70 max-h-full border-r border-gray-400
+        bg-white/80 dark:bg-black/70 max-h-full
         ${className.baseText}
         ${
           selectedTool === undefined
@@ -159,63 +161,86 @@ export function Tools({
         className="flex flex-col p-2 gap-3 text-[130%] "
         aria-label={readerText.tools}
       >
-        <Button.Icon
-          onClick={(): void =>
-            setSelectedTool(
-              selectedTool === 'saveText' ? undefined : 'saveText',
-            )
-          }
-          icon={
-            typeof existingFile === 'string' ? 'bookmark' : 'bookmarkHollow'
-          }
-          title={readerText.saveToGitHub}
-          aria-pressed={selectedTool === 'saveText' ? true : undefined}
-          aria-controls={panelId}
-        />
-        {typeof existingFile === 'string' && typeof repository === 'object' ? (
-          <Link.Icon
-            href={buildRepositoryUrl(repository, existingFile)}
-            icon="pencil"
-            title={readerText.editOnGitHub}
-            aria-controls={panelId}
-          />
-        ) : (
+        {selectedTool === 'saveText' || !collapsed ? (
           <Button.Icon
             onClick={(): void =>
               setSelectedTool(
-                selectedTool === 'editText' ? undefined : 'editText',
+                selectedTool === 'saveText' ? undefined : 'saveText',
               )
             }
-            icon="pencil"
-            title={readerText.editOnGitHub}
-            aria-pressed={selectedTool === 'editText' ? true : undefined}
+            icon={
+              typeof existingFile === 'string' ? 'bookmark' : 'bookmarkHollow'
+            }
+            title={readerText.saveToGitHub}
+            aria-pressed={selectedTool === 'saveText' ? true : undefined}
             aria-controls={panelId}
           />
+        ) : undefined}
+        {selectedTool === 'saveText' || !collapsed ? (
+          typeof existingFile === 'string' && typeof repository === 'object' ? (
+            <Link.Icon
+              href={buildRepositoryUrl(repository, existingFile)}
+              icon="pencil"
+              title={readerText.editOnGitHub}
+              aria-controls={panelId}
+            />
+          ) : (
+            <Button.Icon
+              onClick={(): void =>
+                setSelectedTool(
+                  selectedTool === 'editText' ? undefined : 'editText',
+                )
+              }
+              icon="pencil"
+              title={readerText.editOnGitHub}
+              aria-pressed={selectedTool === 'editText' ? true : undefined}
+              aria-controls={panelId}
+            />
+          )
+        ) : undefined}
+        {!collapsed && (
+          <Button.Icon
+            onClick={handleDownload}
+            icon="download"
+            title={readerText.download}
+          />
         )}
+        {selectedTool === 'infoTab' || !collapsed ? (
+          <Button.Icon
+            onClick={(): void =>
+              setSelectedTool(
+                selectedTool === 'infoTab' ? undefined : 'infoTab',
+              )
+            }
+            icon="informationCircle"
+            title={readerText.aboutTextHoarder}
+            aria-pressed={selectedTool === 'infoTab' ? true : undefined}
+            aria-controls={panelId}
+          />
+        ) : undefined}
+        {selectedTool === 'preferences' || !collapsed ? (
+          <Button.Icon
+            onClick={(): void =>
+              setSelectedTool(
+                selectedTool === 'preferences' ? undefined : 'preferences',
+              )
+            }
+            icon="cog"
+            title={preferencesText.preferences}
+            aria-pressed={selectedTool === 'preferences' ? true : undefined}
+            aria-controls={panelId}
+          />
+        ) : undefined}
         <Button.Icon
-          onClick={handleDownload}
-          icon="download"
-          title={readerText.download}
-        />
-        <Button.Icon
-          onClick={(): void =>
-            setSelectedTool(selectedTool === 'infoTab' ? undefined : 'infoTab')
+          onClick={(): void => setCollapsed(!collapsed)}
+          icon={collapsed ? 'chevronDown' : 'chevronUp'}
+          title={
+            collapsed
+              ? preferencesText.expandMenu
+              : preferencesText.collapseMenu
           }
-          icon="informationCircle"
-          title={readerText.aboutTextHoarder}
-          aria-pressed={selectedTool === 'infoTab' ? true : undefined}
-          aria-controls={panelId}
-        />
-        <Button.Icon
-          onClick={(): void =>
-            setSelectedTool(
-              selectedTool === 'preferences' ? undefined : 'preferences',
-            )
-          }
-          icon="cog"
-          title={preferencesText.preferences}
-          aria-pressed={selectedTool === 'preferences' ? true : undefined}
-          aria-controls={panelId}
+          aria-label={preferencesText.collapseMenu}
+          aria-pressed={collapsed ? true : undefined}
         />
       </nav>
     </div>
