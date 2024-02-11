@@ -2,7 +2,7 @@ import { R, RA } from '@common/utils/types';
 import { Article } from './gatherArticles';
 import { cliText } from '@common/localization/cliText';
 import { encoding } from '@common/utils/encoding';
-import { multiSortFunction } from '@common/utils/utils';
+import { multiSortFunction, sortFunction } from '@common/utils/utils';
 import stopWords from './stopWords.json';
 import { getLanguage } from '@common/localization/utils';
 
@@ -254,6 +254,11 @@ const pickTopFromStatsStructure = (
   statsStructure: StatsStructure,
 ): StatsStructure => ({
   ...statsStructure,
+  perDay: Object.fromEntries(
+    Object.entries(statsStructure.perDay)
+      .sort(sortFunction(([date]) => date))
+      .slice(0, topCount),
+  ),
   perHost: Object.fromEntries(
     Object.entries(statsStructure.perHost)
       .sort(

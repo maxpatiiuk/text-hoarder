@@ -69,13 +69,7 @@ export function BarChart({
                   typeof value === 'number' ? formatNumber(value) : value,
               },
             },
-            x: {
-              offset: true,
-              offsetAfterAutoskip: true,
-              grid: {
-                offset: true,
-              },
-            },
+            // REFACTOR: use TimeScale for x axis to be more acurate
           },
         }}
       />

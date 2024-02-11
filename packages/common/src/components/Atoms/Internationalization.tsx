@@ -22,6 +22,7 @@ declare namespace Intl {
       options?: {
         readonly dateStyle?: 'full' | 'long' | 'medium' | 'short';
         readonly timeStyle?: 'full' | 'long' | 'medium' | 'short';
+        readonly year?: 'numeric' | '2-digit';
         readonly month?: 'long' | 'short';
         readonly day?: 'numeric' | '2-digit';
       },
@@ -44,6 +45,7 @@ declare namespace Intl {
 }
 
 const dateFormatter = new Intl.DateTimeFormat(getLanguage(), {
+  year: 'numeric',
   month: 'short',
   day: 'numeric',
 });
