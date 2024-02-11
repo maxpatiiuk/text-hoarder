@@ -15,10 +15,11 @@ export const downloadFile = async (
   text: string,
 ): Promise<void> =>
   new Promise((resolve) => {
+    let fileDownloaded = false;
     const iframe = document.createElement('iframe');
     iframe.classList.add('absolute', 'hidden');
     iframe.addEventListener('load', () => {
-      if (iframe.contentWindow === null) return;
+      if (iframe.contentWindow === null || fileDownloaded) return;
       const element = iframe.contentWindow.document.createElement('a');
       element.setAttribute(
         'href',
@@ -30,6 +31,7 @@ export const downloadFile = async (
       iframe.contentWindow.document.body.append(element);
 
       element.click();
+      fileDownloaded = true;
       globalThis.setTimeout(() => {
         iframe.remove();
         resolve();
