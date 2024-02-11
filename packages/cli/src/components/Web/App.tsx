@@ -20,6 +20,8 @@ export function App({ stats }: { readonly stats: StatsJson }) {
   const [page, setPage] = React.useState<Page>({ type: 'All' });
   const years = Object.keys(stats.perYear);
   const allTags = Object.keys(stats.perTag);
+  // FIXME: sort tags
+  // FIXME: add years to charts (or at least to labels)
   return (
     <div className={`contents ${className.base}`}>
       <H1>{commonText.textHoarder}</H1>
@@ -30,15 +32,15 @@ export function App({ stats }: { readonly stats: StatsJson }) {
             page.type === 'All'
               ? 'All'
               : page.type === 'Tag'
-              ? `Tag:${page.tag}`
-              : page.year
+                ? `Tag:${page.tag}`
+                : page.year
           }
           onValueChange={(value): void =>
             value === 'All'
               ? setPage({ type: 'All' })
               : value.startsWith('Tag:')
-              ? setPage({ type: 'Tag', tag: value.slice('Tag:'.length) })
-              : setPage({ type: 'Year', year: value })
+                ? setPage({ type: 'Tag', tag: value.slice('Tag:'.length) })
+                : setPage({ type: 'Year', year: value })
           }
         >
           <option value="All">{statsText.allYears}</option>
@@ -67,8 +69,8 @@ export function App({ stats }: { readonly stats: StatsJson }) {
           page.type === 'All'
             ? undefined
             : page.type === 'Year'
-            ? stats.perYear[years[years.indexOf(page.year) - 1]]
-            : stats.perTag[allTags[allTags.indexOf(page.tag) - 1]]
+              ? stats.perYear[years[years.indexOf(page.year) - 1]]
+              : stats.perTag[allTags[allTags.indexOf(page.tag) - 1]]
         }
       />
     </div>
@@ -88,8 +90,8 @@ function Page({
     page.type === 'All'
       ? allStats.allStats
       : page.type === 'Tag'
-      ? allStats.perTag[page.tag]
-      : allStats.perYear[page.year];
+        ? allStats.perTag[page.tag]
+        : allStats.perYear[page.year];
 
   const activeHost = React.useState<string | undefined>(undefined);
   return (
@@ -98,8 +100,8 @@ function Page({
         {page.type === 'All'
           ? statsText.allYears
           : page.type === 'Tag'
-          ? page.tag
-          : page.year}
+            ? page.tag
+            : page.year}
       </H2>
       <DaysCharts stats={stats.perDay} />
       <BadgeStats

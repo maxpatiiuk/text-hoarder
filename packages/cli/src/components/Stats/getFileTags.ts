@@ -40,11 +40,15 @@ export async function tagsToFileMeta(
       );
     }),
   ).then((entries) =>
-    // For each file edited within a tag, preserve only the most recent date edited
+    /*
+     * For each file edited within a tag, preserve only the earliest date
+     * edited. This allows for fixing content extraction mistakes in older
+     * articles, without pushing them into most recent tag
+     */
     entries
       .flat()
       .reduce<Writable<FilesWithTags>>((reduced, [file, date, tag]) => {
-        if (reduced[file] !== undefined && reduced[file]?.date > date)
+        if (reduced[file] !== undefined && reduced[file]?.date < date)
           return reduced;
         reduced[file] = { date, tag };
         return reduced;

@@ -10,7 +10,7 @@ import { dictionary } from './utils';
 export const cliText = dictionary({
   commandDescription: {
     en: `A companion CLI app for the Text Hoarder browser extension. The browser
-    extension saves webpages to a GitHub repository. This CLI app then worked
+    extension saves webpages to a GitHub repository. This CLI app then works
     with the local clone of the GitHub repository to provide insights into your
     most commonly saved webpages. This CLI also has a convenience utility for
     optimizing exported articles for text-to-speech`,
@@ -18,8 +18,14 @@ export const cliText = dictionary({
   statsCommandDescription: {
     en: 'Generate statistics from saved articles',
   },
+  gatheringData: {
+    en: 'Gathering data...',
+  },
   statsCommandProgress: {
     en: 'Computing statistics...',
+  },
+  finalizingOutput: {
+    en: 'Finalizing output...',
   },
   cwdOptionDescription: {
     en: 'The repository to run the command in. Defaults to current directory',
@@ -29,6 +35,9 @@ export const cliText = dictionary({
   },
   noAutoOpenOptionDescription: {
     en: 'Do not automatically open the generated HTML file in the browser',
+  },
+  preciseStatsOptionDescription: {
+    en: 'Compute a much more accurate word and sentence count, but a lot slower',
   },
   jsonOptionDescription: {
     en: 'The path at which a JSON file with computed stats would be emitted',

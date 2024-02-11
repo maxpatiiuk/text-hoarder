@@ -6,6 +6,7 @@ import path from 'node:path';
 import webpack from 'webpack';
 import fs from 'fs';
 import { fileURLToPath } from 'node:url';
+import ShebangPlugin from 'webpack-shebang-plugin';
 
 const version = JSON.parse(
   fs.readFileSync('packages/browser-extension/manifest.json').toString(),
@@ -138,14 +139,25 @@ function makeConfig(packageName, mode, target = 'web') {
             maxChunks: 1,
           })
         : undefined,
+      target === 'node' ? new ShebangPlugin() : undefined,
       new webpack.DefinePlugin({
         'process.env.TEXT_HOARDER_VERSION': JSON.stringify(version),
       }),
     ],
+    experiments: {
+      outputModule: true,
+    },
     output: {
       path: outputPath,
       publicPath: '/public/',
       filename: '[name].bundle.js',
+      chunkFormat: target === 'node' ? 'module' : undefined,
+      library:
+        target === 'node'
+          ? {
+              type: 'module',
+            }
+          : undefined,
       environment: {
         arrowFunction: true,
         const: true,
@@ -154,6 +166,8 @@ function makeConfig(packageName, mode, target = 'web') {
         forOf: true,
         dynamicImport: true,
         module: true,
+        optionalChaining: true,
+        templateLiteral: true,
       },
     },
     watchOptions: {

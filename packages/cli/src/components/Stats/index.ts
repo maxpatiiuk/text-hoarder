@@ -67,7 +67,12 @@ export async function generateStatsPage({
   if (typeof json === 'string') await fs.writeFile(json, jsonString);
 
   if (typeof html === 'string') {
-    const bundleUrl = './dist/web.bundle.js';
+    const meta = import.meta.url;
+    const webBundleLocation = './dist/web.bundle.js';
+    const webBundleUrl = new URL(
+      path.join('../../../', webBundleLocation),
+      meta,
+    );
     await fs.writeFile(
       html,
       `<!doctype html>
@@ -80,8 +85,8 @@ export async function generateStatsPage({
     <script>window.stats = ${jsonString};</script>
     ${
       process.env.NODE_ENV === 'production'
-        ? `<script>${await fs.readFile(bundleUrl).toString()}</script>`
-        : `<script src="${bundleUrl}"></script>`
+        ? `<script>${await fs.readFile(webBundleUrl).toString()}</script>`
+        : `<script src="${webBundleLocation}"></script>`
     }
   </body>
 </html>`,

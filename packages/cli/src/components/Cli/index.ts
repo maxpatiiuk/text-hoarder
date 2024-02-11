@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { Command } from '@commander-js/extra-typings';
 import { registerStatsCommand } from '../Stats';
 import { commonText } from '@common/localization/commonText';

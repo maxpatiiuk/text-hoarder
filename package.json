@@ -12,6 +12,9 @@
   "bugs": {
     "url": "https://github.com/maxpatiiuk/text-hoarder/issues"
   },
+  "bin": {
+    "text-hoarder": "./packages/cli/dist/cli.bundle.js"
+  },
   "scripts": {
     "build": "npx webpack --mode production --env cwd=$INIT_CWD",
     "package": "tsc && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
@@ -74,7 +77,8 @@
     "tsx": "^4.7.0",
     "typescript": "^5.3.2",
     "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-shebang-plugin": "^1.1.8"
   },
   "browserslist": {
     "production": [
