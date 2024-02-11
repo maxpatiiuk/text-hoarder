@@ -5,7 +5,7 @@ import { Button } from '@common/components/Atoms/Button';
 import { Textarea } from '@common/components/Atoms/Input';
 import { extractOrigins, preparePatterns } from '../ReaderMode/matchUrl';
 import { RA } from '@common/utils/types';
-import { IsPreferencesStandalone } from './Context';
+import { IsStandalonePage } from '../Core/StandalonePage';
 import { useStorage } from '../../hooks/useStorage';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
 import { sendRequest } from '../Background/messages';
@@ -31,7 +31,7 @@ export function AutoTriggerUrls(
   const canAddCurrentSite = !lines.includes(currentSite);
   const canAddCurrentPath = !lines.includes(currentPath) && keepLastPart;
 
-  const isStandalone = React.useContext(IsPreferencesStandalone);
+  const isStandalone = React.useContext(IsStandalonePage);
   const showButtons = !isStandalone && (canAddCurrentSite || canAddCurrentPath);
 
   const textAreaRef = React.useRef<HTMLTextAreaElement | null>(null);
@@ -105,7 +105,7 @@ export function RequestUrlPermissions({
 }: {
   readonly position: 'top' | 'inline';
 }): JSX.Element | undefined {
-  const isStandalone = React.useContext(IsPreferencesStandalone);
+  const isStandalone = React.useContext(IsStandalonePage);
   const [existingPermissions] = useStorage('extension.permissions');
 
   const [rawMatchUrls] = useStorage('reader.autoTriggerUrls');

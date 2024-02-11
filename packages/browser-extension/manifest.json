@@ -25,7 +25,7 @@
   "cross_origin_opener_policy": {
     "value": "same-origin"
   },
-  "options_page": "./index.html",
+  "options_page": "./options.html",
   "action": {
     "default_title": "Open Reader Mode"
   },

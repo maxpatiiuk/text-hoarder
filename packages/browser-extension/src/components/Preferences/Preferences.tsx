@@ -1,14 +1,14 @@
 import React from 'react';
 import { H1, H2, H3 } from '@common/components/Atoms';
 import { preferencesText } from '@common/localization/preferencesText';
-import { IsPreferencesStandalone } from './Context';
+import { IsStandalonePage } from '../Core/StandalonePage';
 import { useStorage } from '../../hooks/useStorage';
 import { definitions } from './definitions';
 import { RequestUrlPermissions } from './AutoTriggerUrls';
 import { StorageDefinitions } from '../../utils/storage';
 
 export function Preferences(): JSX.Element {
-  const isStandalone = React.useContext(IsPreferencesStandalone);
+  const isStandalone = React.useContext(IsStandalonePage);
   const Header1 = isStandalone ? H1 : H2;
   const Header2 = isStandalone ? H2 : H3;
   return (

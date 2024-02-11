@@ -21,8 +21,6 @@ import { ActivateExtension } from '../Background/messages';
 const activatedReason = chrome.storage.local.get('activatedReason');
 
 // FEATURE: add local text-to-speech helper CLI
-// FEATURE: if unable to extract information, but user had selected text, use that as information
-// LOW: add stats UI to the web extension (https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#download-a-repository-archive-tar amd https://developer.mozilla.org/en-US/docs/Web/API/Compression_Streams_API)
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
 // FINAL: do accessibility testing
 // FINAL: add webpack dev server for stats? https://morioh.com/a/c6e73ed575bb/how-to-package-nodejs-application-using-webpack#google_vignette

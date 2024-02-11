@@ -10,7 +10,7 @@ const readmeFile = 'README.md';
 export function EnsureAuthenticated({
   children,
 }: {
-  readonly children: JSX.Element;
+  readonly children: React.ReactNode;
 }): JSX.Element {
   const { octokit, github } = React.useContext(AuthContext);
   const needsToSignIn = octokit === undefined;
@@ -40,6 +40,6 @@ export function EnsureAuthenticated({
   ) : needsToSetupRepository ? (
     <RepositoryList />
   ) : (
-    children
+    <>{children}</>
   );
 }
