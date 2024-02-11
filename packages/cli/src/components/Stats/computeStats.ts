@@ -24,8 +24,6 @@ export type StatsStructure = {
   readonly topWords: R<number>;
 };
 
-const uniqueWords = new WeakMap<StatsCounts, Set<string>>();
-
 export type StatsCounts = {
   count: number;
   length: number;
@@ -36,46 +34,77 @@ export type StatsCounts = {
 };
 
 export function computeStats(
-  articles: RA<Article>,
   includeTags: boolean,
   preciseStats: boolean,
-): StatsJson {
+  fileCount: number,
+): {
+  readonly processFile: (article: Article) => void;
+  readonly computeFinal: () => StatsJson;
+} {
   console.log(cliText.statsCommandProgress);
-  const total = articles.length * 2;
-  const reportProgress = (index: number) =>
-    console.log(`${Math.round(((index / total) * 10_000) / 100)}%`);
+  const total = fileCount;
+  const reportTimes = 100;
+  const reportAt = Math.floor(total / reportTimes);
+
   const extractWords = preciseStats ? extractWordsSegmenter : extractWordsRegex;
-  const computed = articles.map((article, index) => {
-    if (index % 400 === 0) reportProgress(index);
-    const fullContent = `${article.title}.\n${article.content}`;
-    const words = extractWords(article.content.toLowerCase());
-    return {
-      article: { ...article, host: new URL(article.url).host },
-      words,
-      counts: articleToCounts(fullContent, words, preciseStats),
-    };
-  });
 
   const statsJson: StatsJson = {
     allStats: initializeStatsStructure(),
     perTag: {},
     perYear: {},
   };
-  computed.forEach(({ article, words, counts }, index) => {
-    if (index % 400 === 0) reportProgress(articles.length + index);
-    const year = article.date.getFullYear();
-    const tag = article.tag ?? cliText.untagged;
 
-    if (includeTags) statsJson.perTag[tag] ??= initializeStatsStructure();
-    statsJson.perYear[year] ??= initializeStatsStructure();
+  let index = 0;
+  return {
+    processFile(article) {
+      if (index % reportAt === 0)
+        console.log(`${Math.round(((index / total) * 10_000) / 100) + 1}%`);
+      index += 1;
 
-    mergeStatsStructure(statsJson.allStats, article, counts, words);
-    if (includeTags)
-      mergeStatsStructure(statsJson.perTag[tag], article, counts, words);
-    mergeStatsStructure(statsJson.perYear[year], article, counts, words);
-  });
+      const fullContent = `${article.title}.\n${article.content}`;
+      const words = extractWords(article.content.toLowerCase());
+      const uniqueWords = new Set(words);
+      const counts = articleToCounts(
+        fullContent,
+        uniqueWords.size,
+        words.length,
+        preciseStats,
+      );
+      const year = article.date.getFullYear();
+      const tag = article.tag ?? cliText.untagged;
 
-  return pickTop(statsJson);
+      if (includeTags) statsJson.perTag[tag] ??= initializeStatsStructure();
+      statsJson.perYear[year] ??= initializeStatsStructure();
+
+      const host = new URL(article.url).host;
+      mergeStatsStructure(
+        statsJson.allStats,
+        article,
+        host,
+        counts,
+        words,
+        uniqueWords,
+      );
+      if (includeTags)
+        mergeStatsStructure(
+          statsJson.perTag[tag],
+          article,
+          host,
+          counts,
+          words,
+          uniqueWords,
+        );
+      mergeStatsStructure(
+        statsJson.perYear[year],
+        article,
+        host,
+        counts,
+        words,
+        uniqueWords,
+      );
+    },
+    computeFinal: () => pickTop(statsJson),
+  };
 }
 
 const wordSegmenter =
@@ -101,22 +130,21 @@ const extractWordsSegmenter =
 
 function articleToCounts(
   content: string,
-  words: RA<string>,
+  uniqueWords: number,
+  words: number,
   preciseStats: boolean,
 ): StatsCounts {
-  const wordsSet = new Set(words);
   const countSentences = preciseStats
     ? countSentencesSegmenter
     : countSentencesRegex;
   const counts = {
     count: 1,
     length: content.length,
-    words: words.length,
+    words,
     sentences: countSentences(content),
     paragraphs: content.split(/\n+/).length,
-    uniqueWords: wordsSet.size,
+    uniqueWords,
   };
-  uniqueWords.set(counts, wordsSet);
   return counts;
 }
 
@@ -149,6 +177,7 @@ const initializeStatsStructure = (): StatsStructure => ({
   topWords: {},
 });
 
+const uniqueWords = new WeakMap<StatsCounts, Set<string>>();
 function initializeCounts(): StatsCounts {
   const counts = {
     count: 0,
@@ -164,12 +193,13 @@ function initializeCounts(): StatsCounts {
 
 function mergeStatsStructure(
   structure: StatsStructure,
-  article: Article & { readonly host: string },
+  article: Article,
+  fullHost: string,
   counts: StatsCounts,
   words: RA<string>,
+  uniqueWords: ReadonlySet<string>,
 ): void {
   const day = encoding.date.encode(article.date);
-  const fullHost = article.host;
   const host = fullHost.startsWith('www.')
     ? fullHost.slice('www.'.length)
     : fullHost;
@@ -182,21 +212,24 @@ function mergeStatsStructure(
     structure.topWords[word] += 1;
   });
 
-  mergeCounts(structure.counts, counts);
-  mergeCounts(structure.perDay[day], counts);
-  mergeCounts(structure.perHost[host], counts);
+  mergeCounts(structure.counts, counts, uniqueWords);
+  mergeCounts(structure.perDay[day], counts, uniqueWords);
+  mergeCounts(structure.perHost[host], counts, uniqueWords);
 }
 
-function mergeCounts(totalCounts: StatsCounts, newCounts: StatsCounts) {
+function mergeCounts(
+  totalCounts: StatsCounts,
+  newCounts: StatsCounts,
+  articleUniqueWords: ReadonlySet<string>,
+) {
   totalCounts.count += newCounts.count;
   totalCounts.length += newCounts.length;
   totalCounts.words += newCounts.words;
   totalCounts.sentences += newCounts.sentences;
   totalCounts.paragraphs += newCounts.paragraphs;
-  totalCounts.uniqueWords += newCounts.uniqueWords;
   const totalUniqueWords = uniqueWords.get(totalCounts)!;
-  const newUniqueWords = uniqueWords.get(newCounts)!;
-  Array.from(newUniqueWords).forEach((word) => totalUniqueWords.add(word));
+  Array.from(articleUniqueWords).forEach((word) => totalUniqueWords.add(word));
+  totalCounts.uniqueWords = totalUniqueWords.size;
 }
 
 const pickTop = (stats: StatsJson): StatsJson => ({

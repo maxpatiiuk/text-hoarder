@@ -55,15 +55,19 @@ export async function generateStatsPage({
   pull,
   preciseStats,
 }: GenerateStatsProps): Promise<void> {
-  console.log(cliText.gatheringData);
   const { git, tags } = await initializeCommand(cwd, pull);
 
   const filesWithTags = await tagsToFileMeta(tags, git);
-  const articles = await gatherArticles(cwd, filesWithTags);
-  const stats = computeStats(articles, tags.length > 0, preciseStats);
+  // REFACTOR: use web workers
+  const { processFile, computeFinal } = computeStats(
+    tags.length > 0,
+    preciseStats,
+    Object.keys(filesWithTags).length,
+  );
+  await gatherArticles(cwd, filesWithTags, processFile);
   console.log(cliText.finalizingOutput);
 
-  const jsonString = JSON.stringify(stats);
+  const jsonString = JSON.stringify(computeFinal());
   if (typeof json === 'string') await fs.writeFile(json, jsonString);
 
   if (typeof html === 'string') {

@@ -18,9 +18,6 @@ export const cliText = dictionary({
   statsCommandDescription: {
     en: 'Generate statistics from saved articles',
   },
-  gatheringData: {
-    en: 'Gathering data...',
-  },
   statsCommandProgress: {
     en: 'Computing statistics...',
   },

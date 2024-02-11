@@ -1,5 +1,4 @@
 import { encoding } from '@common/utils/encoding';
-import { RA, isDefined } from '@common/utils/types';
 import fs from 'fs/promises';
 import { join } from 'path';
 import { markdownToText } from '../../../../browser-extension/src/components/ExtractContent/markdownToText';
@@ -8,7 +7,8 @@ import { FilesWithTags } from './getFileTags';
 export const gatherArticles = async (
   cwd: string,
   filesWithTags: FilesWithTags,
-): Promise<RA<Article>> =>
+  callback: (article: Article) => void,
+): Promise<void> =>
   Promise.all(
     Object.entries(filesWithTags).map(async ([fileName, { date, tag }]) => {
       const path = join(cwd, fileName);
@@ -24,20 +24,20 @@ export const gatherArticles = async (
             const title = fileText[0];
             const content = fileText.slice(1).join('\n').trim();
 
-            return {
+            callback({
               year,
               url,
               title,
               content,
               date,
               tag,
-            };
+            });
           })
           // Happens if the file was deleted (filesWithTags includes deleted files)
           .catch(() => undefined)
       );
     }),
-  ).then((articles) => articles.filter(isDefined));
+  ).then(() => undefined);
 
 export type Article = {
   readonly year: number;
