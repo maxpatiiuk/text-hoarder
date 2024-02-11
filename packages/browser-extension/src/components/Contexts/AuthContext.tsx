@@ -18,8 +18,6 @@ export const AuthContext = React.createContext<Auth>({
 });
 AuthContext.displayName = 'AuthContext';
 
-// FINAL: use pagination (https://docs.github.com/en/rest/guides/scripting-with-the-rest-api-and-javascript?apiVersion=2022-11-28#making-paginated-requests:~:text=const%20iterator%20%3D%20octokit.paginate.iterator(octokit,see%20%22Using%20pagination%20in%20the%20REST%20API.%22)
-
 type Auth = {
   readonly octokit: Octokit | undefined;
   readonly github: OctokitWrapper | undefined;

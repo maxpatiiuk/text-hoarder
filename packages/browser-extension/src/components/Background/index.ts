@@ -162,15 +162,6 @@ chrome.permissions.onAdded.addListener(updatePermissions);
 chrome.permissions.onRemoved.addListener(updatePermissions);
 
 /*
-// FINAL: add install/uninstall URLs?
-chrome.runtime.onInstalled.addListener(({ reason }) =>
-  reason === 'install'
-    ? chrome.tabs.create({
-        url: 'INSTALLED'
-      })
-    : undefined
-);
-chrome.runtime.setUninstallURL('UNINSTALLED');
 // FINAL: add migration scripts when necessary
 runtime.onUpdate(async details => {
     if (details.previousVersion[0] < '9' && runtime.getCurrentVersion() >

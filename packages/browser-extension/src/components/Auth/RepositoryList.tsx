@@ -21,6 +21,11 @@ export function RepositoryList(): JSX.Element | undefined {
           : octokit?.rest.apps
               .listInstallationReposForAuthenticatedUser({
                 installation_id: installationId,
+                /*
+                 * Not using pagination, but optimistically assuming that the
+                 * user only gave access to a single repository, or has <100
+                 * repositories
+                 */
                 per_page: 100,
               })
               .then(({ data }) => data.repositories)

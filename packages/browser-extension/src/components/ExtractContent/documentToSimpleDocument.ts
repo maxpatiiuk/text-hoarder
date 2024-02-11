@@ -31,7 +31,6 @@ export function documentToSimpleDocument(
 
   try {
     const result =
-      // LOW: add customization options
       new Readability(documentClone, {
         serializer: (node) => node as HTMLElement,
         classesToPreserve: Array.from(preserveClassNames),

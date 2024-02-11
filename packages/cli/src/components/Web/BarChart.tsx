@@ -69,7 +69,6 @@ export function BarChart({
                   typeof value === 'number' ? formatNumber(value) : value,
               },
             },
-            // REFACTOR: use TimeScale for x axis to be more acurate
           },
         }}
       />

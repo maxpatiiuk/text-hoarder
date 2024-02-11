@@ -58,7 +58,6 @@ export async function generateStatsPage({
   const { git, tags } = await initializeCommand(cwd, pull);
 
   const filesWithTags = await tagsToFileMeta(tags, git);
-  // REFACTOR: use web workers
   const { processFile, computeFinal } = computeStats(
     tags.length > 0,
     preciseStats,

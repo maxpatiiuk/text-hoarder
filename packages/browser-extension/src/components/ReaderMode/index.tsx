@@ -20,12 +20,10 @@ import { ActivateExtension } from '../Background/messages';
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 
-// FEATURE: add local text-to-speech helper CLI
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
 // FINAL: do accessibility testing
 // FINAL: add webpack dev server for stats? https://morioh.com/a/c6e73ed575bb/how-to-package-nodejs-application-using-webpack#google_vignette
 // FINAL: Review all code and remove unused/simplify
-// LOW: use signed commits https://github.com/orgs/community/discussions/50055
 
 // FINAL: Deploy cors-auth-middleware to vercel
 // FINAL: Sync example config files with changes in real config files
@@ -118,10 +116,6 @@ function displayDialog(
   ) => void,
 ): void {
   // Isolate from parent page's tabindex and scroll
-  // FEATURE: consider using an iframe instead. While dialog is easy to use,
-  // it does not provide sufficient isolation from styles, scroll jacking,
-  // keyboard intercept, css filters, and the rest, even inside the shadow
-  // dom
   const dialog = document.createElement('dialog');
   dialog.id = extensionContainerId;
   dialog.autofocus = true;

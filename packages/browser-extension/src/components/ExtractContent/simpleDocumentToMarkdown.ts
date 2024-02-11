@@ -13,7 +13,6 @@ export function simpleDocumentToMarkdown(
   )}`;
 }
 
-// LOW: add customization options
 const turndownService = new TurndownService({
   headingStyle: 'atx',
   hr: '---',

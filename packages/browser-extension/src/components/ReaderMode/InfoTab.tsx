@@ -21,9 +21,7 @@ export function InfoTab(): JSX.Element {
           {signInText.openRepositoryInGitHub}
         </Link.Info>
       )}
-      <Link.Info href={urls.webStoreReviewUrl}>
-        {readerText.leaveReview}
-      </Link.Info>
+      <Link.Info href={urls.webStoreReview}>{readerText.leaveReview}</Link.Info>
       <Link.Info href={urls.sourceCode}>{readerText.sourceCode}</Link.Info>
       <Link.Info href={urls.requestFeature}>
         {readerText.requestFeature}
