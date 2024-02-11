@@ -96,6 +96,4 @@ export async function generateStatsPage({
     );
     if (autoOpen) await open(html);
   }
-
-  // FEATURE: handle git not being installed
 }

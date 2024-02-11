@@ -10,6 +10,14 @@ export async function initializeCommand(
 }> {
   const git = simpleGit({ baseDir: cwd });
 
+  const { installed } = await git.version();
+  if (!installed) {
+    console.error(
+      'Git is not installed. Please install it and try again: https://git-scm.com/downloads',
+    );
+    process.exit(1);
+  }
+
   if (pull)
     await git.pull().catch((error) => {
       // May fail if no upstream is setup, or working tree is dirty
