@@ -11,8 +11,8 @@ jobs:
         working-directory: ./packages/browser-extension
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
@@ -35,11 +35,11 @@ jobs:
         working-directory: ./packages/cors-auth-middleware
         run: |
           cp example.env.local .env.local
-          npx run build
+          npm ci
+          npm run build
 
       - name: Typecheck
         run: npx tsc
 
       - name: Run JS test suite
-        working-directory: ./packages/common/src
-        run: npm run test
+        run: npm test

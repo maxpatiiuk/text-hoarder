@@ -32,7 +32,10 @@ describe('urlToPath', () => {
     ],
 
     // Don't allow empty path
-    'https://example.com/': '2020/example.com/%3F.md',
+    'https://example.com': '2020/example.com/%3F.md',
+
+    // Don't preserve base trailing slash
+    'https://example.com/': ['2020/example.com/%3F.md', 'https://example.com'],
 
     // Normalize slashes
     'http://example.com/abc//a///': [

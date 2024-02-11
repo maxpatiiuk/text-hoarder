@@ -20,7 +20,6 @@ export function App({ stats }: { readonly stats: StatsJson }) {
   const [page, setPage] = React.useState<Page>({ type: 'All' });
   const years = Object.keys(stats.perYear);
   const allTags = Object.keys(stats.perTag);
-  // FIXME: sort tags
   // FIXME: add years to charts (or at least to labels)
   return (
     <div className={`contents ${className.base}`}>

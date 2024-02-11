@@ -19,7 +19,7 @@
     "build": "npx webpack --mode production --env cwd=$INIT_CWD",
     "package": "tsc && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
     "watch": "npx webpack --mode development --watch --env cwd=$INIT_CWD",
-    "test": "node --loader tsx/esm --test packages/common/src/utils/__tests__/*.test.ts"
+    "test": "node --import tsx/esm --test packages/common/src/utils/__tests__/*.test.ts"
   },
   "dependencies": {
     "@commander-js/extra-typings": "^11.1.0",

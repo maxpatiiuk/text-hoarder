@@ -27,12 +27,15 @@ export const corsAuthMiddlewareUrl = 'http://localhost:3000';
 export const extensionId = 'bjknebjiadgjchmhppdfdiddfegmcaao';
 const webStoreUrl = `https://chromewebstore.google.com/u/1/detail/${extensionId}`;
 export const urls = {
-  privacyPolicy: 'https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/privacy/README.md',
+  privacyPolicy:
+    'https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/privacy/README.md',
   sourceCode: 'https://github.com/maxxxxxdlp/text-hoarder',
   requestFeature:
     'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md',
   reportIssue:
     'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=bug&projects=&template=bug_report.md',
-  webStoreUrl,
-  webStoreReviewUrl: `${webStoreUrl}/reviews`,
+  webStore: webStoreUrl,
+  webStoreReview: `${webStoreUrl}/reviews`,
+  statsDocs:
+    'https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/stats/README.md',
 };
