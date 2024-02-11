@@ -43,9 +43,10 @@ repository, but the features mentioned above will not be available.
 necessary GitHub repository access**. The Extension processes data locally on
 your device and only interacts with GitHub's APIs to read from and write to your
 specified repository. No data is transmitted to any third-party services, except
-for a single network request during authentication as required by GitHub to
-resolve the OAuth token (this can not be done client-side due to security
-implications).
+for
+[a single network request during authentication](https://github.com/maxpatiiuk/text-hoarder/tree/main/packages/cors-auth-middleware#readme)
+as required by GitHub to resolve the OAuth token (this can not be done
+client-side due to security implications).
 
 ## No Analytics or Tracking
 

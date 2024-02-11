@@ -2,7 +2,6 @@ import React from 'react';
 import { AuthContext } from '../Contexts/AuthContext';
 import { AuthPrompt } from './AuthPrompt';
 import { RepositoryList } from './RepositoryList';
-import { urls } from '../../../config';
 import { commitText } from '@common/localization/commitText';
 
 const readmeFile = 'README.md';
@@ -24,10 +23,7 @@ export function EnsureAuthenticated({
             ?.createFile(
               readmeFile,
               commitText.initialize,
-              commitText.readmeContent(
-                urls.webStoreUrl,
-                urls.webStoreReviewUrl,
-              ),
+              commitText.readmeContent,
             )
             .catch(console.error)
             .finally(() => setNeedsSetup(false))
