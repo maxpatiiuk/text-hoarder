@@ -43,12 +43,21 @@ type UpdateBadge = State<
   }
 >;
 
+type OpenStatsPage = State<
+  'OpenStatsPage',
+  {
+    readonly request: void;
+    readonly response: void;
+  }
+>;
+
 export type Requests =
   | AuthenticateRequest
   | OpenUrl
   | OpenPreferences
   | ReloadExtension
-  | UpdateBadge;
+  | UpdateBadge
+  | OpenStatsPage;
 
 /**
  * Send a request to the background script and await the response.

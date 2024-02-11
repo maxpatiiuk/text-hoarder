@@ -124,6 +124,12 @@ function makeConfig(packageName, mode, target = 'web') {
               mode === 'development'
                 ? './packages/browser-extension/src/components/ReaderMode/development.tsx'
                 : './packages/browser-extension/src/components/ReaderMode/index.tsx',
+            stats:
+              mode === 'development'
+                ? './packages/browser-extension/src/components/Stats/development.tsx'
+                : './packages/browser-extension/src/components/Stats/index.tsx',
+            statsWorker:
+              './packages/browser-extension/src/components/Stats/worker.ts',
           }
         : target === 'web'
           ? {

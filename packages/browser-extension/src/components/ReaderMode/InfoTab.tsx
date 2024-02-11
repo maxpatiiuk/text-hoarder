@@ -3,16 +3,20 @@ import { signInText } from '@common/localization/signInText';
 import { Link } from '@common/components/Atoms/Link';
 import { urls } from '../../../config';
 import { readerText } from '@common/localization/readerText';
-import { H1 } from '@common/components/Atoms';
+import { ErrorMessage, H1 } from '@common/components/Atoms';
 import { Button } from '@common/components/Atoms/Button';
 import { useStorage } from '../../hooks/useStorage';
 import { AuthContext } from '../Contexts/AuthContext';
 import { commonText } from '@common/localization/commonText';
 import { buildRepositoryUrl } from './SaveText';
+import { statsText } from '@common/localization/statsText';
+import { loadingGif, useLoading } from '@common/hooks/useLoading';
+import { sendRequest } from '../Background/messages';
 
 export function InfoTab(): JSX.Element {
   const [repository] = useStorage('setup.repository');
   const { handleSignOut } = React.useContext(AuthContext);
+  const [isLoading, error, loading] = useLoading();
   return (
     <>
       <H1 className="flex-1">{commonText.textHoarder}</H1>
@@ -21,9 +25,12 @@ export function InfoTab(): JSX.Element {
           {signInText.openRepositoryInGitHub}
         </Link.Info>
       )}
-      <Link.Info href={urls.webStoreReviewUrl}>
-        {readerText.leaveReview}
-      </Link.Info>
+      <Button.Info
+        onClick={(): void => loading(sendRequest('OpenStatsPage', undefined))}
+      >
+        {statsText.computeRepositoryStats}
+      </Button.Info>
+      <Link.Info href={urls.webStoreReview}>{readerText.leaveReview}</Link.Info>
       <Link.Info href={urls.sourceCode}>{readerText.sourceCode}</Link.Info>
       <Link.Info href={urls.requestFeature}>
         {readerText.requestFeature}
@@ -40,6 +47,8 @@ export function InfoTab(): JSX.Element {
           {signInText.privacyPolicy}
         </Link.Default>
       </p>
+      {isLoading && loadingGif}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
     </>
   );
 }

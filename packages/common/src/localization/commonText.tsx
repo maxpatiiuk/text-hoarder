@@ -10,5 +10,14 @@ import { dictionary } from './utils';
 export const commonText = dictionary({
   textHoarder: { en: 'Text Hoarder' },
   delete: { en: 'Delete' },
+  filePickerMessage: {
+    en: 'Choose a file or drag it here',
+  },
+  colonLine: {
+    en: (label: string, value: string) => `${label}: ${value}`,
+  },
+  selectedFileName: {
+    en: 'Selected file',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

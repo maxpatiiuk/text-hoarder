@@ -79,8 +79,7 @@ const requestHandlers: {
     return { type: 'Authenticated', ...response };
   },
 
-  OpenUrl: (url, { tab }) =>
-    chrome.tabs.create({ openerTabId: tab?.id, url }).then(() => undefined),
+  OpenUrl: async (url, { tab }) => openUrl(url, tab?.id),
 
   OpenPreferences: async () => void chrome.runtime.openOptionsPage(),
 
@@ -96,7 +95,13 @@ const requestHandlers: {
       tabId: tab?.id,
     });
   },
+
+  OpenStatsPage: (_, { tab }) =>
+    openUrl(chrome.runtime.getURL('stats.html'), tab?.id),
 };
+
+const openUrl = (url: string, tabId: number | undefined): Promise<void> =>
+  chrome.tabs.create({ openerTabId: tabId, url }).then(() => undefined);
 
 chrome.action.onClicked.addListener((tab) => connect(tab.id, 'open'));
 chrome.commands.onCommand.addListener((command, tab) =>
