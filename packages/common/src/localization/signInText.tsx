@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { dictionary } from './utils';
+import { commonText } from '@common/localization/commonText';
 
 // Refer to "Guidelines for Programmers" in ./README.md before editing this file
 
@@ -14,8 +15,7 @@ export const signInText = dictionary({
   },
   signInDescription: {
     en: `
-      The Text Hoarder Chrome Extension requires write access to a single GitHub
-      repository - it will be used as storage for the snippets of text you save.
+      The ${commonText.textHoarder} Chrome Extension requires write access to a single GitHub repository - it will be used as storage for the snippets of text you save.
     `,
   },
   privacyPolicyDescription: {
@@ -64,9 +64,9 @@ export const signInText = dictionary({
       editPermissionsLink: (label: string) => JSX.Element,
     ) => (
       <>
-        You don't have any GitHub repositories, or the Text Hoarder extension
-        wasn't given access to any repository. Consider{' '}
-        {createRepositoryLink('creating new repository')} or{' '}
+        You don't have any GitHub repositories, or the {commonText.textHoarder}{' '}
+        extension wasn't given access to any repository. Consider{' '}
+        {createRepositoryLink('creating a new repository')} or{' '}
         {editPermissionsLink('editing the rights you gave to this extension')}.
       </>
     ),

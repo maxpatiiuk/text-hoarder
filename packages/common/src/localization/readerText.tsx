@@ -2,6 +2,7 @@
  * Localization strings for all UI components (except for preferences)
  */
 
+import { commonText } from '@common/localization/commonText';
 import { dictionary } from './utils';
 
 // Refer to "Guidelines for Programmers" in ./README.md before editing this file
@@ -13,7 +14,7 @@ export const readerText = dictionary({
   noContentFound: { en: 'Unable to find readable content on the page' },
   tools: { en: 'Tools' },
   download: { en: 'Download' },
-  aboutTextHoarder: { en: 'About Text Hoarder' },
+  aboutTextHoarder: { en: `About ${commonText.textHoarder}` },
   sourceCode: { en: 'Source code' },
   reportIssue: { en: 'Report an issue' },
   requestFeature: { en: 'Request a feature' },

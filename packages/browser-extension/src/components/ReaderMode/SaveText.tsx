@@ -99,7 +99,7 @@ export function SaveText({
       github!
         .createFile(
           currentYearPath,
-          commitText.createFile(simpleDocument.title),
+          commitText.saveArticle(simpleDocument.title),
           markdown,
         )
         .then((response) => {

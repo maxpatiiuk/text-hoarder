@@ -3,8 +3,9 @@ import { AuthContext } from '../Contexts/AuthContext';
 import { AuthPrompt } from './AuthPrompt';
 import { RepositoryList } from './RepositoryList';
 import { commitText } from '@common/localization/commitText';
+import { initialContent } from './initialContent';
 
-const readmeFile = 'README.md';
+// FIXME: check for cli updates and prompt user to update
 
 export function EnsureAuthenticated({
   children,
@@ -21,11 +22,36 @@ export function EnsureAuthenticated({
       needsSetup
         ? void github
             ?.createFile(
-              readmeFile,
+              initialContent.readme.name,
               commitText.initialize,
-              commitText.readmeContent,
+              initialContent.readme.content(github.owner, github.repo),
             )
-            .catch(console.error)
+            // Will error if file already exists
+            .catch(console.log)
+            .then(() =>
+              github.createFile(
+                initialContent.packageJson.name,
+                commitText.createFile(initialContent.packageJson.name),
+                initialContent.packageJson.content(github.owner),
+              ),
+            )
+            .catch(console.log)
+            .then(() =>
+              github.createFile(
+                initialContent.gitIgnore.name,
+                commitText.createFile(initialContent.gitIgnore.name),
+                initialContent.gitIgnore.content,
+              ),
+            )
+            .catch(console.log)
+            .then(() =>
+              github.createFile(
+                initialContent.excludeList.name,
+                commitText.createFile(initialContent.excludeList.name),
+                initialContent.excludeList.content,
+              ),
+            )
+            .catch(console.log)
             .finally(() => setNeedsSetup(false))
         : undefined,
     [needsSetup, github],
