@@ -7,6 +7,7 @@ import webpack from 'webpack';
 import fs from 'fs';
 import { fileURLToPath } from 'node:url';
 import ShebangPlugin from 'webpack-shebang-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const version = JSON.parse(
   fs.readFileSync('packages/browser-extension/manifest.json').toString(),
@@ -140,6 +141,16 @@ function makeConfig(packageName, mode, target = 'web') {
           })
         : undefined,
       target === 'node' ? new ShebangPlugin() : undefined,
+      target === 'node' && packageName === 'cli'
+        ? new CopyPlugin({
+            patterns: [
+              path.resolve(
+                rootDirectory,
+                'packages/cli/src/components/Spam/exclude-list.txt',
+              ),
+            ],
+          })
+        : undefined,
       new webpack.DefinePlugin({
         'process.env.TEXT_HOARDER_VERSION': JSON.stringify(version),
       }),

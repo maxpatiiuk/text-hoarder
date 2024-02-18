@@ -16,7 +16,7 @@ export const registerProcessCommand = (program: Command<[], {}>) =>
     .description(cliText.processCommandDescription)
     .option(
       '--cwd <path>',
-      cliText.cwdOptionDescription,
+      cliText.cwdRepositoryOptionDescription,
       resolveRepositoryPath,
       process.cwd(),
     )

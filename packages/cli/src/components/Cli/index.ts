@@ -5,6 +5,7 @@ import { registerStatsCommand } from '../Stats';
 import { commonText } from '@common/localization/commonText';
 import { cliText } from '@common/localization/cliText';
 import { registerProcessCommand } from '../Process';
+import { registerFindSpamCommand } from '../Spam';
 
 const program = new Command();
 
@@ -16,5 +17,6 @@ program
 
 registerStatsCommand(program);
 registerProcessCommand(program);
+registerFindSpamCommand(program);
 
 program.parse(process.argv);

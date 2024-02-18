@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import { cliText } from '@common/localization/cliText';
 import { Command } from '@commander-js/extra-typings';
-import { resolveRepositoryPath } from '../Cli/util';
+import { distPath, resolveRepositoryPath } from '../Cli/util';
 import { resolve } from 'node:path';
 import { initializeCommand } from '../Cli/initializeCommand';
 import { gatherArticles } from './gatherArticles';
@@ -17,7 +17,7 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
     .description(cliText.statsCommandDescription)
     .option(
       '--cwd <path>',
-      cliText.cwdOptionDescription,
+      cliText.cwdRepositoryOptionDescription,
       resolveRepositoryPath,
       process.cwd(),
     )
@@ -70,12 +70,8 @@ export async function generateStatsPage({
   if (typeof json === 'string') await fs.writeFile(json, jsonString);
 
   if (typeof html === 'string') {
-    const meta = import.meta.url;
-    const webBundleLocation = './dist/web.bundle.js';
-    const webBundleUrl = new URL(
-      path.join('../../../', webBundleLocation),
-      meta,
-    );
+    const webBundleLocation = 'web.bundle.js';
+    const webBundleUrl = distPath(webBundleLocation);
     await fs.writeFile(
       html,
       `<!doctype html>
@@ -89,7 +85,7 @@ export async function generateStatsPage({
     ${
       process.env.NODE_ENV === 'production'
         ? `<script>${await fs.readFile(webBundleUrl).toString()}</script>`
-        : `<script src="${webBundleLocation}"></script>`
+        : `<script src="${path.join('dist', webBundleLocation)}"></script>`
     }
   </body>
 </html>`,
