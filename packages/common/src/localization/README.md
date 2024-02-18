@@ -3,8 +3,8 @@
 ## Guidelines for Programmers
 
 - All keys must use strict camel case, unless absolutely necessary to do
-  otherwise (e.x, in case of proper nouns that contain numbers or
-  capitalized letters)
+  otherwise (e.x, in case of proper nouns that contain numbers or capitalized
+  letters)
 
 - Prefer full terms rather than acronyms or shortened variants. Some people may
   be unfamiliar with the acronyms used.
@@ -25,13 +25,13 @@
   Incorrect example:
 
   ```javascript
-  commonText(hasError ? 'errorOccurred' : 'successMessage');
+  commonText[hasError ? 'errorOccurred' : 'successMessage'];
   ```
 
   Correct example:
 
   ```javascript
-  hasError ? commonText('errorOccurred') : commonText('successMessage');
+  hasError ? commonText.errorOccurred : commonText.successMessage;
   ```
 
   Similarly, don't construct key names dynamically. This is needed to simplify
@@ -47,41 +47,13 @@
   Incorrect example:
 
   ```javascript
-  NewGoal: () => `New Goal ${new Date().toDateString()}`;
+  newGoal: () => `New Goal ${new Date().toDateString()}`;
   ```
 
   Correct example:
 
   ```javascript
-  NewGoal: (date: string) => `New Goal ${date}`;
-  ```
-
-- When writing multi-line strings, keep in mind that some values are going to be
-  used in whitespace sensitive contexts. Most common example is the "title"
-  attribute of a button. Another example is the cell comment text in the
-  Workbench. In such cases, wrap the string in a whitespaceSensitive function
-  call and use the `<br>` HTML tags for new lines.
-
-  Incorrect example:
-
-  ```javascript
-  someWhitespaceSensitiveValue: `
-    Lorem Ipsum is simply dummy text of the printing and typesetting
-    industry.
-    Lorem Ipsum has been the industry's standard dummy text<br>
-    ever since the 1500s
-  `,
-  ```
-
-  Correct example:
-
-  ```javascript
-  someWhitespaceSensitiveValue: whitespaceSensitive(`
-    Lorem Ipsum is simply dummy text of the printing and typesetting
-    industry.<br>
-    Lorem Ipsum has been the industry's standard dummy text
-    ever since the 1500s
-  `),
+  newGoal: (date: string) => `New Goal ${date}`;
   ```
 
 ## Localization Utils
@@ -99,7 +71,7 @@
    ```javascript
    textarea.value = textarea.value.replaceAll(
      /(?<key>\w+):\s{\s+'en-us':([\s\S]+?(?=['`\)],\n)['`\)],\n)([\s\S]+?(?=\},\n))\},/g,
-     "$1: {\n    'en-us':$2$3  'es-es':$2  },"
+     "$1: {\n    'en-us':$2$3  'es-es':$2  },",
    );
    ```
 
@@ -116,9 +88,9 @@
    dictionary = Object.fromEntries(
      Array.from(
        textarea.value.matchAll(
-         /(?<key>\w+):\s{\s+'en-us':\s+(?:\(\s*\w[^)]+[^>]+>\s+)?\w*\(?['"`]?\n?(?<enUS>[\s\S]*?)['"`)]\s*\)?,\s+'ru-ru':\s+(?:\(\s*\w[^)]+[^>]+>\s+)?\w*\(?['"`]?\n?(?<ruRU>[\s\S]*?)['"`)]\s*\)?,/g
+         /(?<key>\w+):\s{\s+'en-us':\s+(?:\(\s*\w[^)]+[^>]+>\s+)?\w*\(?['"`]?\n?(?<enUS>[\s\S]*?)['"`)]\s*\)?,\s+'ru-ru':\s+(?:\(\s*\w[^)]+[^>]+>\s+)?\w*\(?['"`]?\n?(?<ruRU>[\s\S]*?)['"`)]\s*\)?,/g,
        ),
-       ({ groups: { key, ...strings } }) => [key, strings]
-     )
+       ({ groups: { key, ...strings } }) => [key, strings],
+     ),
    );
    ```

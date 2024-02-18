@@ -1,3 +1,4 @@
+import { savedFileExtension } from '@common/utils/encoding';
 import { SimpleDocument } from '../ExtractContent/documentToSimpleDocument';
 import { markdownToText } from '../ExtractContent/markdownToText';
 import { simpleDocumentToMarkdown } from '../ExtractContent/simpleDocumentToMarkdown';
@@ -20,7 +21,10 @@ export async function downloadDocument(
   const markdown = simpleDocumentToMarkdown(simpleDocument);
 
   if (downloadFormat === 'markdown')
-    return downloadFile(`${simpleDocument.title}.md`, markdown);
+    return downloadFile(
+      `${simpleDocument.title}${savedFileExtension}`,
+      markdown,
+    );
   else
     return downloadFile(
       `${simpleDocument.title}.txt`,

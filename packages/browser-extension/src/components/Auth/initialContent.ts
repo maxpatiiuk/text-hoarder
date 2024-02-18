@@ -35,6 +35,7 @@ export const initialContent = {
     content: `
 node_modules
 package-lock.json
+processed
 `.trim(),
   },
   excludeList: {

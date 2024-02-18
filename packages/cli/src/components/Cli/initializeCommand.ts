@@ -1,3 +1,4 @@
+import { cliText } from '@common/localization/cliText';
 import { RA } from '@common/utils/types';
 import simpleGit, { SimpleGit } from 'simple-git';
 
@@ -12,9 +13,7 @@ export async function initializeCommand(
 
   const { installed } = await git.version();
   if (!installed) {
-    console.error(
-      'Git is not installed. Please install it and try again: https://git-scm.com/downloads',
-    );
+    console.error(cliText.gitNotInstalled);
     process.exit(1);
   }
 
@@ -28,7 +27,7 @@ export async function initializeCommand(
 
   const { all: tags } = await git.tags({
     '--merged': 'HEAD',
-    '--sort': 'creatordate',
+    '--sort': 'creatorDate'.toLowerCase(),
   });
 
   return { git, tags };

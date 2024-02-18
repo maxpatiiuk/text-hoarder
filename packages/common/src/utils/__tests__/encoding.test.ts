@@ -18,6 +18,12 @@ describe('fileName', () => {
   test('decode', () => assert.equal(encoding.fileName.decode(to), from));
 });
 
+describe('fileTitle', () => {
+  const from = 'Test 🤣 = _ – # < > : " \\ | * ?    .';
+  const to = 'Test 🤣 = _ –';
+  test('encode', () => assert.equal(encoding.fileTitle.encode(from), to));
+});
+
 describe('urlToPath', () => {
   const year = 2020;
   const urls = {

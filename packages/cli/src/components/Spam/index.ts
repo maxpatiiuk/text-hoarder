@@ -56,15 +56,10 @@ function findSpam(
     readonly showCounts: boolean;
   },
 ): void {
-  const g = new Glob(Array.from(glob), {
-    cwd,
-    nodir: true,
-    absolute: true,
-    distPath: true,
-  });
+  const globInstance = runGlob(glob, cwd);
   const exclude = resolveExcludes(excludeList, cwd, defaultExclude);
   const lines: Record<string, number> = {};
-  for (const file of g) {
+  for (const file of globInstance) {
     const content = fs.readFileSync(file, 'utf8');
     const text = file.endsWith(savedFileExtension)
       ? markdownToText(content)
@@ -93,6 +88,40 @@ function findSpam(
       .map(([line, count]) => (showCounts ? `${count}\t${line}` : line))
       .join('\n'),
   );
+}
+
+const isGlobby = '[*?('.split('');
+export function runGlob(
+  globs: RA<string>,
+  cwd: string,
+): Generator<string, void, void> {
+  /*
+   * Make globs more user-friendly by automatically searching for all text files
+   * in a directory
+   */
+  const smartGlobs = globs.map((glob) =>
+    isGlobby.some((character) => glob.includes(character)) ||
+    (glob.endsWith('/') && glob.slice(1).includes('.'))
+      ? glob
+      : `${glob}${glob.endsWith('/') ? '' : '/'}**/*.{md,txt}`,
+  );
+
+  const generator = new Glob(smartGlobs, {
+    cwd,
+    nodir: true,
+    absolute: true,
+    distPath: true,
+  });
+
+  let matchedAny = false;
+  for (const _ of generator) {
+    matchedAny = true;
+    break;
+  }
+
+  if (!matchedAny) console.warn(cliText.noGlobMatches);
+
+  return generator.iterateSync();
 }
 
 export function resolveExcludes(

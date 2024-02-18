@@ -16,6 +16,7 @@ export const encoding = {
       return new TextDecoder().decode(bytes);
     },
   },
+  // For converting file names stores in the repository
   fileName: {
     encode: (name: string): string =>
       unsafeCharacters.reduce(
@@ -35,6 +36,22 @@ export const encoding = {
           ),
         name,
       ),
+  },
+  // For encoding file names from article titles in CLI's process utility
+  fileTitle: {
+    encode: (name: string): string =>
+      name
+        .replaceAll(
+          new RegExp(
+            `[${unsafeCharacters.join('').replace('\\', '\\\\')}/]`,
+            'gu',
+          ),
+          ' ',
+        )
+        // https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file
+        .replaceAll(/\.+$/gu, ' ')
+        .replaceAll(/\s{2,}/gu, ' ')
+        .trim(),
   },
   /**
    * Converting URL to file path is rather tricky. Reasons:
@@ -143,6 +160,7 @@ export const encoding = {
       ];
     },
   },
+  // Use ISO 8601 ("YYYY-MM-DD"), a.k.a. the best date format
   date: {
     encode: (date: Date) =>
       [

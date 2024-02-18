@@ -7,6 +7,7 @@ import { renderApp } from '@common/components/Core/renderApp';
 import { commonText } from '@common/localization/commonText';
 import { StatsJson } from '../Stats/computeStats';
 import { App } from './App';
+import { statsText } from '@common/localization/statsText';
 
 const container = document.createElement('main');
 
@@ -24,7 +25,7 @@ document.body.append(container);
 document.title = commonText.textHoarder;
 
 if (!('stats' in window) || typeof window.stats !== 'object')
-  throw new Error('Stats not found');
+  throw new Error(statsText.statsNotFound);
 
 const stats = window.stats as StatsJson;
 

@@ -7,10 +7,15 @@ export type FilesWithTags = RR<
   string,
   {
     readonly date: Date;
+    // Undefined for files created since the last tag (or if there are no tags)
     readonly tag: string | undefined;
   }
 >;
 
+/**
+ * Given a list of tags, find all the files belonging to each tag and hte
+ * date of creation for each file
+ */
 export async function tagsToFileMeta(
   tags: RA<string>,
   git: SimpleGit,
@@ -33,7 +38,7 @@ export async function tagsToFileMeta(
               ({ file }) =>
                 // Exclude non-markdown
                 extname(file) === savedFileExtension &&
-                // Exclude files not-containing a year in path (README.md)
+                // Exclude files not-containing a year in the path (README.md)
                 !Number.isNaN(Number.parseInt(file.split('/')[0])),
             )
             .map(({ file }) => [file, new Date(date), tag] as const) ?? [],

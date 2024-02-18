@@ -25,8 +25,19 @@ export function getUniqueName(
    */
   maxLength: number = Number.POSITIVE_INFINITY,
   type: keyof typeof format = 'title',
+  padLength = 0,
 ): string {
-  if (!usedNames.includes(name)) return name;
+  if (!usedNames.includes(name))
+    return name.length < maxLength
+      ? name
+      : getUniqueName(
+          name.slice(0, maxLength - 1),
+          usedNames,
+          maxLength,
+          type,
+          padLength,
+        );
+
   const { prefix, suffix } = format[type];
   const reSuffix = new RegExp(
     `${escapeRegExp(prefix)}(\\d+)${escapeRegExp(suffix)}$`,
@@ -39,19 +50,42 @@ export function getUniqueName(
     `^${escapeRegExp(strippedName)}${reSuffix.source}`,
     'u',
   );
+  const indexes = [
+    indexString,
+    ...usedNames.map((name) => indexRegex.exec(name)?.[1]),
+  ];
   const newIndex =
     Math.max(
-      ...[
-        f.parseInt(indexString),
-        ...usedNames.map((name) => f.parseInt(indexRegex.exec(name)?.[1]) ?? 1),
-      ].filter(isDefined),
+      ...indexes.map((string) => f.parseInt(string) ?? 1).filter(isDefined),
     ) + 1;
-  const uniquePart = `${prefix}${newIndex}${suffix}`;
+  // This ensures natural sort order when using wildcards in bash
+  const paddedNewIndex =
+    padLength === 0
+      ? newIndex
+      : newIndex
+          .toString()
+          .padStart(
+            Math.max(
+              padLength,
+              ...indexes.map((string) => string?.length ?? 0),
+            ),
+            '0',
+          );
+  const uniquePart = `${prefix}${paddedNewIndex}${suffix}`;
   const newName =
     newIndex === 1 && length === 0
       ? strippedName
       : `${strippedName}${uniquePart}`;
-  return newName.length > maxLength
-    ? getUniqueName(name.slice(0, -1 * uniquePart.length), usedNames, maxLength)
-    : newName;
+
+  // Call itself again just in case the new name is also used
+  return getUniqueName(
+    // Handle new name being over length limit
+    newName.length > maxLength
+      ? name.slice(0, -1 * uniquePart.length)
+      : newName,
+    usedNames,
+    maxLength,
+    type,
+    padLength,
+  );
 }

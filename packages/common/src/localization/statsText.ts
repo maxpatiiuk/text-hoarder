@@ -8,6 +8,7 @@ import { dictionary } from './utils';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const statsText = dictionary({
+  statsNotFound: { en: 'No stats found' },
   filter: { en: 'Filter' },
   allYears: { en: 'All years' },
   years: { en: 'Years' },

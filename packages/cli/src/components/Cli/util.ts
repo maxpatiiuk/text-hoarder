@@ -1,4 +1,4 @@
-import { commonText } from '@common/localization/commonText';
+import { cliText } from '@common/localization/cliText';
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,9 +9,7 @@ export function resolveRepositoryPath(rawPath: string): string {
   // User might have passed a subdirectory path - resolve root from it
   const gitDirectoryPath = findPath(resolved, '.git');
   if (gitDirectoryPath === undefined)
-    throw new Error(
-      `Could not find a ${commonText.textHoarder} repository at ${resolved}. If this is a new repository, please make sure to save at least one article before running this command`,
-    );
+    throw new Error(cliText.repositoryPathResolveError(resolved));
   return dirname(gitDirectoryPath);
 }
 /**

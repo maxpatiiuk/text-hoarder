@@ -4,6 +4,19 @@ import { RA } from '../../utils/types';
 /* This is an incomplete definition. For complete, see MDN Docs */
 // eslint-disable-next-line @typescript-eslint/no-namespace
 declare namespace Intl {
+  // eslint-disable-next-line functional/no-class
+  class ListFormat {
+    public constructor(
+      locales?: RA<string> | string,
+      options?: {
+        readonly type?: 'conjunction' | 'disjunction';
+        readonly style?: 'long' | 'narrow' | 'short';
+      },
+    );
+
+    public format(values: RA<string>): string;
+  }
+
   class Locale {
     public constructor(locales?: RA<string> | string);
 
@@ -58,3 +71,10 @@ const numberFormatter = new Intl.NumberFormat(getLanguage(), {
 });
 export const formatNumber = (number: number): string =>
   numberFormatter.format(number);
+
+const conjunctionFormatter = new Intl.ListFormat(getLanguage(), {
+  style: 'long',
+  type: 'conjunction',
+});
+export const formatConjunction = (list: RA<string>): string =>
+  conjunctionFormatter.format(list);

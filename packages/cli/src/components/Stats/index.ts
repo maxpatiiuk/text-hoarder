@@ -16,13 +16,13 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
     .command('stats')
     .description(cliText.statsCommandDescription)
     .option(
-      '--cwd <path>',
-      cliText.cwdRepositoryOptionDescription,
+      '-r, --repository <path>',
+      cliText.repositoryOptionDescription,
       resolveRepositoryPath,
       process.cwd(),
     )
     .option(
-      '--html <path>',
+      '-h, --html <path>',
       cliText.htmlOptionDescription,
       resolve,
       './stats.html',
@@ -30,7 +30,7 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
     .option('--no-auto-open', cliText.noAutoOpenOptionDescription)
     .option('--precise-stats', cliText.preciseStatsOptionDescription, false)
     .option(
-      '--json <path>',
+      '-j, --json <path>',
       cliText.jsonOptionDescription,
       resolve,
       './stats.json',
@@ -39,7 +39,7 @@ export const registerStatsCommand = (program: Command<[], {}>) =>
     .action(generateStatsPage);
 
 type GenerateStatsProps = {
-  readonly cwd: string;
+  readonly repository: string;
   readonly html: string;
   readonly autoOpen: boolean;
   readonly json: string;
@@ -48,14 +48,14 @@ type GenerateStatsProps = {
 };
 
 export async function generateStatsPage({
-  cwd,
+  repository,
   html,
   autoOpen,
   json,
   pull,
   preciseStats,
 }: GenerateStatsProps): Promise<void> {
-  const { git, tags } = await initializeCommand(cwd, pull);
+  const { git, tags } = await initializeCommand(repository, pull);
 
   const filesWithTags = await tagsToFileMeta(tags, git);
   const { processFile, computeFinal } = computeStats(
@@ -63,7 +63,7 @@ export async function generateStatsPage({
     preciseStats,
     Object.keys(filesWithTags).length,
   );
-  await gatherArticles(cwd, filesWithTags, processFile);
+  await gatherArticles(repository, filesWithTags, processFile);
   console.log(cliText.finalizingOutput);
 
   const jsonString = JSON.stringify(computeFinal());
