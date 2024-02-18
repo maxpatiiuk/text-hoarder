@@ -5,7 +5,6 @@ import { registerStatsCommand } from '../Stats';
 import { cliText } from '@common/localization/cliText';
 import { registerProcessCommand } from '../Process';
 import { registerFindSpamCommand } from '../Spam';
-import { registerMacOsFindVoiceCommand } from '../MacOsFindVoice';
 
 const program = new Command();
 
@@ -18,6 +17,5 @@ program
 registerStatsCommand(program);
 registerProcessCommand(program);
 registerFindSpamCommand(program);
-registerMacOsFindVoiceCommand(program);
 
 program.parse(process.argv);

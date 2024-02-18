@@ -89,23 +89,5 @@ export const cliText = dictionary({
   showCountsOptionDescription: {
     en: 'show the occurrence count of each spam line',
   },
-  macOsFindVoiceCommandDescription: {
-    en: "A utility to help you find a suitable voice for text-to-speech among installed system voices (using macOS's 'say -v \"?\"' command)",
-  },
-  textOptionDescription: {
-    en: 'the test string to say',
-  },
-  languageOptionDescription: {
-    en: 'only include voices whose language begins with a given string',
-  },
-  delayOptionDescription: {
-    en: 'delay between voices (in ms)',
-  },
-  speedOptionDescription: {
-    en: 'speed of the output',
-  },
-  voicesOptionDescription: {
-    en: 'list of voices to include (multiple space separated values are accepted). \nSome quality voices: Samantha (Enhanced), Ava (Premium). \nSome fun voices: Cellos, Organ, Good News',
-  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */
