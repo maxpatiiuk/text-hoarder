@@ -2,15 +2,15 @@
 
 import { Command } from '@commander-js/extra-typings';
 import { registerStatsCommand } from '../Stats';
-import { commonText } from '@common/localization/commonText';
 import { cliText } from '@common/localization/cliText';
 import { registerProcessCommand } from '../Process';
 import { registerFindSpamCommand } from '../Spam';
+import { registerMacOsFindVoiceCommand } from '../MacOsFindVoice';
 
 const program = new Command();
 
 program
-  .name(commonText.textHoarder)
+  .name(cliText.textHoarderCli)
   .version(process.env.TEXT_HOARDER_VERSION ?? '')
   .description(cliText.commandDescription)
   .showHelpAfterError();
@@ -18,5 +18,6 @@ program
 registerStatsCommand(program);
 registerProcessCommand(program);
 registerFindSpamCommand(program);
+registerMacOsFindVoiceCommand(program);
 
 program.parse(process.argv);

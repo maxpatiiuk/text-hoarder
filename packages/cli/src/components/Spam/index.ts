@@ -9,11 +9,14 @@ import { initialContent } from '../../../../browser-extension/src/components/Aut
 import { distPath, findPath } from '../Cli/util';
 import { multiSortFunction } from '@common/utils/utils';
 import { markdownToText } from '../../../../browser-extension/src/components/ExtractContent/markdownToText';
+import { f } from '@common/utils/functools';
+
+const defaultLimit = 100;
 
 export const registerFindSpamCommand = (program: Command<[], {}>) =>
   program
     .command('find-spam')
-    .description(cliText.processCommandDescription)
+    .description(cliText.findSpamCommandDescription)
     .argument('[glob...]', cliText.globOptionDescription, [
       `**/*${savedFileExtension}`,
     ])
@@ -23,9 +26,13 @@ export const registerFindSpamCommand = (program: Command<[], {}>) =>
       (path) => resolve(path),
       process.cwd(),
     )
-    .option('--limit <number>', cliText.limitOptionDescription, '100')
+    .option(
+      '-l, --limit <number>',
+      cliText.limitOptionDescription,
+      defaultLimit.toString(),
+    )
     .option('--no-default-exclude', cliText.noDefaultExcludeOptionDescription)
-    .option('--show-counts', cliText.showCountsOptionDescription, false)
+    .option('-c, --show-counts', cliText.showCountsOptionDescription, false)
     .option(
       '--exclude-list <string>',
       cliText.excludeListOptionDescription,
@@ -69,7 +76,7 @@ function findSpam(
     });
   }
 
-  const limit = Number.parseInt(rawLimit);
+  const limit = f.parseInt(rawLimit) ?? defaultLimit;
   const results = Object.entries(lines)
     .filter(([, count]) => count > 1)
     .sort(
@@ -78,11 +85,11 @@ function findSpam(
         true,
         ([line]) => line,
       ),
-    )
-    .slice(0, limit);
+    );
+  const sliced = limit < 0 ? results : results.slice(0, limit);
 
   console.log(
-    results
+    sliced
       .map(([line, count]) => (showCounts ? `${count}\t${line}` : line))
       .join('\n'),
   );
