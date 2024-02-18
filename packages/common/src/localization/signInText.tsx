@@ -15,7 +15,7 @@ export const signInText = dictionary({
   },
   signInDescription: {
     en: `
-      The ${commonText.textHoarder} Chrome Extension requires write access to a single GitHub repository - it will be used as storage for the snippets of text you save.
+      The ${commonText.textHoarder} Browser Extension requires write access to a single GitHub repository - it will be used as storage for the snippets of text you save.
     `,
   },
   privacyPolicyDescription: {

@@ -1,10 +1,10 @@
-# Privacy Policy for Text Hoarder Chrome Extension
+# Privacy Policy for Text Hoarder Browser Extension
 
-Effective Date: February 10th, 2024
+Effective Date: February 17th, 2024
 
 ## Introduction
 
-This Privacy Policy applies to the Text Hoarder Chrome Extension ("Text
+This Privacy Policy applies to the Text Hoarder Browser Extension ("Text
 Hoarder", "the Extension", "we", "us", or "our") and aims to inform users
 ("you", "your", or "user") about the policies regarding the collection, use, and
 protection of their data when using the Extension.
@@ -14,7 +14,7 @@ https://github.com/maxpatiiuk/text-hoarder/.
 
 ## Who is requesting access to your GitHub repository data?
 
-The Text Hoarder Chrome Extension, developed and maintained by
+The Text Hoarder Browser Extension, developed and maintained by
 [Max Patiiuk](https://max.patii.uk), requests read and write access to your
 GitHub repository data.
 
@@ -77,7 +77,7 @@ Text Hoarder's use and transfer of information received from GitHub APIs adhere
 to GitHub's API Services User Data Policy, including the requirements for
 limited use.
 
-By using the Text Hoarder Chrome Extension, you consent to this Privacy Policy
+By using the Text Hoarder Browser Extension, you consent to this Privacy Policy
 and agree to comply with GitHub's API Services User Data Policy, including its
 requirements for limited use.
 
