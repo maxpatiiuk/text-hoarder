@@ -35,7 +35,10 @@ export const initialContent = {
 # Added by ${commonText.textHoarder}
 node_modules
 package-lock.json
-# Will hold output from "npx text-hoarder process"
+# Output from "npx text-hoarder stats"
+stats.html
+stats.json
+# Output from "npx text-hoarder process"
 processed
 `.trim(),
   },

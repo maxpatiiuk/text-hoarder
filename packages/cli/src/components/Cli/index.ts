@@ -6,6 +6,7 @@ import { cliText } from '@common/localization/cliText';
 import { registerProcessCommand } from '../Process';
 import { registerFindSpamCommand } from '../Spam';
 
+// FEATURE: check for cli updates and prompt user to update
 const program = new Command();
 
 program

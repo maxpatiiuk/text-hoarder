@@ -5,8 +5,6 @@ import { RepositoryList } from './RepositoryList';
 import { commitText } from '@common/localization/commitText';
 import { initialContent } from './initialContent';
 
-// FIXME: check for cli updates and prompt user to update
-
 export function EnsureAuthenticated({
   children,
 }: {

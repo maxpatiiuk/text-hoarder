@@ -41,7 +41,7 @@ export const cliText = dictionary({
     en: 'the folder to run the command in. Defaults to current directory',
   },
   htmlOptionDescription: {
-    en: 'the path at which an HTML file with computed stats would be emitted',
+    en: 'the path at which the HTML file with computed stats would be emitted',
   },
   noAutoOpenOptionDescription: {
     en: 'do not automatically open the generated HTML file in the browser',
@@ -50,7 +50,7 @@ export const cliText = dictionary({
     en: 'compute a much more accurate word and sentence count, but a lot slower',
   },
   jsonOptionDescription: {
-    en: 'the path at which a JSON file with computed stats would be emitted',
+    en: 'the path at which the JSON file with computed stats would be emitted',
   },
   noPullOptionDescription: {
     en: `do not automatically try to pull the latest changes from GitHub. \nNote, this means ${commonText.textHoarder} might not know about recently saved articles. \nYou can also manually pull recent changes by running "git pull"`,
