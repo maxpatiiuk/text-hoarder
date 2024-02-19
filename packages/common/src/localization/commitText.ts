@@ -27,7 +27,6 @@ export const commitText = dictionary({
   },
   saveArticle: { en: (title: string) => title },
   // FIXME: figure out mechanism for keeping this readme updated without overwriting user changes - or simpler yet, just provide a link to a readme hosted in text-hoarder repository
-  // FIXME: try out the html in svg idea to embed html page in here???
   readmeContent: {
     en: (owner: string, repo: string) => `# ${commonText.textHoarder} Store
 
@@ -35,7 +34,7 @@ This repository is used by the [${commonText.textHoarder}](${urls.webStore}) bro
 for storage of saved snippets of text.
 
 Did you know that ${commonText.textHoarder} can compute fancy stats from the articles you
-saved? It can do even more than that! [See a full guide to ${commonText.textHoarder}](${urls.cliDocs}).
+saved? It can do even more than that! [See a full guide to ${commonText.textHoarder}](${urls.docs}).
 
 A quick start to text-hoarder CLI:
 
@@ -58,9 +57,6 @@ Helpful links:
   },
   textHoarderStoreDescription: {
     en: `A repository used by ${commonText.textHoarder} browser extension to store text snippets`,
-  },
-  gitIgnoreComment: {
-    en: `# Added by ${commonText.textHoarder}`,
   },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

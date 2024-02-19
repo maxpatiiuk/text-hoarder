@@ -36,8 +36,8 @@ export const urls = {
     'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=bug&projects=&template=bug_report.md',
   webStore: webStoreUrl,
   webStoreReview: `${webStoreUrl}/reviews`,
-  cliDocs:
-    'https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/cli.md',
+  docs:
+    'https://github.com/maxpatiiuk/text-hoarder/tree/main/docs#readme',
   excludeList:
     'https://github.com/maxpatiiuk/text-hoarder/blob/main/packages/cli/src/components/Spam/exclude-list.txt',
 };

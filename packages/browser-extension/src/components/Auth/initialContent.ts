@@ -5,8 +5,7 @@ import { urls } from '../../../config';
 export const initialContent = {
   readme: {
     name: 'README.md',
-    content: (owner: string, repo: string) =>
-      commitText.readmeContent(owner, repo),
+    content: commitText.readmeContent,
   },
   packageJson: {
     name: 'package.json',
@@ -33,6 +32,7 @@ export const initialContent = {
      * so package-lock.json is needless
      */
     content: `
+# Added by ${commonText.textHoarder}
 node_modules
 package-lock.json
 # Will hold output from "npx text-hoarder process"
@@ -50,7 +50,7 @@ processed
 #
 # This file is supplementing the default exclude list that comes with ${commonText.textHoarder}.
 # See default exclude list - ${urls.excludeList}
-# See CLI docs - ${urls.cliDocs}
+# See docs - ${urls.docs}
 `.trim(),
   },
 };

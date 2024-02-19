@@ -17,6 +17,15 @@ export function EnsureAuthenticated({
   const needsToSetupRepository = github === undefined;
 
   const [needsSetup, setNeedsSetup] = React.useState(needsToSetupRepository);
+  /**
+   * Have to be VERY careful with the logic below. Reasons:
+   * 1. Repository might have existing content - either safely merge, or NOOP,
+   *    but don't corrupt or delete
+   * 2. Extension might be re-initialized several times, thus this code would
+   *    be run on the same repository multiple times
+   * 3. Extension might be updated and this logic might change, yet be run on a
+   *    repository initialized with an older version of the extension
+   */
   React.useEffect(
     () =>
       needsSetup
@@ -31,23 +40,19 @@ export function EnsureAuthenticated({
                       initialContent.readme.content(github.owner, github.repo),
                     )
                     .then(() => undefined)
-                : github.updateFile(
-                    initialContent.readme.name,
-                    commitText.initialize,
-                    `${
-                      /*
-                       * Persevere existing content if it's more than 2 lies
-                       * (i.e not default GitHub repo content)
-                       */
-                      file.content.trim().split('\n').length > 1
-                        ? `${file.content}\n\n`
-                        : ''
-                    }${initialContent.readme.content(
-                      github.owner,
-                      github.repo,
-                    )}`,
-                    file.sha,
-                  ),
+                : /*
+                   * Persevere existing content if it's more than 3 lines
+                   * (i.e not default GitHub repo content). It might also be a
+                   * README that Text Hoarder previously created
+                   */
+                  file.content.trim().split('\n').length > 2
+                  ? undefined
+                  : github.updateFile(
+                      initialContent.readme.name,
+                      commitText.initialize,
+                      initialContent.readme.content(github.owner, github.repo),
+                      file.sha,
+                    ),
             )
             .catch(console.log)
             .then(() =>
@@ -66,25 +71,28 @@ export function EnsureAuthenticated({
             // Will error if file already exists
             .catch(console.log)
             .then(() => github.getFile(initialContent.gitIgnore.name))
-            .then((file) =>
-              file === undefined
-                ? github
-                    .createFile(
-                      initialContent.gitIgnore.name,
-                      commitText.createFile(initialContent.gitIgnore.name),
-                      initialContent.gitIgnore.content,
-                    )
-                    .then(() => undefined)
+            .then((file) => {
+              if (file === undefined)
+                return github
+                  .createFile(
+                    initialContent.gitIgnore.name,
+                    commitText.createFile(initialContent.gitIgnore.name),
+                    initialContent.gitIgnore.content,
+                  )
+                  .then(() => undefined);
+              const merged = mergeGitIgnore(
+                file.content,
+                initialContent.gitIgnore.content,
+              );
+              return merged === undefined
+                ? undefined
                 : github.updateFile(
                     initialContent.gitIgnore.name,
                     commitText.createFile(initialContent.gitIgnore.name),
-                    mergeGitIgnore(
-                      file.content,
-                      initialContent.gitIgnore.content,
-                    ),
+                    merged,
                     file.sha,
-                  ),
-            )
+                  );
+            })
             .catch(console.log)
             .then(() =>
               github.createFile(
@@ -108,14 +116,14 @@ export function EnsureAuthenticated({
   );
 }
 
-function mergeGitIgnore(current: string, add: string): string {
+function mergeGitIgnore(current: string, add: string): string | undefined {
   const newLines = new Set(add.split('\n'));
   current
     .split('\n')
     .forEach((line) =>
       newLines.has(line) ? newLines.delete(line) : undefined,
     );
-  return `${current}\n\n${commitText.gitIgnoreComment}\n${Array.from(
-    newLines,
-  ).join('\n')}`;
+  return newLines.size === 0
+    ? undefined
+    : `${current}\n\n${Array.from(newLines).join('\n')}`;
 }
