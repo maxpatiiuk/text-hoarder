@@ -10,6 +10,9 @@ export type OctokitWrapper = {
   readonly owner: string;
   readonly repo: string;
   readonly hasFile: (name: string) => Promise<boolean>;
+  readonly getFile: (
+    name: string,
+  ) => Promise<{ readonly content: string; readonly sha: string } | undefined>;
   readonly createFile: (
     name: string,
     commitMessage: string,
@@ -17,6 +20,12 @@ export type OctokitWrapper = {
   ) => Promise<
     State<'AlreadyExists'> | State<'Created', { readonly sha: string }>
   >;
+  readonly updateFile: (
+    name: string,
+    commitMessage: string,
+    content: string,
+    fileSha: string,
+  ) => Promise<State<'Modified', { readonly sha: string }>>;
   readonly deleteFile: (name: string, commitMessage: string) => Promise<void>;
   readonly deleteFileUsingForcePush: (name: string) => Promise<boolean>;
 };
@@ -48,6 +57,26 @@ export function wrapOctokit(
       .then(({ data }) => data.object.sha)
       .catch(() => undefined);
 
+  const writeFile = (
+    name: string,
+    commitMessage: string,
+    content: string,
+    sha: string | undefined,
+  ) =>
+    octokit.rest.repos.createOrUpdateFileContents({
+      owner,
+      repo,
+      path: encoding.fileName.encode(name),
+      message: commitMessage,
+      content: encoding.fileContent.encode(content),
+      author: {
+        name: `${gitHubAppName}[bot]`,
+        email: `${gitHubAppId}+${gitHubAppName}[bot]@users.noreply.github.com`,
+      },
+      branch,
+      sha,
+    });
+
   return {
     owner,
     repo,
@@ -69,20 +98,26 @@ export function wrapOctokit(
         )
         .catch(() => false),
 
-    createFile: async (name, commitMessage, content) =>
+    getFile: async (fileName) =>
       octokit.rest.repos
-        .createOrUpdateFileContents({
+        .getContent({
           owner,
           repo,
-          path: encoding.fileName.encode(name),
-          message: commitMessage,
-          content: encoding.fileContent.encode(content),
-          author: {
-            name: `${gitHubAppName}[bot]`,
-            email: `${gitHubAppId}+${gitHubAppName}[bot]@users.noreply.github.com`,
-          },
+          path: encoding.fileName.encode(fileName),
           branch,
         })
+        .then(({ data }) =>
+          'content' in data
+            ? {
+                content: encoding.fileContent.decode(data.content),
+                sha: data.sha,
+              }
+            : undefined,
+        )
+        .catch(() => undefined),
+
+    createFile: async (name, commitMessage, content) =>
+      writeFile(name, commitMessage, content, undefined)
         .then(({ data }) => ({
           type: 'Created' as const,
           sha: data.commit.sha!,
@@ -102,6 +137,12 @@ export function wrapOctokit(
             return { type: 'AlreadyExists' };
           throw response;
         }),
+
+    updateFile: async (name, commitMessage, content, sha) =>
+      writeFile(name, commitMessage, content, sha).then(({ data }) => ({
+        type: 'Modified' as const,
+        sha: data.commit.sha!,
+      })),
 
     deleteFile: async (name, commitMessage) =>
       fetchFileSha(name)
