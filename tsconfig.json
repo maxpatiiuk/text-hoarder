@@ -1,44 +1,48 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig.json",
   /* File Inclusion */
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["**/node_modules", "**/dist"],
   "files": ["packages/common/src/declarations.d.ts"],
   "compilerOptions": {
-    "paths": {
-      "@common/*": ["./packages/common/src/*"]
-    },
-    /* Basic Options */
-    "isolatedModules": true,
-    "jsx": "react",
-    "lib": ["esnext", "dom"],
-    "module": "esnext",
-    "noEmit": true,
-    "sourceMap": true,
-    "target": "esnext",
-    "allowJs": true,
-    "checkJs": false,
-    /**/
-    /* Strict Checks */
-    "strict": true,
-    /**/
-    /* Module Resolution */
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    /**/
-    /* Linter Checks */
-    "noFallthroughCasesInSwitch": true,
+    /* Type Checking */
+    "allowUnreachableCode": false,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    /**/
-    /* Advanced */
-    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+
+    /* Modules */
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@common/*": ["./packages/common/src/*"]
+    },
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "types": ["jest", "node", "chrome"]
-  },
-  "typedocOptions": {
-    "entryPoints": ["src"],
-    "out": "docs"
+
+    /* Emit */
+    "declaration": true,
+    "newLine": "lf",
+    "noEmit": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": true,
+    "sourceMap": true,
+
+    /* JavaScript Support */
+    "allowJs": false,
+
+    /* Interop Constraints */
+    "esModuleInterop": true,
+    "isolatedModules": true,
+
+    /* Language and Environment */
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "ESNext",
+
+    /* Completeness */
+    "skipLibCheck": true
   }
 }
