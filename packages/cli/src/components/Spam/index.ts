@@ -1,7 +1,7 @@
 import { cliText } from '@common/localization/cliText';
 import { Command } from '@commander-js/extra-typings';
 import { savedFileExtension } from '@common/utils/encoding';
-import { RA } from '@common/utils/types';
+import type { R, RA } from '@common/utils/types';
 import { Glob } from 'glob';
 import { resolve } from 'node:path';
 import fs from 'node:fs';
@@ -58,7 +58,7 @@ function findSpam(
 ): void {
   const globInstance = runGlob(glob, cwd);
   const exclude = resolveExcludes(excludeList, cwd, defaultExclude);
-  const lines: Record<string, number> = {};
+  const lines: R<number> = {};
   for (const file of globInstance) {
     const content = fs.readFileSync(file, 'utf8');
     const text = file.endsWith(savedFileExtension)

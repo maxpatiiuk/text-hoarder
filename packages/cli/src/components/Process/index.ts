@@ -190,8 +190,6 @@ export async function processArticles({
           ? tags.slice(tags.indexOf(sinceTag) + 1)
           : tags.slice(tags.indexOf(sinceTag) + 1, tags.indexOf(tillTag)),
   );
-  if (includedTags.size > 0)
-    console.log(cliText.processingFromTags(Array.from(includedTags)));
 
   const allFiles = await tagsToFileMeta(tags, git);
   const includeUntagged = unbounded || tags.at(-1) === sinceTag;
@@ -203,6 +201,9 @@ export async function processArticles({
     console.error(cliText.duplicateTag(newTag));
     process.exit(1);
   }
+
+  if (includedTags.size > 0)
+    console.log(cliText.processingFromTags(Array.from(includedTags)));
 
   const { file, complete } = textProcessor(
     repository,

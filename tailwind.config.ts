@@ -45,9 +45,6 @@ export default {
           350: 'hsl(0deg 0% 73%)',
         },
       },
-      spacing: {
-        'table-icon': '1.25rem',
-      },
       brightness: {
         70: '.7',
         80: '.8',

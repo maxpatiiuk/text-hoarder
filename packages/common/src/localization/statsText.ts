@@ -2,9 +2,9 @@
  * Localization strings used by the Stats page
  */
 
-// Refer to "Guidelines for Programmers" in ./README.md before editing this file
-
 import { dictionary } from './utils';
+
+// Refer to "Guidelines for Programmers" in ./README.md before editing this file
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const statsText = dictionary({

@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     request !== null &&
     request.type in requestHandlers
   ) {
-    requestHandlers[request.type as 'ReloadExtension'](
+    requestHandlers[request.type as 'UpdateBadge'](
       request.request as undefined,
       sender,
     )
@@ -83,11 +83,6 @@ const requestHandlers: {
     chrome.tabs.create({ openerTabId: tab?.id, url }).then(() => undefined),
 
   OpenPreferences: async () => void chrome.runtime.openOptionsPage(),
-
-  async ReloadExtension() {
-    chrome.tabs.reload();
-    chrome.runtime.reload();
-  },
 
   async UpdateBadge(text, { tab }) {
     await chrome.action.setBadgeText({ text: text ?? '', tabId: tab?.id });

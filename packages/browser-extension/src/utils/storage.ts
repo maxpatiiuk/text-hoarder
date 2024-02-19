@@ -1,4 +1,4 @@
-import { IR, ensure } from '@common/utils/types';
+import type { IR } from '@common/utils/types';
 
 export type Repository = {
   readonly owner: string;
@@ -6,7 +6,7 @@ export type Repository = {
   readonly branch: string;
 };
 
-export const storageDefinitions = ensure<IR<unknown>>()({
+export const storageDefinitions = {
   'auth.accessToken': undefined as undefined | string,
   'auth.installationId': undefined as undefined | number,
   'setup.repository': undefined as undefined | Repository,
@@ -35,7 +35,7 @@ export const storageDefinitions = ensure<IR<unknown>>()({
   'reader.toolsCollapsed': false as boolean,
   'markdownToText.includeImageAltText': true as boolean,
   'github.undoUsingForcePush': true as boolean,
-} as const);
+} as const satisfies IR<unknown>;
 
 export const storage = chrome.storage.sync;
 export type StorageDefinitions = typeof storageDefinitions;

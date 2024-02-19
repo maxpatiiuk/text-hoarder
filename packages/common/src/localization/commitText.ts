@@ -6,13 +6,13 @@
  * style and create an inconsistent commit message)
  */
 
-// Refer to "Guidelines for Programmers" in ./README.md before editing this file
-
 import { readerText } from '@common/localization/readerText';
 import { urls } from '../../../browser-extension/config';
 import { commonText } from './commonText';
 import { dictionary } from './utils';
 import { signInText } from '@common/localization/signInText';
+
+// Refer to "Guidelines for Programmers" in ./README.md before editing this file
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const commitText = dictionary({

@@ -2,6 +2,9 @@ import { cliText } from '@common/localization/cliText';
 import { RA } from '@common/utils/types';
 import simpleGit, { SimpleGit } from 'simple-git';
 
+/**
+ * "simple-git" setup logic common to all commands
+ */
 export async function initializeCommand(
   cwd: string,
   pull: boolean,

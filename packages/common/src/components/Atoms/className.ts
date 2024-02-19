@@ -22,7 +22,7 @@ export const className = {
     [&_tr:nth-child(even)_:is(th,td)]:bg-gray-200 p-px`,
   label: 'flex flex-col',
   labelForCheckbox: 'cursor-pointer inline-flex gap-1 items-center',
-  // Ensures Textarea can't grow past max dialog width
+  // Ensures Textarea can't grow past max container width
   textArea: `max-w-full min-w-[theme(spacing.20)] min-h-[theme(spacing.8)] ${inputBackground}`,
   widget: 'bg-gray-100 dark:bg-neutral-800 p-2 rounded',
 };

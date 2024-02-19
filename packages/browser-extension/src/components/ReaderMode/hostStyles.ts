@@ -1,3 +1,8 @@
+/**
+ * Carefully apply some limited styles to the host page while the ReaderMode
+ * is active
+ */
+
 export const extensionContainerId = 'text-hoarder-container';
 const stylesId = 'text-hoarder-styles';
 

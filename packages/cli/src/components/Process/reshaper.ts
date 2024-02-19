@@ -1,7 +1,7 @@
 import { RA, isDefined } from '@common/utils/types';
 
 /**
- * Run through several processing functions to prepare the text for
+ * Run through several processing steps to prepare the text for
  * text-to-speech
  */
 export function reshapeText(

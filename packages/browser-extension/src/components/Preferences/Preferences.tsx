@@ -70,7 +70,7 @@ function Item<KEY extends keyof StorageDefinitions>({
   return renderer(localValueRef.current, (newValue, apply = true) => {
     /*
      * Only change value on blur (to avoid UX issues with font size, and
-     * avoid chrome storage quota issues if value changes often)
+     * avoid Chrome storage quota issues if value changes often)
      */
     if (apply) setValue(newValue);
     else {

@@ -1,3 +1,5 @@
+import { listen } from '@common/utils/events';
+
 /**
  * Listen to clicks on anchor elements, and scroll to the target element.
  */
@@ -20,10 +22,8 @@ export function listenToAnchors(container: HTMLElement): () => void {
     console.log(target);
   }
 
-  container.addEventListener('click', handleClick, {
+  return listen(container, 'click', handleClick, {
     passive: true,
     capture: true,
   });
-  return (): void =>
-    container.removeEventListener('click', handleClick, { capture: true });
 }

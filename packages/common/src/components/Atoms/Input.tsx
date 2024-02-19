@@ -28,50 +28,6 @@ export const Input = {
       },
     }),
   ),
-  Text: wrap<
-    'input',
-    {
-      readonly onValueChange?: (value: string) => void;
-      readonly type?: never;
-      readonly children?: undefined;
-    }
-  >(
-    'Input.Text',
-    'input',
-    `${className.input} w-full`,
-    ({ onValueChange: handleChange, ...props }) => ({
-      ...props,
-      type: 'text',
-      onChange(event): void {
-        handleChange?.((event.target as HTMLInputElement).value);
-        props.onChange?.(event);
-      },
-    }),
-  ),
-  Number: wrap<
-    'input',
-    {
-      readonly value: number | '';
-      readonly onValueChange?: (value: number) => void;
-      readonly type?: never;
-      readonly children?: undefined;
-    }
-  >(
-    'Input.Number',
-    'input',
-    `${className.input} w-full`,
-    ({ onValueChange: handleValueChange, ...props }) => ({
-      ...props,
-      type: 'number',
-      onChange(event): void {
-        handleValueChange?.(
-          // This non-null assertion is unsafe, but simplifies typing
-          f.parseFloat((event.target as HTMLInputElement).value)!,
-        );
-        props.onChange?.(event);
-      },
-    }),
-  ),
   Generic: wrap<
     'input',
     {

@@ -46,7 +46,11 @@ export function useAsyncState<T>(
     setState(undefined);
     loading(
       Promise.resolve(callback()).then((newState) =>
-        destructorCalled ? undefined : setState(newState),
+        destructorCalled
+          ? undefined
+          : setState(
+              typeof newState === 'function' ? () => newState : newState,
+            ),
       ),
     );
 

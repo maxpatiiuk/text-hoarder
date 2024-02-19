@@ -27,14 +27,6 @@ type OpenPreferences = State<
   { readonly request: void; readonly response: void }
 >;
 
-type ReloadExtension = State<
-  'ReloadExtension',
-  {
-    readonly request: void;
-    readonly response: void;
-  }
->;
-
 type UpdateBadge = State<
   'UpdateBadge',
   {
@@ -47,7 +39,6 @@ export type Requests =
   | AuthenticateRequest
   | OpenUrl
   | OpenPreferences
-  | ReloadExtension
   | UpdateBadge;
 
 /**

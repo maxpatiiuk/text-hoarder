@@ -51,6 +51,7 @@ export function wrapOctokit(
   return {
     owner,
     repo,
+
     hasFile: async (fileName) =>
       octokit.rest.repos
         .getContent({
@@ -67,6 +68,7 @@ export function wrapOctokit(
             status === http.notModified,
         )
         .catch(() => false),
+
     createFile: async (name, commitMessage, content) =>
       octokit.rest.repos
         .createOrUpdateFileContents({
@@ -100,6 +102,7 @@ export function wrapOctokit(
             return { type: 'AlreadyExists' };
           throw response;
         }),
+
     deleteFile: async (name, commitMessage) =>
       fetchFileSha(name)
         .then((sha) =>
@@ -119,6 +122,7 @@ export function wrapOctokit(
               }),
         )
         .then(() => undefined),
+
     async deleteFileUsingForcePush(name) {
       const {
         sha,

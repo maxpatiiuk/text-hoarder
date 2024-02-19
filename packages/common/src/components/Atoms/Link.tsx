@@ -26,22 +26,6 @@ export const Link = {
     target: '_blank',
     rel: 'noopener',
   }),
-  Success: linkComponent(
-    'Link.Success',
-    `${className.button} ${className.success}`,
-    {
-      target: '_blank',
-      rel: 'noopener',
-    },
-  ),
-  Danger: linkComponent(
-    'Link.Danger',
-    `${className.button} ${className.danger}`,
-    {
-      target: '_blank',
-      rel: 'noopener',
-    },
-  ),
   Info: linkComponent('Link.Info', `${className.button} ${className.info}`, {
     target: '_blank',
     rel: 'noopener',

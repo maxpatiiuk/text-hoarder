@@ -1,11 +1,10 @@
 import fs from 'node:fs/promises';
 import open from 'open';
-import path from 'node:path';
+import { resolve, join } from 'node:path';
 
 import { cliText } from '@common/localization/cliText';
 import { Command } from '@commander-js/extra-typings';
 import { distPath, resolveRepositoryPath } from '../Cli/util';
-import { resolve } from 'node:path';
 import { initializeCommand } from '../Cli/initializeCommand';
 import { gatherArticles } from './gatherArticles';
 import { tagsToFileMeta } from './getFileTags';
@@ -85,7 +84,7 @@ export async function generateStatsPage({
     ${
       process.env.NODE_ENV === 'production'
         ? `<script>${await fs.readFile(webBundleUrl).toString()}</script>`
-        : `<script src="${path.join('dist', webBundleLocation)}"></script>`
+        : `<script src="${join('dist', webBundleLocation)}"></script>`
     }
   </body>
 </html>`,

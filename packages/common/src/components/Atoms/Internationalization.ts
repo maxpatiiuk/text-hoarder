@@ -17,18 +17,6 @@ declare namespace Intl {
     public format(values: RA<string>): string;
   }
 
-  class Locale {
-    public constructor(locales?: RA<string> | string);
-
-    public weekInfo?: {
-      readonly firstDay: 1 | 7;
-    };
-
-    public getWeekInfo?: () => {
-      readonly firstDay: 1 | 7;
-    };
-  }
-
   class DateTimeFormat {
     public constructor(
       locales?: RA<string> | string,

@@ -3,6 +3,7 @@
  * but simplified and modernized
  */
 
+import { silenceError } from '@common/components/Errors/assert';
 import { RA, isDefined } from '@common/utils/types';
 
 export const preparePatterns = (patterns: string): RA<string | RegExp> =>
@@ -32,13 +33,8 @@ export const extractOrigins = (
       .filter(isDefined),
   );
 
-function parseRegex(pattern: string): RegExp | undefined {
-  try {
-    return new RegExp(pattern, 'i');
-  } catch {
-    return undefined;
-  }
-}
+const parseRegex = (pattern: string): RegExp | undefined =>
+  silenceError(() => new RegExp(pattern, 'i'));
 
 const wildcardToRegex = (pattern: string): string =>
   pattern
@@ -96,10 +92,5 @@ function isTextMatch(href: string, pattern: string): boolean {
   );
 }
 
-function toUrl(pattern: string, base?: string): URL | undefined {
-  try {
-    return new URL(pattern, base);
-  } catch {
-    return undefined;
-  }
-}
+const toUrl = (pattern: string, base?: string): URL | undefined =>
+  silenceError(() => new URL(pattern, base));
