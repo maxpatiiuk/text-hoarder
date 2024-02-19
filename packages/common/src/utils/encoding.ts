@@ -162,17 +162,14 @@ export const encoding = {
   },
   // Use ISO 8601 ("YYYY-MM-DD"), a.k.a. the best date format
   date: {
-    encode: (date: Date) =>
-      [
-        date.getFullYear(),
-        (date.getMonth() + 1).toString().padStart(2, '0'),
-        date.getDate().toString().padStart(2, '0'),
-      ].join('-'),
-    decode: (date: string) => {
-      const [year, month, day] = date
-        .split('-')
-        .map((value) => Number.parseInt(value));
-      return new Date(year, month - 1, day);
+    encode: (rawDate: Date) => {
+      const date = new Date(rawDate);
+      date.setUTCHours(0, 0, 0, 0);
+      return [
+        date.getUTCFullYear(),
+        (date.getUTCMonth() + 1).toString().padStart(2, '0'),
+        date.getUTCDate().toString().padStart(2, '0'),
+      ].join('-');
     },
   },
 };

@@ -137,12 +137,10 @@ describe('urlToPath', () => {
 });
 
 describe('date', () => {
-  const date = '2020-10-01T00:00:00-07:00';
+  const date = '2020-10-01T00:00:00-00:00';
   const from = new Date(date);
   const to = '2020-10-01';
   test('encode', () => assert.equal(encoding.date.encode(from), to));
-  test('decode', () =>
-    assert.equal(encoding.date.decode(to).toJSON(), from.toJSON()));
 });
 
 describe('filterQueryString', () => {
