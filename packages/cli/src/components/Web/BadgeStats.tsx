@@ -3,6 +3,7 @@ import { Button } from '@common/components/Atoms/Button';
 import { formatNumber } from '@common/components/Atoms/Internationalization';
 import { className } from '@common/components/Atoms/className';
 import { statsText } from '@common/localization/statsText';
+import { focusWhenRendered } from '@common/components/Molecules/scroll';
 import { RR, IR, GetSet } from '@common/utils/types';
 import React from 'react';
 import { StatsCounts, StatsJson, StatsStructure } from '../Stats/computeStats';
@@ -32,7 +33,7 @@ export function BadgeStats({
           <H3>{statsText.counts}</H3>
           {typeof activeHost === 'string' && (
             <>
-              <div className="flex items-center">
+              <div className="flex items-center" ref={focusWhenRendered}>
                 {statsText.forWebsite(activeHost)}
               </div>
               <Button.Success onClick={(): void => setActiveHost(undefined)}>
@@ -135,7 +136,7 @@ function BadgeCharts({
   const showAverage = badge !== 'count';
   return (
     <WidgetSection className={`${className.widget} !flex-row flex-wrap`}>
-      <div className="flex-1">
+      <div ref={focusWhenRendered} className="flex-1">
         <H3>{countLabels[badge]}</H3>
         <BarChart labels={labels} data={totalData} />
       </div>

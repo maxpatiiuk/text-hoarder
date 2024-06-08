@@ -9,6 +9,7 @@ import { IR } from '@common/utils/types';
 import { BarChart } from './BarChart';
 import { useBooleanState } from '@common/hooks/useBooleanState';
 import { countLabels } from './BadgeStats';
+import { focusWhenRendered } from '@common/components/Molecules/scroll';
 
 export function DaysCharts({
   stats,
@@ -35,9 +36,11 @@ export function DaysCharts({
     <>
       {Object.entries(countLabels)
         .slice(0, showAll ? Number.POSITIVE_INFINITY : 1)
-        .map(([key, label]) => (
+        .map(([key, label], index) => (
           <WidgetSection className={className.widget} key={key}>
-            <H3>{label}</H3>
+            <H3 forwardRef={index === 1 ? undefined : focusWhenRendered}>
+              {label}
+            </H3>
             <BarChart labels={labels} data={data[key]} />
             {key === 'count' && (
               <div>
