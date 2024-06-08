@@ -23,7 +23,6 @@ const activatedReason = chrome.storage.local.get('activatedReason');
 
 // FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
 // FINAL: add webpack dev server for stats? https://morioh.com/a/c6e73ed575bb/how-to-package-nodejs-application-using-webpack#google_vignette
-// TEST: try out text-hoarder CLI on windows
 
 // FINAL: Deploy cors-auth-middleware to vercel
 // FINAL: Sync example config files with changes in real config files

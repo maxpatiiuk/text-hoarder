@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import open from 'open';
-import { resolve, join } from 'node:path';
+import { resolve, relative } from 'node:path';
 
 import { cliText } from '@common/localization/cliText';
 import { Command } from '@commander-js/extra-typings';
@@ -80,11 +80,11 @@ export async function generateStatsPage({
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <script>window.stats = ${jsonString};</script>
+    <script>window.textHoarderStats = ${jsonString};</script>
     ${
       process.env.NODE_ENV === 'production'
-        ? `<script>${await fs.readFile(webBundleUrl).toString()}</script>`
-        : `<script src="${join('dist', webBundleLocation)}"></script>`
+        ? `<script>${await fs.readFile(webBundleUrl, 'utf8')}</script>`
+        : `<script src="${relative(process.cwd(), webBundleUrl)}"></script>`
     }
   </body>
 </html>`,

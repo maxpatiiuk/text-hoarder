@@ -10,10 +10,11 @@ import ShebangPlugin from 'webpack-shebang-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 
 const version = JSON.parse(
-  fs.readFileSync('packages/browser-extension/manifest.json').toString(),
+  fs.readFileSync('packages/browser-extension/manifest.json', 'utf8'),
 ).version;
 
-export default function ({ cwd = process.cwd() }, { mode }) {
+export default function (_, { mode }) {
+  const cwd = process.env.INIT_CWD ?? process.cwd();
   const pathParts = cwd.split(path.sep);
   const packagesPathPart = pathParts.indexOf('packages');
   const packageName = pathParts[packagesPathPart + 1] ?? 'browser-extension';

@@ -31,6 +31,16 @@ npx text-hoarder --help
 If you need help cloning the repository from the command line, see
 [documentation from GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
+> If you are a Windows user, consider running this command in your terminal to
+> allow Git to handle files with long file names.
+>
+> ```sh
+> git config --global core.longpaths true
+> ```
+>
+> Without this, "git clone" may fail if your text hoarder repository saved
+> articles with very long URLs
+
 ## Generating Stats
 
 You can create a webpage with comprehensive statistics about the saved articles

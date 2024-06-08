@@ -15,9 +15,9 @@ export const gatherArticles = async (
       const [year, url] = encoding.urlToPath.decode(fileName);
       return (
         fs
-          .readFile(path)
+          .readFile(path, 'utf8')
           .then((fileContent) => {
-            const fileText = markdownToText(fileContent.toString())
+            const fileText = markdownToText(fileContent)
               .trim()
               .replaceAll('’', "'")
               .split('\n');

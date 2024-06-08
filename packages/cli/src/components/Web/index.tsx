@@ -24,9 +24,12 @@ container.classList.add(
 document.body.append(container);
 document.title = commonText.textHoarder;
 
-if (!('stats' in window) || typeof window.stats !== 'object')
+if (
+  !('textHoarderStats' in window) ||
+  typeof window.textHoarderStats !== 'object'
+)
   throw new Error(statsText.statsNotFound);
 
-const stats = window.stats as StatsJson;
+const stats = window.textHoarderStats as StatsJson;
 
 renderApp(container, <App stats={stats} />);
