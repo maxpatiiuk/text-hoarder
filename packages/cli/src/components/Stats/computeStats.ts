@@ -57,8 +57,11 @@ export function computeStats(
   let index = 0;
   return {
     processFile(article) {
-      if (index % reportAt === 0)
-        console.log(`${Math.round(((index / total) * 10_000) / 100) + 1}%`);
+      if (index % reportAt === 0) {
+        const percentage = Math.round(((index / total) * 10_000) / 100) + 1;
+        // Prevent 101%
+        if (percentage <= 100) console.log(`${percentage}%`);
+      }
       index += 1;
 
       const fullContent = `${article.title}.\n${article.content}`;
