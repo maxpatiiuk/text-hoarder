@@ -69,11 +69,11 @@ export function BadgeStats({
 
 export const countLabels: RR<keyof StatsCounts, string> = {
   count: statsText.savedArticles,
-  length: statsText.totalLength,
-  words: statsText.totalWords,
-  sentences: statsText.totalSentences,
   paragraphs: statsText.totalParagraphs,
+  sentences: statsText.totalSentences,
   uniqueWords: statsText.totalUniqueWords,
+  words: statsText.totalWords,
+  length: statsText.totalLength,
 };
 
 function Badge({
