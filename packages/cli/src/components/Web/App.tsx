@@ -10,6 +10,8 @@ import { TopWords } from './TopWords';
 import { BadgeStats } from './BadgeStats';
 import { Select } from '@common/components/Atoms/Input';
 import { className } from '@common/components/Atoms/className';
+import { Button } from '@common/components/Atoms/Button';
+import { downloadFile } from '@common/components/Molecules/downloadFile';
 
 type Page =
   | State<'All'>
@@ -22,7 +24,16 @@ export function App({ stats }: { readonly stats: StatsJson }) {
   const allTags = Object.keys(stats.perTag);
   return (
     <div className={`contents ${className.base}`}>
-      <H1>{commonText.textHoarder}</H1>
+      <div className="flex justify-between items-baseline">
+        <H1>{commonText.textHoarder}</H1>
+        <Button.Info
+          onClick={() =>
+            downloadFile('stats.json', JSON.stringify(stats, null, 2))
+          }
+        >
+          {statsText.downloadAsJson}
+        </Button.Info>
+      </div>
       <Label.Inline className="gap-2">
         {statsText.filter}
         <Select

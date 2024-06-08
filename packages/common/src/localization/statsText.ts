@@ -15,7 +15,7 @@ export const statsText = dictionary({
   tags: { en: 'Tags' },
   counts: { en: 'Counts' },
   savedArticles: { en: 'Saved Articles' },
-  totalLength: { en: 'Total length' },
+  totalLength: { en: 'Total characters' },
   totalWords: { en: 'Total words' },
   totalSentences: { en: 'Total sentences' },
   totalParagraphs: { en: 'Total paragraphs' },
@@ -34,5 +34,6 @@ export const statsText = dictionary({
   word: { en: 'Word' },
   forWebsite: { en: (website: string) => `(for website: ${website})` },
   showAll: { en: 'Show all' },
+  downloadAsJson: { en: 'Download as JSON' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */
