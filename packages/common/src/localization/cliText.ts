@@ -202,5 +202,17 @@ export const cliText = dictionary({
         tags,
       )}`,
   },
+  bookPlayerParseCommandDescription: {
+    en: `Book Player is an iOS app for playing audiobooks (unaffiliated with ${commonText.textHoarder}). It provides bookmark export feature. This command parses the exported bookmarks file and tries to match the bookmarks with the website that was converted to audio to produce a given audio file.`,
+  },
+  forceOutputOptionDescription: {
+    en: 'overwrite the output file if it already exists',
+  },
+  jsonOutputOptionDescription: {
+    en: 'output the parsed bookmarks in JSON format',
+  },
+  htmlOutputOptionDescription: {
+    en: 'output the parsed bookmarks in HTML format',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

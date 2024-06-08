@@ -5,6 +5,7 @@ import { registerStatsCommand } from '../Stats';
 import { cliText } from '@common/localization/cliText';
 import { registerProcessCommand } from '../Process';
 import { registerFindSpamCommand } from '../Spam';
+import { registerBookPlayerParseCommand } from '../BookPlayerBookmarks';
 
 // FEATURE: check for cli updates and prompt user to update
 const program = new Command();
@@ -18,5 +19,6 @@ program
 registerStatsCommand(program);
 registerProcessCommand(program);
 registerFindSpamCommand(program);
+registerBookPlayerParseCommand(program);
 
 program.parse(process.argv);
