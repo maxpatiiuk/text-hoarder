@@ -84,6 +84,15 @@ Build the front-end for production:
 npm run build
 ```
 
+Then package into a zip file:
+
+```sh
+npm run package:extension
+```
+
+The resulting file (`packages/browser-extension/text-hoarder.zip`) can be
+uploaded to Chrome Web Store.
+
 ### Development
 
 Start the watcher script which would rebuild the code on any changes:

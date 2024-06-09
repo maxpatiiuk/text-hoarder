@@ -47,3 +47,9 @@ introduced:
 ```sh
 npx tsc
 ```
+
+## NPM Publishing
+
+For npm, the package json from [npm/package.json](./npm/package.json) is used.
+
+Run `npm run publish:cli` to publish the package to npm.
