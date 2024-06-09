@@ -59,7 +59,7 @@ export const Input = {
   >(
     'Input.Range',
     'input',
-    `${className.input} w-full`,
+    `${className.input} w-full !ring-0`,
     ({ onValueChange: handleValueChange, ...props }) => ({
       ...props,
       type: 'range',

@@ -126,6 +126,7 @@ export function SaveText({
 
   return (
     <>
+      {typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
       {existingFile === undefined ||
       fileEditUrl === undefined ||
       mode === 'edit' ? (
@@ -133,7 +134,9 @@ export function SaveText({
       ) : (
         <>
           <p className="flex-1">
-            {wasAlreadySaved ? readerText.recentlySaved : readerText.saved}
+            {wasAlreadySaved
+              ? readerText.recentlySaved
+              : readerText.savedToGitHub}
           </p>
           <Button.Danger
             onClick={(): void =>
@@ -165,7 +168,6 @@ export function SaveText({
           </Button.Danger>
           <Link.Info href={fileEditUrl}>{readerText.edit}</Link.Info>
           {isLoading && loadingGif}
-          {typeof error === 'string' && <ErrorMessage>{error}</ErrorMessage>}
         </>
       )}
     </>

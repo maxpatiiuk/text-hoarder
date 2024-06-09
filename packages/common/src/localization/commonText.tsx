@@ -10,5 +10,6 @@ import { dictionary } from './utils';
 export const commonText = dictionary({
   textHoarder: { en: 'Text Hoarder' },
   delete: { en: 'Delete' },
+  download: { en: 'Download' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

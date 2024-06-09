@@ -1,5 +1,3 @@
-import { sep } from 'node:path';
-
 export const savedFileExtension = '.md';
 
 export const encoding = {
@@ -149,6 +147,7 @@ export const encoding = {
         ? rawPath.slice(0, -savedFileExtension.length)
         : rawPath;
 
+      const sep = path.includes('/') ? '/' : '\\';
       const [year, host, ...pathname] = path.split(sep);
 
       const urlString = encoding.fileName.decode(pathname.join('/'));

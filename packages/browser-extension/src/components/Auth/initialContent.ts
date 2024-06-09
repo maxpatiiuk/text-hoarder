@@ -16,7 +16,7 @@ export const initialContent = {
           description: commitText.textHoarderStoreDescription,
           private: true,
           type: 'module',
-          dependencies: {
+          devDependencies: {
             'text-hoarder': 'latest',
           },
         },
@@ -29,7 +29,9 @@ export const initialContent = {
     /*
      * While ignoring package-lock.json is usually not recommended, for
      * text-hoarder, the latest version of the CLI should be used at all times,
-     * so package-lock.json is needless
+     * so package-lock.json is counterproductive. Plus, having an uncommitted
+     * change (package-lock.json) appear after running npm install may confuse
+     * less git savvy users and may prevent automatic git pull from working.
      */
     content: `
 # Added by ${commonText.textHoarder}

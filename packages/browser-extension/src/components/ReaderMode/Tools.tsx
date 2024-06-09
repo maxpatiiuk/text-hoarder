@@ -14,6 +14,7 @@ import { ActivateExtension, listenEvent } from '../Background/messages';
 import { Link } from '@common/components/Atoms/Link';
 import { loadingGif, useLoading } from '@common/hooks/useLoading';
 import { className } from '@common/components/Atoms/className';
+import { commonText } from '@common/localization/commonText';
 
 export function Tools({
   simpleDocument,
@@ -125,7 +126,8 @@ export function Tools({
         // REFACTOR: use popover once it's well supported
         <aside
           className={`
-            flex flex-col gap-4 p-4 overflow-auto w-[20rem]
+            flex flex-col gap-4 p-4 overflow-auto w-[20rem] rounded
+            border-4 border-gray-200 dark:border-none
             ${
               selectedTool === 'preferences' || selectedTool === 'infoTab'
                 ? 'pt-0 '
@@ -158,7 +160,7 @@ export function Tools({
         </aside>
       )}
       <nav
-        className="flex flex-col p-2 gap-3 text-[130%] "
+        className="flex flex-col p-2 gap-3 text-[130%] rounded-es border-4 border-gray-200 dark:border-none"
         aria-label={readerText.tools}
       >
         {selectedTool === 'saveText' || !collapsed ? (
@@ -202,7 +204,7 @@ export function Tools({
           <Button.Icon
             onClick={handleDownload}
             icon="download"
-            title={readerText.download}
+            title={commonText.download}
           />
         )}
         {selectedTool === 'infoTab' || !collapsed ? (

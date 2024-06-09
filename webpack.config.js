@@ -17,7 +17,9 @@ export default function (_, { mode }) {
   const cwd = process.env.INIT_CWD ?? process.cwd();
   const pathParts = cwd.split(path.sep);
   const packagesPathPart = pathParts.indexOf('packages');
-  const packageName = pathParts[packagesPathPart + 1] ?? 'browser-extension';
+  const packageName = pathParts[packagesPathPart + 1];
+  if (packageName === undefined)
+    throw new Error(`Unable to resolve package name from cwd (${cwd})`);
   return packageName === 'browser-extension'
     ? makeConfig(packageName, mode)
     : [

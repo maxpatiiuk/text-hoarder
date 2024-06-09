@@ -13,7 +13,6 @@ export const readerText = dictionary({
   loading: { en: 'Loading...' },
   noContentFound: { en: 'Unable to find readable content on the page' },
   tools: { en: 'Tools' },
-  download: { en: 'Download' },
   aboutTextHoarder: { en: `About ${commonText.textHoarder}` },
   sourceCode: { en: 'Source code' },
   reportIssue: { en: 'Report an issue' },
@@ -23,7 +22,7 @@ export const readerText = dictionary({
   editOnGitHub: { en: 'Edit on GitHub' },
   recentlySaved: { en: 'This article has already been saved recently' },
   saveAgain: { en: 'Save again' },
-  saved: { en: 'Saved!' },
+  savedToGitHub: { en: 'Saved to GitHub!' },
   edit: { en: 'Edit' },
 });
 /* eslint-enable @typescript-eslint/naming-convention */
