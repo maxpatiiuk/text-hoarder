@@ -26,7 +26,6 @@ export const commitText = dictionary({
     en: (fileName: string) => `${commonText.textHoarder}: Create ${fileName}`,
   },
   saveArticle: { en: (title: string) => title },
-  // FIXME: figure out mechanism for keeping this readme updated without overwriting user changes - or simpler yet, just provide a link to a readme hosted in text-hoarder repository
   readmeContent: {
     en: (owner: string, repo: string) => `# ${commonText.textHoarder} Store
 
@@ -56,7 +55,7 @@ Helpful links:
 `,
   },
   textHoarderStoreDescription: {
-    en: `A repository used by ${commonText.textHoarder} browser extension to store text snippets`,
+    en: `A repository used by ${commonText.textHoarder} browser extension to store saved articles`,
   },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

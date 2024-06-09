@@ -83,7 +83,7 @@ export const cliText = dictionary({
     en: '(untagged)',
   },
   findSpamCommandDescription: {
-    en: `Find commonly repeated lines in text file, which likely indicate spam/advertisement that should be excluded. \nFor example 'Advertisement', 'RECOMMENDED VIDEOS FOR YOU', and other trash`,
+    en: `Find commonly repeated lines in text file, which likely indicate spam/advertisement that should be excluded. \nFor example 'Advertisement', 'RECOMMENDED VIDEOS FOR YOU', and other unwanted content`,
   },
   globOptionDescription: {
     en: 'file/folder to search for spam (path or glob pattern). \nNote, when providing a glob pattern, it should be enclosed in quotes. \nSee full glob syntax: https://www.npmjs.com/package/glob#glob-primer\nCan provide multiple space-separated values. \nIf markdown files are provided, they are converted to plain-text automatically',

@@ -1,7 +1,5 @@
 # Text Hoarder
 
-FINAL: update the docs
-
 ## Development
 
 ### Installation

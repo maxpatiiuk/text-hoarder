@@ -29,15 +29,14 @@ const webStoreUrl = `https://chromewebstore.google.com/u/1/detail/${extensionId}
 export const urls = {
   privacyPolicy:
     'https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/privacy.md',
-  sourceCode: 'https://github.com/maxxxxxdlp/text-hoarder',
+  sourceCode: 'https://github.com/maxpatiiuk/text-hoarder',
   requestFeature:
-    'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md',
+    'https://github.com/maxpatiiuk/text-hoarder/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md',
   reportIssue:
-    'https://github.com/maxxxxxdlp/text-hoarder/issues/new?assignees=&labels=bug&projects=&template=bug_report.md',
+    'https://github.com/maxpatiiuk/text-hoarder/issues/new?assignees=&labels=bug&projects=&template=bug_report.md',
   webStore: webStoreUrl,
   webStoreReview: `${webStoreUrl}/reviews`,
-  docs:
-    'https://github.com/maxpatiiuk/text-hoarder/tree/main/docs#readme',
+  docs: 'https://github.com/maxpatiiuk/text-hoarder/tree/main/docs#readme',
   excludeList:
     'https://github.com/maxpatiiuk/text-hoarder/blob/main/packages/cli/src/components/Spam/exclude-list.txt',
 };

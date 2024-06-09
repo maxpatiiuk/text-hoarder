@@ -21,23 +21,6 @@ import { commonText } from '@common/localization/commonText';
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 
-// FEATURE: consider adding more text pre-processing steps to the extension rather than the CLI
-// FINAL: add webpack dev server for stats? https://morioh.com/a/c6e73ed575bb/how-to-package-nodejs-application-using-webpack#google_vignette
-
-// FINAL: Deploy cors-auth-middleware to vercel
-// FINAL: Sync example config files with changes in real config files
-// FINAL: Add github repository description and meta (home url, setup url)
-// FINAL: Add description and meta data for github app (and "Add a note to users")
-// FINAL: Add documentation & screenshots & video (compare to calendar plus
-// FINAL: in each package root, show dev docs, but clearly tell that main docs are in root README and in docs/ dir
-//   documentation)
-// FINAL:  Add description and action.default_title in manifest.json
-// FINAL: Add to portfolio
-// FINAL: Submit to Chrome Web Store and post link in several places
-// FINAL: In GitHub App settings, set "Make this GitHub App public" to allow others
-//   to install the app
-// FINAL: once published, send link to coworkers & friends
-
 // Remove previous reader mode instance
 const previousDialog = document.getElementById(extensionContainerId);
 const alreadyOpen = previousDialog !== null;

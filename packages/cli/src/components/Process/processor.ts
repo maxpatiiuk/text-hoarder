@@ -118,7 +118,6 @@ export function textProcessor(
 
       const uniqueNames = splitText.map((text) => {
         const newName = getUniqueName(
-          // title,
           host === undefined ? title : `${host} - ${title}`,
           usedNames,
           maxLength,

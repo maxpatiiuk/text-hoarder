@@ -9,8 +9,6 @@ The companion has the following powerful features:
 - [Optimize saved articles for text-to-speech software](#processing-text)
 - [Automatically exclude unwanted content and advertisements from saved articles](#finding-spam-lines)
 
-// FIXME: write this
-
 ## Getting started
 
 As a pre-requisite, you should have
@@ -46,16 +44,6 @@ If you need help cloning the repository from the command line, see
 You can create a webpage with comprehensive statistics about the saved articles
 using the `npx text-hoarder stats` command.
 
-// FIXME: write this
-
-// FIXME: add nice screenshots
-
-// FIXME: add CLI video
-
-// FIXME: add json download option to the stats html page?
-
-// FIXME: attach example outputs for the commands
-
 ### Example Usage
 
 ```sh
@@ -65,6 +53,25 @@ cd YOUR_TEXT_HOARDER_REPOSITORY
 # To see all options, run "npx text-hoarder stats --help"
 npx text-hoarder stats
 ```
+
+### Example output:
+
+```
+Computing statistics...
+1%
+... trimmed ...
+99%
+100%
+Finalizing output...
+```
+
+Once complete, stats.html will open in your browser:
+
+![Stats page displays a chart of saved articles per time period and a button to download stats as JSON](./assets/stats-top.webp)
+
+![There are metrics for total number of articles, paragraphs, sentences, unique words, words and characters](./assets/stats-middle.webp)
+
+![There are tables for most commonly saved websites and most common words](./assets/stats-bottom.webp)
 
 ## Processing Text
 
@@ -123,12 +130,12 @@ for f in *.txt; do
   echo "Generating $f.flac"
   # -r controls speaking rate. Run "man say" to see all options
   say -r 100 -o "$f.flac" --progress "$(cat $f)"
-  # NOTE: this deletes the original text file
+  # NOTE: this deletes the processed text file after it's converted to audio
   rm "$f"
 done
 ```
 
-> NOTE: the above script removes the original text file after converting it to
+> NOTE: the above script removes the processed text file after converting it to
 > audio. This allows to mark current progress and makes restarting the command
 > easy if it freezes. If you do not wish this, remove the `rm "$f"` line.
 

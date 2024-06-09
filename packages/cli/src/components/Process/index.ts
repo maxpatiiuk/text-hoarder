@@ -80,7 +80,6 @@ export const registerProcessCommand = (program: Command<[], {}>) =>
     )
     .action(processArticles);
 
-// FIXME: export files for 2023-11-18
 type ProcessProps = {
   readonly repository: string;
   readonly glob?: RA<string>;

@@ -1,5 +1,11 @@
 # Text Hoarder
 
+This document describes how to do local development and local deployment of Text
+Hoarder extension. For regular users, see [introduction page](../../README.md).
+
+As a companion of this extension a [CLI is available](../../docs/cli.md) for
+generating stats based on your saved articles.
+
 ## Local Installation
 
 ### Get extension ID
@@ -116,3 +122,11 @@ Note, this project does not include tests, which is an intentional decision.
 Read the commit message in
 [af2eedf](https://github.com/maxpatiiuk/text-hoarder/commit/af2eedf) to see
 several justifications (and why this may be reversed in the future).
+
+## Previous iterations
+
+Previous iterations of the general idea of Text Hoarder:
+
+- [tts-reader](https://github.com/maxpatiiuk/tts-reader/)
+- [python_tts](https://github.com/maxpatiiuk/python_tts/)
+- [TTS King](https://github.com/maxpatiiuk/tts_king/)
