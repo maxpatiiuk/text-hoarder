@@ -1,0 +1,26 @@
+{
+  "name": "text-hoarder",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxpatiiuk/text-hoarder.git"
+  },
+  "author": "Max Patiiuk",
+  "keywords": [
+    "chrome-extension",
+    "cli",
+    "text-to-speech",
+    "readability",
+    "declutter"
+  ],
+  "homepage": "https://github.com/maxpatiiuk/text-hoarder#readme",
+  "bugs": {
+    "url": "https://github.com/maxpatiiuk/text-hoarder/issues"
+  },
+  "scripts": {},
+  "bin": {
+    "text-hoarder": "cli.bundle.js"
+  }
+}

@@ -42,7 +42,7 @@ Your common sources and topics:
 
 ---
 
-[Report a Bug/Feature Request](https://github.com/maxpatiiuk/calendar-plus/issues/new/choose)
+[Report a Bug / Feature Request](https://github.com/maxpatiiuk/calendar-plus/issues/new/choose)
 
 Note, to experience all features, you need to create a GitHub repository for
 Text Hoarder to use as storage.

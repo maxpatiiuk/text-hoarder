@@ -1,9 +1,8 @@
 # Text Hoarder CLI Docs
 
-Text Hoarder browser extension comes with an optional command line companion
-program.
-
-The companion has the following powerful features:
+[Text Hoarder browser extension](https://chromewebstore.google.com/u/1/detail/bjknebjiadgjchmhppdfdiddfegmcaao)
+comes with an optional command line companion that provides the following
+powerful features:
 
 - [Generate comprehensive statistics about your saved articles](#generating-stats)
 - [Optimize saved articles for text-to-speech software](#processing-text)
@@ -36,7 +35,7 @@ If you need help cloning the repository from the command line, see
 > git config --global core.longpaths true
 > ```
 >
-> Without this, "git clone" may fail if your text hoarder repository saved
+> Without this, "git clone" may fail if your text hoarder repository has saved
 > articles with very long URLs
 
 ## Generating Stats
@@ -67,11 +66,11 @@ Finalizing output...
 
 Once complete, stats.html will open in your browser:
 
-![Stats page displays a chart of saved articles per time period and a button to download stats as JSON](./assets/stats-top.webp)
+![Stats page displays a chart of saved articles per time period and a button to download stats as JSON](https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/assets/stats-top.webp)
 
-![There are metrics for total number of articles, paragraphs, sentences, unique words, words and characters](./assets/stats-middle.webp)
+![There are metrics for total number of articles, paragraphs, sentences, unique words, words and characters](https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/assets/stats-middle.webp)
 
-![There are tables for most commonly saved websites and most common words](./assets/stats-bottom.webp)
+![There are tables for most commonly saved websites and most common words](https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/assets/stats-bottom.webp)
 
 ## Processing Text
 
@@ -191,6 +190,7 @@ Next time you run `npx text-hoarder process` or `npx text-hoarder find-spam`,
 the unwanted lines would be excluded automatically.
 
 By default, text-hoarder's CLI comes with a list of common spam lines built in.
-See the [full list](../packages/cli/src/components/Spam/exclude-list.txt). If
-you do not wish to use this list, pass the `--no-default-exclude` option when
+See the
+[full list](https://github.com/maxpatiiuk/text-hoarder/blob/main/packages/cli/src/components/Spam/exclude-list.txt).
+If you do not wish to use this list, pass the `--no-default-exclude` option when
 running the commands.

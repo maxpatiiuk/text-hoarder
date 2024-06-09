@@ -35,9 +35,9 @@ export const signInText = dictionary({
   createRepositoryPrompt: {
     en: (link: (label: string) => JSX.Element) => (
       <>
-        Then, proceed to {link('create a new repository')} for this extension.
-        Set repository visibility to private if you wish to keep your snippets
-        accessible only to you.
+        Then, proceed to {link('create a new repository')} for{' '}
+        {commonText.textHoarder}. Set repository visibility to private if you
+        wish to keep your snippets accessible only to you.
       </>
     ),
   },

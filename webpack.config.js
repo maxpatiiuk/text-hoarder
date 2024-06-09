@@ -151,6 +151,11 @@ function makeConfig(packageName, mode, target = 'web') {
                 rootDirectory,
                 'packages/cli/src/components/Spam/exclude-list.txt',
               ),
+              path.resolve(rootDirectory, 'packages/cli/npm/package.json'),
+              {
+                from: path.resolve(rootDirectory, 'docs/cli.md'),
+                to: 'README.md',
+              },
             ],
           })
         : undefined,

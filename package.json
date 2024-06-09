@@ -8,16 +8,17 @@
     "url": "https://github.com/maxpatiiuk/text-hoarder.git"
   },
   "author": "Max Patiiuk",
-  "homepage": "https://github.com/maxpatiiuk/text-hoarder#readme",
+  "homepage": "https://github.com/maxpatiiuk/text-hoarder/blob/main/docs/cli.md",
   "bugs": {
-    "url": "https://github.com/maxpatiiuk/text-hoarder/issues"
+    "url": "https://github.com/maxpatiiuk/text-hoarder/issues/new/choose"
   },
   "bin": {
     "text-hoarder": "./packages/cli/dist/cli.bundle.js"
   },
   "scripts": {
     "build": "webpack --mode production",
-    "package": "tsc && npm run build && zip -r text-hoarder.zip dist public index.html manifest.json",
+    "package:extension": "tsc && cd packages/browser-extension && npm run build && zip -r text-hoarder.zip dist public options.html manifest.json",
+    "package:cli": "tsc && cd packages/browser-extension && npm run build && zip -r text-hoarder.zip dist public options.html manifest.json",
     "watch": "webpack --mode development --watch",
     "test": "node --import tsx/esm --test packages/common/src/utils/__tests__/*.test.ts"
   },
