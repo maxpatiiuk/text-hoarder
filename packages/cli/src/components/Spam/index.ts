@@ -101,7 +101,7 @@ export function runGlob(
    */
   const smartGlobs = globs.map((glob) =>
     isGlobby.some((character) => glob.includes(character)) ||
-    (glob.endsWith('/') && glob.slice(1).includes('.'))
+    fs.statSync(glob, { throwIfNoEntry: false })?.isFile() === true
       ? glob
       : `${glob}${glob.endsWith('/') ? '' : '/'}**/*.{md,txt}`,
   );

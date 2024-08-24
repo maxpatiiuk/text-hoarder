@@ -8,7 +8,7 @@ Features:
 
 - Customizable reader mode
   - Bypass flashing ads, distracting elements, scrolljacking and other
-    inconveniences of modern day web browsing.
+    inconveniences of modern day web browsing
   - Improve accessibility & usability of any webpage
   - Automatically enter reader mode for configured webpages
   - Download simplified page as HTML, markdown or plain text
