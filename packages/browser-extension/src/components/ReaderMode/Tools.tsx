@@ -108,7 +108,7 @@ export function Tools({
     <div
       className={`
         fixed top-0 right-0 flex backdrop-blur rounded-es print:hidden
-        bg-white/80 dark:bg-black/70 max-h-full
+        bg-white/80 dark:bg-black/70 max-h-full z-50
         ${className.baseText}
         ${
           selectedTool === undefined
