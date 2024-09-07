@@ -25,9 +25,13 @@ export function getUniqueName(
    */
   maxLength: number = Number.POSITIVE_INFINITY,
   type: keyof typeof format = 'title',
+  /**
+   * For ensuring natural sort order when sorting by ascii
+   */
   padLength = 0,
+  isRecursiveCall = false,
 ): string {
-  if (!usedNames.includes(name))
+  if ((isRecursiveCall || padLength === 0) && !usedNames.includes(name))
     return name.length < maxLength
       ? name
       : getUniqueName(
@@ -36,6 +40,7 @@ export function getUniqueName(
           maxLength,
           type,
           padLength,
+          true,
         );
 
   const { prefix, suffix } = format[type];
@@ -50,42 +55,32 @@ export function getUniqueName(
     `^${escapeRegExp(strippedName)}${reSuffix.source}`,
     'u',
   );
-  const indexes = [
-    indexString,
-    ...usedNames.map((name) => indexRegex.exec(name)?.[1]),
-  ];
+  const currentIndex = f.parseInt(indexString) ?? 0;
+  const indexes = usedNames
+    .map((name) => f.parseInt(indexRegex.exec(name)?.[1]) ?? 0)
+    .filter(isDefined);
+  const highestExistingIndex = Math.max(0, ...indexes);
+  // If current entry is already highest index, don't increment it
   const newIndex =
-    Math.max(
-      ...indexes.map((string) => f.parseInt(string) ?? 1).filter(isDefined),
-    ) + 1;
-  // This ensures natural sort order when using wildcards in bash
+    currentIndex > highestExistingIndex
+      ? currentIndex
+      : highestExistingIndex + 1;
   const paddedNewIndex =
-    padLength === 0
-      ? newIndex
-      : newIndex
-          .toString()
-          .padStart(
-            Math.max(
-              padLength,
-              ...indexes.map((string) => string?.length ?? 0),
-            ),
-            '0',
-          );
+    padLength === 0 ? newIndex : newIndex.toString().padStart(padLength, '0');
   const uniquePart = `${prefix}${paddedNewIndex}${suffix}`;
   const newName =
-    newIndex === 1 && length === 0
+    padLength === 0 && newIndex === 1 && length === 0
       ? strippedName
       : `${strippedName}${uniquePart}`;
 
-  // Call itself again just in case the new name is also used
-  return getUniqueName(
-    // Handle new name being over length limit
+  // Handle new name being over length limit
+  const finalName =
     newName.length > maxLength
       ? name.slice(0, -1 * uniquePart.length)
-      : newName,
-    usedNames,
-    maxLength,
-    type,
-    padLength,
-  );
+      : newName;
+
+  // Call itself again just in case the new name is also used
+  return finalName === name
+    ? name
+    : getUniqueName(finalName, usedNames, maxLength, type, padLength, true);
 }

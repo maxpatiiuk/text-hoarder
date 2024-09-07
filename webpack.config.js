@@ -111,7 +111,7 @@ function makeConfig(packageName, mode, target = 'web') {
     // Set appropriate process.env.NODE_ENV
     mode: mode,
     /*
-     * User recommended source map type in production
+     * Use recommended source map type in production
      * Can't use the recommended "eval-source-map" in development due to
      * https://stackoverflow.com/questions/48047150/chrome-extension-compiled-by-webpack-throws-unsafe-eval-error
      */
