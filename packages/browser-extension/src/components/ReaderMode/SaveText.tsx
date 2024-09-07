@@ -80,7 +80,8 @@ export function SaveText({
   readonly onSaved: (fileName: string | false) => void;
 }): JSX.Element {
   const { github } = React.useContext(AuthContext);
-  const repository = useStorage('setup.repository')[0];
+  const [repository] = useStorage('setup.repository');
+  const [includeArticleUrl] = useStorage('extract.includeArticleUrl');
 
   const [isLoading, error, loading] = useLoading();
 
@@ -94,7 +95,10 @@ export function SaveText({
     // Fix request being sent twice when React is in development mode
     requestSent.current = true;
 
-    const markdown = simpleDocumentToMarkdown(simpleDocument);
+    const markdown = simpleDocumentToMarkdown(
+      simpleDocument,
+      includeArticleUrl,
+    );
     loading(
       github!
         .createFile(
@@ -107,7 +111,7 @@ export function SaveText({
           handleSaved(currentYearPath);
         }),
     );
-  }, [loading, github, wasAlreadySaved, simpleDocument]);
+  }, [loading, github, wasAlreadySaved, simpleDocument, includeArticleUrl]);
 
   const fileEditUrl =
     typeof repository === 'object' && typeof existingFile === 'string'

@@ -8,6 +8,7 @@ export async function downloadDocument(
   downloadFormat: 'markdown' | 'html' | 'text',
   simpleDocument: SimpleDocument,
   toolsContainer: HTMLElement,
+  includeArticleUrl: boolean,
 ): Promise<void> {
   if (downloadFormat === 'html') {
     const document = clonePage(simpleDocument, toolsContainer);
@@ -18,7 +19,7 @@ export async function downloadDocument(
     );
   }
 
-  const markdown = simpleDocumentToMarkdown(simpleDocument);
+  const markdown = simpleDocumentToMarkdown(simpleDocument, includeArticleUrl);
 
   if (downloadFormat === 'markdown')
     return downloadFile(

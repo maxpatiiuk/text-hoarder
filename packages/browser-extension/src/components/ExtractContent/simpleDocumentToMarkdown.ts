@@ -1,16 +1,29 @@
 import TurndownService from '@joplin/turndown';
 import { gfm } from '@joplin/turndown-plugin-gfm';
 import { SimpleDocument } from './documentToSimpleDocument';
+import { encoding } from '@common/utils/encoding';
 
 /**
  * Convert simple document to markdown to be saved to GitHub repository
  */
 export function simpleDocumentToMarkdown(
   simpleDocument: SimpleDocument,
+  includeArticleUrl: boolean,
 ): string {
-  return `# ${simpleDocument.title}\n\n${elementToMarkdown(
+  return `# ${simpleDocument.title}\n\n${includeArticleUrl ? `${getCleanUrl()}\n\n` : ''}${elementToMarkdown(
     simpleDocument.content,
   )}`;
+}
+
+/**
+ * During url to path conversion, we clean up the URL - run the process and
+ * reverse to get a cleaner URL
+ */
+function getCleanUrl(): string {
+  const raw = window.location.href;
+  const encoded = encoding.urlToPath.encode(0, raw);
+  const decoded = encoding.urlToPath.decode(encoded)[1];
+  return decoded;
 }
 
 const turndownService = new TurndownService({

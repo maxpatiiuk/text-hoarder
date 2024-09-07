@@ -34,6 +34,7 @@ export function Tools({
 
   const [_, __, catchErrors] = useLoading();
   const [downloadFormat] = useStorage('reader.downloadFormat');
+  const [includeArticleUrl] = useStorage('extract.includeArticleUrl');
   const handleDownload = React.useCallback(
     (): void =>
       containerRef.current === null
@@ -43,9 +44,10 @@ export function Tools({
               downloadFormat,
               simpleDocument,
               containerRef.current,
+              includeArticleUrl,
             ),
           ),
-    [catchErrors, downloadFormat],
+    [catchErrors, downloadFormat, includeArticleUrl],
   );
 
   const handleActivated = React.useCallback(

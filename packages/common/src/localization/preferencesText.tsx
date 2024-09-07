@@ -80,5 +80,8 @@ export const preferencesText = dictionary({
   undoUsingForcePush: {
     en: 'Undo using force push when possible',
   },
+  includeArticleUrl: {
+    en: 'Include article URL at the top of saved file',
+  },
 });
 /* eslint-enable @typescript-eslint/naming-convention */

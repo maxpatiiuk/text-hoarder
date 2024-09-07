@@ -89,5 +89,8 @@ export const definitions: IR<
     'github.undoUsingForcePush': Renderers.Checkbox(
       preferencesText.undoUsingForcePush,
     ),
+    'extract.includeArticleUrl': Renderers.Checkbox(
+      preferencesText.includeArticleUrl,
+    ),
   },
 };
