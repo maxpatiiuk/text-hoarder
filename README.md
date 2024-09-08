@@ -1,6 +1,6 @@
 # Text Hoarder
 
-[A browser extension for Google Calendar](https://chromewebstore.google.com/u/1/detail/bjknebjiadgjchmhppdfdiddfegmcaao)
+[A browser extension for Google Chrome](https://chromewebstore.google.com/u/1/detail/bjknebjiadgjchmhppdfdiddfegmcaao)
 that provides reader view, saving articles for later, and generation of stats of
 your reading habits.
 
@@ -42,7 +42,7 @@ Your common sources and topics:
 
 ---
 
-[Report a Bug / Feature Request](https://github.com/maxpatiiuk/calendar-plus/issues/new/choose)
+[Report a Bug / Feature Request](https://github.com/maxpatiiuk/text-hoarder/issues/new/choose)
 
 Note, to experience all features, you need to create a GitHub repository for
 Text Hoarder to use as storage.
