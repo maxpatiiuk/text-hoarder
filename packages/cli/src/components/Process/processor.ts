@@ -60,7 +60,7 @@ export function textProcessor(
       /**
        * Only delete previous directory contents once at least one file is
        * going to be outputted, so that directory is not needlessly deleted
-       * if a error occurs
+       * if an error occurs
        */
       prepareDirectory?.();
       prepareDirectory = undefined;
@@ -82,7 +82,9 @@ export function textProcessor(
           ? fullHost.slice('www.'.length)
           : fullHost;
 
-      const rawText = fs.readFileSync(file, 'utf8');
+      const rawText = readFile(file);
+      if (rawText === undefined) return;
+
       const { birthtime: createdDate, mtime: modifiedDate } =
         date === undefined
           ? fs.statSync(file)
@@ -138,6 +140,15 @@ export function textProcessor(
       stats.output();
     },
   };
+}
+
+function readFile(fileName: string): string | undefined {
+  try {
+    return fs.readFileSync(fileName, 'utf8');
+  } catch {
+    console.error('Failed to read the file. Skipping it');
+    return undefined;
+  }
 }
 
 function splitFile(text: string, maxSize: number): RA<string> {
