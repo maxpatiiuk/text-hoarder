@@ -66,15 +66,20 @@ export function textProcessor(
       prepareDirectory = undefined;
 
       const relativeFile = relative(rootDir, file);
+      const relativeMatchIndex = relativeFile.match(reYearInPath)?.index;
+      // Try to align the path so that it begins with the year
+      let alignedPath = relativeFile;
+      if (relativeMatchIndex !== undefined)
+        alignedPath = relativeFile.slice(relativeMatchIndex);
+      else {
+        const absoluteMatchIndex = file.match(reYearInPath)?.index;
+        if (absoluteMatchIndex !== undefined)
+          alignedPath = file.slice(absoluteMatchIndex);
+      }
+
       console.log(relativeFile);
-      const [year, url] = encoding.urlToPath.decode(
-        // Try to align the path so that it begins with the year
-        relativeFile.includes('/2')
-          ? relativeFile.slice(relativeFile.indexOf('/2') + 1)
-          : file.includes('/2')
-            ? file.slice(file.indexOf('/2') + 1)
-            : relativeFile,
-      );
+      const [year, url] = encoding.urlToPath.decode(alignedPath);
+
       // Check if the path was created by Text Hoarder
       const fullHost = Number.isNaN(year) ? undefined : new URL(url).hostname;
       const host =
@@ -141,6 +146,8 @@ export function textProcessor(
     },
   };
 }
+
+const reYearInPath = /(^|[\/\\])2\d{3}[\/\\]/u;
 
 function readFile(fileName: string): string | undefined {
   try {
