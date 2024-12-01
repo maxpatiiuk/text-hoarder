@@ -29,19 +29,11 @@ export function getUniqueName(
    * For ensuring natural sort order when sorting by ascii
    */
   padLength = 0,
-  isRecursiveCall = false,
 ): string {
-  if ((isRecursiveCall || padLength === 0) && !usedNames.includes(name))
-    return name.length < maxLength
+  if (!usedNames.includes(name))
+    return name.length <= maxLength
       ? name
-      : getUniqueName(
-          name.slice(0, maxLength - 1),
-          usedNames,
-          maxLength,
-          type,
-          padLength,
-          true,
-        );
+      : getUniqueName(name, usedNames, maxLength, type, padLength);
 
   const { prefix, suffix } = format[type];
   const reSuffix = new RegExp(
@@ -73,14 +65,16 @@ export function getUniqueName(
       ? strippedName
       : `${strippedName}${uniquePart}`;
 
+  const isTooLong = newName.length > maxLength;
   // Handle new name being over length limit
-  const finalName =
-    newName.length > maxLength
-      ? name.slice(0, -1 * uniquePart.length)
-      : newName;
+  const trimmedName = isTooLong
+    ? length > 0
+      ? strippedName
+      : strippedName.slice(0, Math.min(maxLength, strippedName.length - 1))
+    : newName;
 
   // Call itself again just in case the new name is also used
-  return finalName === name
-    ? name
-    : getUniqueName(finalName, usedNames, maxLength, type, padLength, true);
+  return isTooLong || newName !== name
+    ? getUniqueName(trimmedName, usedNames, maxLength, type, padLength)
+    : name;
 }
