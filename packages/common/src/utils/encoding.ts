@@ -165,11 +165,10 @@ export const encoding = {
   date: {
     encode: (rawDate: Date) => {
       const date = new Date(rawDate);
-      date.setUTCHours(0, 0, 0, 0);
       return [
-        date.getUTCFullYear(),
-        (date.getUTCMonth() + 1).toString().padStart(2, '0'),
-        date.getUTCDate().toString().padStart(2, '0'),
+        date.getFullYear(),
+        (date.getMonth() + 1).toString().padStart(2, '0'),
+        date.getDate().toString().padStart(2, '0'),
       ].join('-');
     },
   },

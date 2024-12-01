@@ -139,6 +139,8 @@ describe('urlToPath', () => {
 describe('date', () => {
   const date = '2020-10-01T00:00:00-00:00';
   const from = new Date(date);
+  // Adjust for local time zone being different from UTC
+  from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
   const to = '2020-10-01';
   test('encode', () => assert.equal(encoding.date.encode(from), to));
 });
