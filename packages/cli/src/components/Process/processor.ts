@@ -122,7 +122,8 @@ export function textProcessor(
         ) ||
         encoding.fileTitle.encode(commonText.textHoarder);
       const splitText = splitFile(newText, split);
-      const padLength = splitText.length.toString().length;
+      const padLength =
+        splitText.length === 1 ? 0 : splitText.length.toString().length;
 
       const uniqueNames = splitText.map((text) => {
         const newName = getUniqueName(

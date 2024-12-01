@@ -18,7 +18,7 @@ export function getUniqueName(
   usedNames: RA<string>,
   /**
    * In the process of making the name unique, its length may increase.
-   * This trims the string if needed, while still keeping it unique
+   * This option trims the string if needed, while still keeping it unique
    *
    * @remarks
    * Can get this number from SQL schema for a given field
@@ -29,11 +29,13 @@ export function getUniqueName(
    * For ensuring natural sort order when sorting by ascii
    */
   padLength = 0,
+  isRecursive = false,
 ): string {
-  if (!usedNames.includes(name))
-    return name.length <= maxLength
-      ? name
-      : getUniqueName(name, usedNames, maxLength, type, padLength);
+  const isUnique = !usedNames.includes(name);
+  if (isUnique && name.length <= maxLength && (padLength === 0 || isRecursive))
+    return name;
+
+  const defaultIndex = isUnique ? 0 : 1;
 
   const { prefix, suffix } = format[type];
   const reSuffix = new RegExp(
@@ -41,13 +43,14 @@ export function getUniqueName(
     'u',
   );
   const matchedSuffix = reSuffix.exec(name);
-  const [{ length }, indexString] = matchedSuffix ?? ([[], '0'] as const);
+  const [{ length }, indexString] =
+    matchedSuffix ?? ([[], defaultIndex.toString()] as const);
   const strippedName = length > 0 ? name.slice(0, -1 * length) : name;
   const indexRegex = new RegExp(
     `^${escapeRegExp(strippedName)}${reSuffix.source}`,
     'u',
   );
-  const currentIndex = f.parseInt(indexString) ?? 0;
+  const currentIndex = f.parseInt(indexString) ?? defaultIndex;
   const indexes = usedNames
     .map((name) => f.parseInt(indexRegex.exec(name)?.[1]) ?? 0)
     .filter(isDefined);
@@ -55,7 +58,7 @@ export function getUniqueName(
   // If current entry is already highest index, don't increment it
   const newIndex =
     currentIndex > highestExistingIndex
-      ? currentIndex
+      ? currentIndex + 1
       : highestExistingIndex + 1;
   const paddedNewIndex =
     padLength === 0 ? newIndex : newIndex.toString().padStart(padLength, '0');
@@ -75,6 +78,13 @@ export function getUniqueName(
 
   // Call itself again just in case the new name is also used
   return isTooLong || newName !== name
-    ? getUniqueName(trimmedName, usedNames, maxLength, type, padLength)
+    ? getUniqueName(
+        trimmedName,
+        usedNames,
+        maxLength,
+        type,
+        padLength,
+        !isTooLong,
+      )
     : name;
 }
