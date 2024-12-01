@@ -137,9 +137,9 @@ export const cliText = dictionary({
   outputDirAlreadyExits: {
     en: (outputDir: string) =>
       [
-        `Output directory already exists (${outputDir}).`,
+        `Output directory already exists and is not empty (${outputDir}).`,
         'Please provide a different directory using --output-dir',
-        'Or, add --force-output-dir to overwrite existing directory',
+        'Or, re-run with --force-output-dir to overwrite existing directory',
       ].join('\n'),
   },
   ignoringSinceTag: {

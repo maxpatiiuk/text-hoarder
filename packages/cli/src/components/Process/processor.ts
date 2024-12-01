@@ -45,7 +45,8 @@ export function textProcessor(
   const usedNames: string[] = [];
 
   let prepareDirectory: (() => void) | undefined = () => {
-    const directoryExists = fs.existsSync(outputDir);
+    const directoryExists =
+      fs.existsSync(outputDir) && fs.readdirSync(outputDir).length !== 0;
     if (directoryExists)
       if (forceOutputDir) fs.rmSync(outputDir, { recursive: true });
       else {
