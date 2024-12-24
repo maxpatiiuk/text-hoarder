@@ -176,7 +176,11 @@ export async function processArticles({
     typeof newTag === 'string' &&
     (rawSinceTag === false || rawSinceTag === null) &&
     tillTag === undefined;
-  if (!shouldCreateTag && typeof createTag === 'string')
+  if (
+    !shouldCreateTag &&
+    typeof createTag === 'string' &&
+    createTag !== todaysTag
+  )
     console.warn(cliText.ignoringCreateTagAlt);
 
   const unbounded = sinceTag === undefined && tillTag === undefined;
@@ -184,10 +188,10 @@ export async function processArticles({
     unbounded
       ? tags
       : sinceTag === undefined
-        ? tags.slice(0, tags.indexOf(tillTag!))
+        ? tags.slice(0, tags.indexOf(tillTag!) + 1)
         : tillTag === undefined
           ? tags.slice(tags.indexOf(sinceTag) + 1)
-          : tags.slice(tags.indexOf(sinceTag) + 1, tags.indexOf(tillTag)),
+          : tags.slice(tags.indexOf(sinceTag) + 1, tags.indexOf(tillTag) + 1),
   );
 
   const allFiles = await tagsToFileMeta(tags, git);
