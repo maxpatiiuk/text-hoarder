@@ -1,4 +1,4 @@
-import { savedFileExtension, encoding } from '@common/utils/encoding';
+import { encoding, savedFileExtension } from '@common/utils/encoding';
 import { RA } from '@common/utils/types';
 import { getUniqueName } from '@common/utils/uniquifyName';
 import { relative, sep, join } from 'path';
@@ -16,6 +16,7 @@ const maxSafeWindowsPath = 250;
 // See https://serverfault.com/a/9548/522337
 const maxFileNameLength = 255;
 const minTitleLength = 20;
+const processedFileExtension = '.txt';
 export function textProcessor(
   rootDir: string,
   outputDir: string,
@@ -37,7 +38,7 @@ export function textProcessor(
     process.platform === 'win32' &&
     outputDir.length + minTitleLength < maxSafeWindowsPath
       ? maxSafeWindowsPath - outputDir.length
-      : maxFileNameLength - savedFileExtension.length;
+      : maxFileNameLength - processedFileExtension.length;
 
   console.log(cliText.processingFiles);
 
@@ -134,7 +135,7 @@ export function textProcessor(
           padLength,
         );
         usedNames.push(newName);
-        return [join(outputDir, `${newName}.txt`), text];
+        return [join(outputDir, `${newName}${processedFileExtension}`), text];
       });
 
       uniqueNames.forEach(([path, text]) => {
