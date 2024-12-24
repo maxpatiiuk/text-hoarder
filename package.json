@@ -20,7 +20,7 @@
     "package:extension": "tsc && cd packages/browser-extension && npm run build && zip -r text-hoarder.zip dist public options.html manifest.json",
     "publish:cli": "tsc && cd packages/cli && npm run build && cd dist && npm publish",
     "watch": "webpack --mode development --watch",
-    "test": "node --import tsx/esm --test packages/common/src/utils/__tests__/*.test.ts"
+    "test": "node --import tsx/esm --test packages/common/src/utils/__tests__/*.test.ts packages/browser-extension/src/components/ExtractContent/markdownToText.spec.ts"
   },
   "dependencies": {
     "@commander-js/extra-typings": "^12.0.0",

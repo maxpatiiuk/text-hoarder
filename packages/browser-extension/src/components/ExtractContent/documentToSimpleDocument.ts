@@ -52,7 +52,33 @@ export function documentToSimpleDocument(
 }
 
 // From https://stackoverflow.com/a/34064434/8584605
-function htmlDecode(input: string): string {
-  const doc = new DOMParser().parseFromString(input, 'text/html');
+export function htmlDecode(input: string): string {
+  if (globalThis.DOMParser === undefined) return unescape(input);
+  const doc = new globalThis.DOMParser().parseFromString(input, 'text/html');
   return doc.documentElement.textContent ?? input;
 }
+
+/**
+ * Based on https://github.com/markedjs/marked/blob/476b85e99ae4101d8cf94957328f70777c911b2c/src/helpers.ts#L29
+ */
+const unescape = (input: string): string =>
+  input.replace(reUnescapeTest, (_, n) => {
+    n = n.toLowerCase();
+    const replacement = escapeReplacements[n];
+    if (replacement) return replacement;
+    else if (n.charAt(0) === '#') {
+      return n.charAt(1) === 'x'
+        ? String.fromCharCode(parseInt(n.substring(2), 16))
+        : String.fromCharCode(+n.substring(1));
+    }
+    return '';
+  });
+const escapeReplacements: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  colon: ':',
+};
+const reUnescapeTest = /&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));/gi;
