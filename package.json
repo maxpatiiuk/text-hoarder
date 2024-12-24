@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "package:extension": "tsc && cd packages/browser-extension && npm run build && zip -r text-hoarder.zip dist public options.html manifest.json",
+    "package:extension": "tsc && cd packages/browser-extension && npm run build && zip -FSr text-hoarder.zip dist public options.html manifest.json",
     "publish:cli": "tsc && cd packages/cli && npm run build && cd dist && npm publish",
     "watch": "webpack --mode development --watch",
     "test": "node --import tsx/esm --test packages/common/src/utils/__tests__/*.test.ts packages/browser-extension/src/components/ExtractContent/markdownToText.spec.ts"

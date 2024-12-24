@@ -1,7 +1,7 @@
 {
   "name": "Text Hoarder",
   "short_name": "Text Hoarder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Reader view, save articles, and see stats of your reading habits",
   "author": "Max Patiiuk",
   "manifest_version": 3,
