@@ -10,7 +10,7 @@ import ShebangPlugin from 'webpack-shebang-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 
 const version = JSON.parse(
-  fs.readFileSync('packages/browser-extension/manifest.json', 'utf8'),
+  fs.readFileSync('packages/cli/npm/package.json', 'utf8'),
 ).version;
 
 export default function (_, { mode }) {
