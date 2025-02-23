@@ -8,14 +8,12 @@ import { encoding } from '@common/utils/encoding';
 import { RA } from '@common/utils/types';
 import { join, resolve } from 'node:path';
 import { resolveExcludes, runGlob } from '../Spam';
-import { formatNumber } from '@common/components/Atoms/Internationalization';
 import { f } from '@common/utils/functools';
 import { reshapeText } from './reshaper';
 import { textProcessor } from './processor';
 
 const today = new Date();
 const todaysTag = encoding.date.encode(today);
-const defaultSplit = 32_000;
 
 export const registerProcessCommand = (program: Command<[], {}>) =>
   program
@@ -62,12 +60,7 @@ export const registerProcessCommand = (program: Command<[], {}>) =>
       cliText.forceOutputDirOptionDescription,
       false,
     )
-    .addOption(
-      new Option(
-        '-s, --split <number>',
-        cliText.splitOptionDescription,
-      ).default(defaultSplit.toString(), formatNumber(defaultSplit)),
-    )
+    .option('-s, --split <number>', cliText.splitOptionDescription)
     .option(
       '--no-exclude-duplicated-lines',
       cliText.noExcludeDuplicatedLinesOptionDescription,
@@ -94,7 +87,7 @@ type ProcessProps = {
   readonly defaultExclude: boolean;
   readonly excludeList?: string | undefined;
   readonly excludeDuplicatedLines: boolean;
-  readonly split: string;
+  readonly split?: string;
 };
 
 export async function processArticles({
@@ -114,7 +107,7 @@ export async function processArticles({
   split: rawSplit,
 }: ProcessProps): Promise<void> {
   const exclude = resolveExcludes(excludeList, process.cwd(), defaultExclude);
-  const split = f.parseInt(rawSplit) ?? defaultSplit;
+  const split = f.parseInt(rawSplit) ?? Number.POSITIVE_INFINITY;
   const reshaper = reshapeText(exclude, excludeDuplicatedLines);
 
   const outputDir = resolve(repository, rawOutputDir);

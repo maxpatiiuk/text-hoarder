@@ -126,7 +126,7 @@ export const cliText = dictionary({
     en: 'Warning: Output directory path might be too long for Windows',
   },
   splitOptionDescription: {
-    en: 'split a processed article if it is longer than this number of characters. Pass 0 to disable splitting',
+    en: 'split a processed article if it is longer than this number of characters',
   },
   forceOutputDirOptionDescription: {
     en: 'overwrite output directory even if it already exists',

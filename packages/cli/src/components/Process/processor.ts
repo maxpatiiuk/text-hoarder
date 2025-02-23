@@ -162,7 +162,7 @@ function readFile(fileName: string): string | undefined {
 }
 
 function splitFile(text: string, maxSize: number): RA<string> {
-  if (maxSize === 0 || text.length < maxSize) return [text];
+  if (maxSize <= 0 || text.length < maxSize) return [text];
   const lines = text.split('\n');
   const chunks: string[] = [];
   let currentChunk = '';
