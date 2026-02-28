@@ -18,6 +18,11 @@ export default defineConfig({
       '@common': path.resolve(rootDir, 'packages/common/src'),
     },
   },
+  define: {
+    // Vite doesn't auto-replace process.env in IIFE lib mode; do it explicitly
+    // so React and other libraries don't reference undefined `process`
+    'process.env.NODE_ENV': JSON.stringify('production'),
+  },
   build: {
     outDir: 'packages/cli/dist',
     emptyOutDir: false,
