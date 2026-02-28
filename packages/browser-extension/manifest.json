@@ -1,7 +1,7 @@
 {
   "name": "Text Hoarder",
   "short_name": "Text Hoarder",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Reader view, save articles, and see stats of your reading habits",
   "author": "Max Patiiuk",
   "manifest_version": 3,
@@ -20,36 +20,22 @@
     "service_worker": "./dist/background.bundle.js",
     "type": "module"
   },
-  "cross_origin_embedder_policy": {
-    "value": "require-corp"
-  },
-  "cross_origin_opener_policy": {
-    "value": "same-origin"
-  },
+  "cross_origin_embedder_policy": { "value": "require-corp" },
+  "cross_origin_opener_policy": { "value": "same-origin" },
   "options_page": "./options.html",
-  "action": {
-    "default_title": "Open Reader Mode"
-  },
+  "action": { "default_title": "Open Reader Mode" },
   "commands": {
     "_execute_action": {
-      "suggested_key": {
-        "mac": "Command+E",
-        "default": "Ctrl+E"
-      },
+      "suggested_key": { "mac": "Command+E", "default": "Ctrl+E" },
       "description": "Open Reader Mode"
     },
     "saveText": {
-      "suggested_key": {
-        "mac": "Command+Shift+E",
-        "default": "Ctrl+Shift+E"
-      },
+      "suggested_key": { "mac": "Command+Shift+E", "default": "Ctrl+Shift+E" },
       "description": "Save current page to GitHub repository"
     },
     "editText": {
       "description": "Open Editor for current page in GitHub repository"
     },
-    "download": {
-      "description": "Download current webpage"
-    }
+    "download": { "description": "Download current webpage" }
   }
 }
