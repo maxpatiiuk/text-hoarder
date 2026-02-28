@@ -1,4 +1,4 @@
-import { test, describe } from 'node:test';
+import { test, describe } from 'vitest';
 import assert from 'node:assert/strict';
 import { encoding, exportsForTests } from '../encoding';
 
