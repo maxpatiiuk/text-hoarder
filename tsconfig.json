@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig.json",
   /* File Inclusion */
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/dist"],
+  "exclude": ["**/node_modules", "**/dist", "packages/cors-auth-middleware"],
   "files": ["packages/common/src/declarations.d.ts"],
   "compilerOptions": {
     /* Type Checking */
