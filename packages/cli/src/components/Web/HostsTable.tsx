@@ -25,7 +25,7 @@ export function HostsTable({
       <H3>{statsText.topWebsites}</H3>
       <Table.Container
         className={`${className.strippedTable} ${
-          hasPrevious ? 'grid-cols-[auto,auto,1fr]' : 'grid-cols-[auto,1fr]'
+          hasPrevious ? 'grid-cols-[auto_auto_1fr]' : 'grid-cols-[auto_1fr]'
         } max-h-[80vh]`}
       >
         <Table.Head>
