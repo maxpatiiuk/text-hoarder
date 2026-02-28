@@ -1,9 +1,5 @@
-import mainCss from '@common/css/main.css?inline';
-import { collectStyle } from '../Core/styleLoader';
 import React from 'react';
 import { renderExtension } from '../Core/renderExtension';
-
-collectStyle(mainCss);
 import { className } from '@common/components/Atoms/className';
 import { usePageStyle } from '../Preferences/usePageStyle';
 
