@@ -1,4 +1,5 @@
 // See https://postcss.org/docs/postcss-plugin-guidelines for plugin writing
+import tailwindcss from '@tailwindcss/postcss';
 
 /**
  * Modify the .css file from the github-markdown-css library to have
@@ -7,7 +8,6 @@
  * See my solution posted in
  * https://github.com/sindresorhus/github-markdown-css/issues/104#issuecomment-1774279738
  */
-/** @type {import('postcss-load-config').ConfigPlugin} */
 const makeGitHubCssUseClassName = {
   postcssPlugin: 'makeGitHubCssUseClassName',
   // When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
@@ -39,7 +39,7 @@ const makeGitHubCssUseClassName = {
 };
 
 /**
- * When in content script, despite having my react tree inside of shadow rom,
+ * When in content script, despite having my react tree inside of shadow DOM,
  * host page's styles affect the size of "rem" unit.
  *
  * The workaround is:
@@ -52,7 +52,9 @@ const makeGitHubCssUseClassName = {
  *   and have that affect the font-size of the Popup
  * - Makes the content script protected against host page changing rem value
  */
-/** @type {import('postcss-load-config').ConfigPlugin} */
+// Regex to find all occurrences of "rem" units
+const remRegex = /(?<=\d)rem/g;
+
 const convertRemToEm = {
   postcssPlugin: 'convertRemToEm',
   // When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
@@ -61,15 +63,11 @@ const convertRemToEm = {
   },
 };
 
-// Regex to find all occurrences of "rem" units
-const remRegex = /(?<=\d)rem/g;
-
 /**
- * Fix tailwind's preflight apply styles only to "html" selector, and not
- * ":host", thus not working inside of shadow dom (since my <styles> block
- * is added only inside the shadow dom, "html" selector never matches)
+ * Fix Tailwind's preflight applying styles only to "html" selector, and not
+ * ":host", thus not working inside of shadow DOM (since my <style> block
+ * is added only inside the shadow DOM, "html" selector never matches)
  */
-/** @type {import('postcss-load-config').ConfigPlugin} */
 const useHostAlongsideHtml = {
   postcssPlugin: 'useHostAlongsideHtml',
   // When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
@@ -83,7 +81,6 @@ const useHostAlongsideHtml = {
  * GitHub styles do not override it either but rely on the user agent
  * stylesheet)
  */
-/** @type {import('postcss-load-config').ConfigPlugin} */
 const dontOverwriteListStyle = {
   postcssPlugin: 'dontOverwriteListStyle',
   // When debugging this, https://astexplorer.net/#/2uBU1BLuJ1 is very helpful
@@ -93,13 +90,10 @@ const dontOverwriteListStyle = {
   },
 };
 
-/** @type {import('postcss-load-config').Config} */
-module.exports = {
+export default {
   plugins: [
-    require('postcss-import'),
-    require('postcss-preset-env'),
-    require('tailwindcss'),
-    require('autoprefixer'),
+    // Tailwind v4 handles @import resolution and autoprefixing natively
+    tailwindcss,
     makeGitHubCssUseClassName,
     useHostAlongsideHtml,
     convertRemToEm,

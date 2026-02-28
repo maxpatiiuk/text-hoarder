@@ -1,18 +1,44 @@
-/**
- * This injects Tailwind's base styles and any base styles registered by
- * plugins.
- */
-@import 'tailwindcss/base';
+@import 'tailwindcss';
 @import './base.css';
 
-/**
- * This injects Tailwind's component classes and any component classes
- * registered by plugins.
- */
-@import 'tailwindcss/components';
+/* Use .dark class instead of prefers-color-scheme media query */
+@custom-variant dark (&:where(.dark, .dark *));
 
-/**
- * This injects Tailwind's utility classes and any utility classes registered
- * by plugins.
- */
-@import 'tailwindcss/utilities';
+@theme {
+  /* Replace the default border-radius scale entirely */
+  --radius-*: initial;
+  --radius-none: 0px;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Custom in-between color shades */
+  --color-gray-350: hsl(218deg 12% 79%);
+  --color-yellow-250: hsl(53deg 98% 72%);
+  --color-indigo-350: hsl(232deg 92% 79%);
+  --color-neutral-350: hsl(0deg 0% 73%);
+
+  /* Custom brightness values */
+  --brightness-70: 0.7;
+  --brightness-80: 0.8;
+
+  /* Custom transition duration */
+  --duration-0: 0ms;
+
+  /* Custom animation */
+  --animate-hue-rotate: 4s hue-rotate 2s linear infinite;
+}
+
+@keyframes hue-rotate {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(360deg);
+  }
+}
