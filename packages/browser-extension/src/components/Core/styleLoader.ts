@@ -1,10 +1,16 @@
 /**
- * Rather than appending styles directly to the page (as that would mess with)
- * the host page's styles, append styles to an array, so that they can later be
- * manually appended to Shadow DOM
+ * Rather than appending styles directly to the page (as that would mess with
+ * the host page's styles), collect CSS strings so they can later be manually
+ * appended to Shadow DOM as <style> elements.
  */
 
-const styleTags: HTMLLinkElement[] = [];
-export const getStyleTags = () => styleTags.map((node) => node.cloneNode(true));
+const styles: string[] = [];
 
-export default (linkTag: HTMLLinkElement): void => void styleTags.push(linkTag);
+export const collectStyle = (css: string): void => void styles.push(css);
+
+export const getStyleTags = (): HTMLStyleElement[] =>
+  styles.map((css) => {
+    const el = document.createElement('style');
+    el.textContent = css;
+    return el;
+  });

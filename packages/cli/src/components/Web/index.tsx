@@ -2,6 +2,7 @@
  * This script is called from the stats page opened by the CLI script
  */
 
+import '@common/css/main.css';
 import React from 'react';
 import { renderApp } from '@common/components/Core/renderApp';
 import { commonText } from '@common/localization/commonText';

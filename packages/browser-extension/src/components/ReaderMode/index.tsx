@@ -3,7 +3,9 @@
  * executed in the page that was active when action was triggered.
  */
 
-import 'github-markdown-css/github-markdown.css';
+import mainCss from '@common/css/main.css?inline';
+import markdownCss from 'github-markdown-css/github-markdown.css?inline';
+import { collectStyle } from '../Core/styleLoader';
 import { Dialog } from './Dialog';
 import { shouldAutoTrigger } from '../ExtractContent/shouldAutoTrigger';
 import {
@@ -18,6 +20,11 @@ import { renderExtension } from '../Core/renderExtension';
 import { applyHostPageStyles, extensionContainerId } from './hostStyles';
 import { ActivateExtension } from '../Background/messages';
 import { commonText } from '@common/localization/commonText';
+
+// Collect styles before any rendering occurs; they will be injected into the
+// shadow DOM when renderExtension is called later.
+collectStyle(mainCss);
+collectStyle(markdownCss);
 
 const activatedReason = chrome.storage.local.get('activatedReason');
 

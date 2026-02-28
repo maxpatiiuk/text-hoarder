@@ -30,7 +30,7 @@ export function findPath(
   return undefined;
 }
 
-const thisDirectory = dirname(import.meta.url);
+// At runtime this resolves to the directory containing the bundle (dist/)
+const thisDirectory = dirname(fileURLToPath(import.meta.url));
 /** Build a path to a file in packages/cli/dist/ */
-export const distPath = (path: string): string =>
-  fileURLToPath(join(thisDirectory, '../../../dist/', path));
+export const distPath = (path: string): string => join(thisDirectory, path);

@@ -59,6 +59,12 @@ declare global {
   }
 }
 
+// Type for Vite's ?inline CSS import query (returns processed CSS as a string)
+declare module '*.css?inline' {
+  const css: string;
+  export default css;
+}
+
 declare module '@joplin/turndown-plugin-gfm' {
   import TurndownService from 'turndown';
   export declare const gfm: TurndownService.Plugin;

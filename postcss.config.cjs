@@ -96,8 +96,8 @@ const dontOverwriteListStyle = {
 /** @type {import('postcss-load-config').Config} */
 module.exports = {
   plugins: [
-    'postcss-import',
-    'postcss-preset-env',
+    require('postcss-import'),
+    require('postcss-preset-env'),
     require('tailwindcss'),
     require('autoprefixer'),
     makeGitHubCssUseClassName,
