@@ -6,15 +6,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./packages/browser-extension
-
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: package.json
           cache: 'npm'
           cache-dependency-path: ./package-lock.json
 
@@ -22,13 +18,11 @@ jobs:
         run: npm ci
 
       - name: Build browser extension
-        working-directory: ./packages/browser-extension
         run: |
-          cp config.example config.ts
-          npm run build
+          cp packages/browser-extension/config.example packages/browser-extension/config.ts
+          npm run package:extension
 
       - name: Build CLI
-        working-directory: ./packages/cli
         run: npm run build
 
       - name: Build cors-auth-middleware
