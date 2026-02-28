@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "vite build --config vite.cli.config.ts && vite build --config vite.web.config.ts",
-    "package:extension": "tsc && vite build --config vite.extension.config.ts && cd packages/browser-extension && zip -FSr text-hoarder.zip dist public options.html manifest.json",
+    "package:extension": "tsc && vite build --config vite.extension.config.ts && vite build --config vite.reader-mode.config.ts && cd packages/browser-extension && zip -FSr text-hoarder.zip dist public options.html manifest.json",
     "publish:cli": "tsc && vite build --config vite.cli.config.ts && vite build --config vite.web.config.ts && cd packages/cli/dist && npm publish",
     "watch": "vite build --config vite.cli.config.ts --watch",
     "test": "vitest run"
