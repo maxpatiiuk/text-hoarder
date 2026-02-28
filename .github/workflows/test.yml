@@ -22,6 +22,9 @@ jobs:
           cp packages/browser-extension/config.example packages/browser-extension/config.ts
           npm run package:extension
 
+      - name: Typecheck
+        run: npx tsc
+
       - name: Build CLI
         run: npm run build
 
@@ -31,9 +34,6 @@ jobs:
           cp example.env.local .env.local
           npm ci
           npm run build
-
-      - name: Typecheck
-        run: npx tsc
 
       - name: Run JS test suite
         run: npm test
