@@ -20,7 +20,7 @@
     "package:extension": "tsc && vite build --config vite.extension.config.ts && cd packages/browser-extension && zip -FSr text-hoarder.zip dist public options.html manifest.json",
     "publish:cli": "tsc && vite build --config vite.cli.config.ts && vite build --config vite.web.config.ts && cd packages/cli/dist && npm publish",
     "watch": "vite build --config vite.cli.config.ts --watch",
-    "test": "node --import tsx/esm --test packages/common/src/utils/__tests__/*.test.ts packages/browser-extension/src/components/ExtractContent/markdownToText.spec.ts"
+    "test": "vitest run"
   },
   "dependencies": {
     "@commander-js/extra-typings": "^12.0.0",
@@ -57,7 +57,7 @@
     "prettier": "^3.4.2",
     "react-devtools": "^5.3.2",
     "tailwindcss": "^4.2.1",
-    "tsx": "^4.19.2",
+    "vitest": "^3.0.0",
     "typescript": "^5.7.3",
     "vite": "^6.0.7",
     "vite-plugin-css-injected-by-js": "^3.5.2"
