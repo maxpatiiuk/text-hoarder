@@ -29,15 +29,10 @@ export default defineConfig({
           : 'packages/browser-extension/src/components/Preferences/index.tsx',
         background:
           'packages/browser-extension/src/components/Background/index.ts',
-        readerMode: isDev
-          ? 'packages/browser-extension/src/components/ReaderMode/development.tsx'
-          : 'packages/browser-extension/src/components/ReaderMode/index.tsx',
       },
       output: {
         entryFileNames: '[name].bundle.js',
         chunkFileNames: '[name]-[hash].js',
-        // CSS is handled via ?inline imports and collected into shadow DOM;
-        // prevent Vite from also injecting CSS into document head
         assetFileNames: '[name][extname]',
       },
     },

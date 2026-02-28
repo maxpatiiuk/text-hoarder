@@ -17,7 +17,8 @@
   "permissions": ["identity", "storage", "activeTab", "scripting"],
   "optional_host_permissions": ["https://*/*", "http://*/*"],
   "background": {
-    "service_worker": "./dist/background.bundle.js"
+    "service_worker": "./dist/background.bundle.js",
+    "type": "module"
   },
   "cross_origin_embedder_policy": {
     "value": "require-corp"
