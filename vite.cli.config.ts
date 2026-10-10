@@ -3,7 +3,7 @@
  */
 
 import { builtinModules } from 'node:module';
-import { chmodSync, copyFileSync, readFileSync } from 'node:fs';
+import { chmodSync, copyFileSync, existsSync, readFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -46,7 +46,18 @@ export default defineConfig({
   plugins: [
     {
       name: 'cli-post-build',
-      closeBundle() {
+      buildStart() {
+        const configPath = path.resolve(
+          rootDir,
+          'packages/browser-extension/config.ts',
+        );
+        if (!existsSync(configPath)) {
+          this.error(
+            'Missing packages/browser-extension/config.ts. Follow the steps in packages/browser-extension/README.md',
+          );
+        }
+      },
+      writeBundle() {
         // Make the bundle executable
         chmodSync('packages/cli/dist/cli.bundle.js', 0o755);
         // Copy files needed at runtime alongside the bundle
