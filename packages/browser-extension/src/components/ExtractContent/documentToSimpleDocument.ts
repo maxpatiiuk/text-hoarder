@@ -1,5 +1,6 @@
 import { silenceError } from '@common/components/Errors/assert';
 import { Readability } from '@mozilla/readability';
+import { applyHardcodedBehavior } from './hardcodedBehavior';
 
 export type SimpleDocument = Exclude<
   ReturnType<Readability<HTMLElement>['parse']>,
@@ -12,6 +13,8 @@ export type SimpleDocument = Exclude<
 export function documentToSimpleDocument(
   documentClone = document.cloneNode(true) as Document,
 ): undefined | string | SimpleDocument {
+  applyHardcodedBehavior(documentClone);
+
   /**
    * Preserve syntax-highlighting related class names (used in GitHub
    * codeblocks). Also used by turndown-plugin-gfm to output correct language
@@ -42,7 +45,7 @@ export function documentToSimpleDocument(
       // Workaround for https://github.com/mozilla/readability/issues/820
       title:
         typeof result.title === 'string'
-          ? silenceError(() => htmlDecode(result.title)) ?? result.title
+          ? (silenceError(() => htmlDecode(result.title)) ?? result.title)
           : result.title,
     };
   } catch (error) {
